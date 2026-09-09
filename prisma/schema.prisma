@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Minimal auth surface plus this cube's Groups/Students management.
+// Test / Theme / Question models are added when we build those cubes,
+// per our step-by-step plan.
+
+model Teacher {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  groups    Group[]
+}
+
+model Group {
+  id        String    @id @default(cuid())
+  name      String
+  order     Int       @default(0)
+  teacherId String
+  teacher   Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  students  Student[]
+  sentTests SentTest[]
+  createdAt DateTime  @default(now())
+
+  @@index([teacherId])
+}
+
+model Student {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  accessCode String   @unique // 4-digit code, per prior design
+  name       String?
+  surname    String?
+  contact    String?
+  order      Int      @default(0)
+  groupId    String?
+  group      Group?   @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  attempts   TestAttempt[]
+  createdAt  DateTime @default(now())
+
+  @@index([groupId])
+}
+
+// One-time login tokens for the magic-link flow (Images 2–6).
+model LoginToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  role      Role
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  teacher
+  student
+}
+
+// Themes & Tests cube. "type" is which question-template the test
+// uses (type1 = MCQ, the only template built so far; type2/type3 are
+// reserved for future templates, not separate teacher-defined data).
+model Theme {
+  id        String   @id @default(cuid())
+  name      String
+  order     Int      @default(0)
+  teacherId String
+  tests     Test[]
+  createdAt DateTime @default(now())
+
+  @@index([teacherId])
+}
+
+enum TestTemplate {
+  type1
+  type2
+  type3
+}
+
+model Test {
+  id          String       @id @default(cuid())
+  themeId     String
+  theme       Theme        @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  type        TestTemplate
+  order       Int          @default(0)
+  title       String
+  instruction String?
+  published   Boolean      @default(false)
+  questions   Question[]
+  sentTests   SentTest[]
+  createdAt   DateTime     @default(now())
+
+  @@index([themeId])
+}
+
+model Question {
+  id      String   @id @default(cuid())
+  testId  String
+  test    Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  prompt  String
+  order   Int      @default(0)
+  options Option[]
+  answers AttemptAnswer[]
+
+  @@index([testId])
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  isCorrect  Boolean  @default(false)
+  order      Int      @default(0)
+  answers    AttemptAnswer[]
+
+  @@index([questionId])
+}
+
+// Sending & taking tests cube. A teacher sends a published Test to a
+// Group (Image 4); every student in that group sees it under "ახალი
+// ტესტები" until *they* submit an attempt for it, at which point it
+// moves into their own "უკვე გაკეთებული ტესტები" table.
+model SentTest {
+  id       String   @id @default(cuid())
+  testId   String
+  test     Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  groupId  String
+  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sentAt   DateTime @default(now())
+  attempts TestAttempt[]
+
+  @@index([groupId])
+  @@index([testId])
+}
+
+model TestAttempt {
+  id             String   @id @default(cuid())
+  sentTestId     String
+  sentTest       SentTest @relation(fields: [sentTestId], references: [id], onDelete: Cascade)
+  studentId      String
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  score          Int
+  totalQuestions Int
+  completedAt    DateTime @default(now())
+  answers        AttemptAnswer[]
+
+  @@index([sentTestId])
+  @@index([studentId])
+}
+
+model AttemptAnswer {
+  id               String       @id @default(cuid())
+  attemptId        String
+  attempt          TestAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId       String
+  question         Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOptionId String?
+  selectedOption   Option?      @relation(fields: [selectedOptionId], references: [id], onDelete: SetNull)
+
+  @@index([attemptId])
+}

@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paper / ink palette, grounded in the hand-drawn note cards this
+     product was designed from: cream paper, ink-navy text, marker-red
+     for primary actions, a quiet ledger-green for success states. */
+  --color-paper: #faf8f3;
+  --color-paper-line: #e7e1d3;
+  --color-ink: #1f2937;
+  --color-ink-soft: #5b6472;
+  --color-marker: #b33f2e;
+  --color-marker-dark: #8f3123;
+  --color-ledger: #2e6b5e;
+  --color-ledger-soft: #e4efec;
+
+  --font-display: "Noto Serif Georgian", "Noto Serif", serif;
+  --font-body: "Noto Sans Georgian", "Noto Sans", sans-serif;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* A single, deliberate texture: a faint ruled line under the header,
+   echoing a notebook page. Used once, not scattered everywhere. */
+.ruled-edge {
+  border-bottom: 1px solid var(--color-paper-line);
+}
+
+/* Index-card look for the login card, matching the source sketches. */
+.index-card {
+  background: #fff;
+  border: 2px solid var(--color-marker);
+  border-radius: 4px;
+}
