@@ -39,7 +39,6 @@ export default function StudentDashboard() {
           <span className="h-0.5 bg-ink rounded-full" />
           <span className="h-0.5 bg-ink rounded-full" />
         </button>
-        <h1 className="font-display text-lg text-ink">დაშბორდი</h1>
       </header>
 
       <main className="px-6 py-8 max-w-sm mx-auto flex flex-col gap-8">
