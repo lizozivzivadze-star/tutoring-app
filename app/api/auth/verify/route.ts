@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { encode } from "next-auth/jwt";
+import { signIn } from "@/lib/auth";
+import { AuthError } from "next-auth";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
@@ -19,7 +20,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // ტოკენის გამოყენებულად მონიშვნა
   await prisma.loginToken.update({
     where: { token },
     data: { usedAt: new Date() },
@@ -28,44 +28,17 @@ export async function GET(req: NextRequest) {
   const destination =
     record.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
 
-  // მომხმარებლის მოძებნა ბაზაში
-const user =
-  record.role === "teacher"
-    ? await prisma.teacher.findUnique({ where: { email: record.email } })
-    : await prisma.student.findUnique({ where: { email: record.email } });
-
-  if (!user) {
-    return NextResponse.redirect(loginUrl);
+  try {
+    await signIn("internal", {
+      email: record.email,
+      role: record.role,
+      internalSecret: process.env.INTERNAL_AUTH_SECRET,
+      redirectTo: destination,
+    });
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return NextResponse.redirect(loginUrl);
+    }
+    throw err;
   }
-
-  // JWT სესიის ტოკენის ხელით დაგენერირება
-  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
-  const sessionToken = await encode({
-  token: {
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: record.role,
-  },
-    secret,
-    salt: process.env.NODE_ENV === "production" 
-      ? "__Secure-authjs.session-token" 
-      : "authjs.session-token",
-  });
-
-  const response = NextResponse.redirect(new URL(destination, req.url));
-
-  // სესიის კუკის პირდაპირ ბრაუზერში ჩაწერა
-  const cookieName = process.env.NODE_ENV === "production" 
-    ? "__Secure-authjs.session-token" 
-    : "authjs.session-token";
-
-  response.cookies.set(cookieName, sessionToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
-
-  return response;
 }
