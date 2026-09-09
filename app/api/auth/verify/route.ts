@@ -17,8 +17,6 @@ export async function GET(req: NextRequest) {
     !record || record.usedAt || record.expiresAt < new Date();
 
   if (isInvalid) {
-    // Error case (Image 6): send back to the login/dashboard entry
-    // point rather than leaving the user on a dead link.
     return NextResponse.redirect(loginUrl);
   }
 
@@ -27,26 +25,22 @@ export async function GET(req: NextRequest) {
     data: { usedAt: new Date() },
   });
 
+  const destination =
+    record.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+
   try {
-    // This is the only caller of the "internal" credentials provider
-    // in the whole app — it runs server-side, right after the
-    // one-time token above has already been validated and burned,
-    // and it's the only place that reads INTERNAL_AUTH_SECRET.
     await signIn("internal", {
       email: record.email,
       role: record.role,
       internalSecret: process.env.INTERNAL_AUTH_SECRET,
-      redirect: false,
+      redirectTo: destination, // NextAuth-ს პირდაპირ ვავალებთ სწორ მისამართზე გადაყვანას
     });
   } catch (err) {
     if (err instanceof AuthError) {
       return NextResponse.redirect(loginUrl);
     }
+    // Next.js-ის ავტომატური redirect() აგდებს შეცდომას, რომელსაც ვატარებთ,
+    // რათა სესიის კუკი უსაფრთხოდ გაყვეს გადამისამართებას.
     throw err;
   }
-
-  const destination =
-    record.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
-
-  return NextResponse.redirect(new URL(destination, req.url));
 }
