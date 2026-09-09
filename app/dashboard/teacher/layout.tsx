@@ -18,7 +18,6 @@ export default function TeacherDashboardLayout({
           <span className="h-0.5 bg-ink rounded-full" />
           <span className="h-0.5 bg-ink rounded-full" />
         </button>
-        <h1 className="font-display text-lg text-ink">დაშბორდი</h1>
       </header>
 
       <TeacherTabs />

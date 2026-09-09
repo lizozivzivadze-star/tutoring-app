@@ -13,7 +13,7 @@ export default function TeacherTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="ruled-edge bg-white px-6 flex gap-6">
+    <nav className="ruled-edge bg-white px-6 flex justify-center gap-6">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (
