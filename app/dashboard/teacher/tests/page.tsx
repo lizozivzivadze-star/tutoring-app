@@ -97,7 +97,7 @@ export default function ThemesAndTestsTab() {
 
       <button
         onClick={() => setAddThemeOpen(true)}
-        className="mt-2 text-sm text-marker font-medium text-left hover:text-marker-dark"
+        className="mt-2 text-[15px] text-marker font-medium text-left hover:text-marker-dark"
       >
         + თემა
       </button>
