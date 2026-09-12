@@ -48,11 +48,6 @@ export default function LoginPage() {
         {/* Title block — echoes the marker-boxed card from the sketch.
             One shared entry point now, so the label is role-neutral;
             the server decides teacher vs. student from the email. */}
-        <div className="index-card px-6 py-4 mb-6 text-center">
-          <h1 className="font-display text-xl font-medium text-ink">
-            შესვლის გვერდი
-          </h1>
-        </div>
 
         <form
           onSubmit={handleSubmit}
