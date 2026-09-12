@@ -53,18 +53,18 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="bg-white border border-paper-line rounded-md px-6 py-8 shadow-sm"
         >
-          <label htmlFor="email" className="block text-sm text-ink-soft mb-2">
-            შეიყვანეთ
-          </label>
+         <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
+          შეიყვანეთ
+        </label>
           <input
             id="email"
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="email"
+            placeholder="Email"
             className="w-full border border-paper-line rounded-sm px-3 py-2.5 mb-6
-                       font-body text-ink placeholder:text-ink-soft/50
+                       font-body text-ink text-center placeholder:text-ink-soft/50
                        focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
           />
 
