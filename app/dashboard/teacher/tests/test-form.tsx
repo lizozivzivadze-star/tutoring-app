@@ -7,7 +7,7 @@ import { QuestionDraft, TestTemplate, TYPE_LABELS } from "./types";
 type ThemeOption = { id: string; name: string };
 
 const inputClass =
-  "w-full border border-paper-line rounded-sm px-3 py-2.5 font-body text-ink " +
+  "w-full border border-paper-line rounded-sm px-3 py-2.5 font-body text-ink bg-white " +
   "focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker";
 
 export default function TestForm({
@@ -109,26 +109,25 @@ export default function TestForm({
         </p>
       )}
 
-      <div className="flex gap-3">
-        <div className="flex-1">
-          <label className="block text-sm text-ink-soft mb-2">თემა</label>
-          <select
-            value={themeId}
-            onChange={(e) => setThemeId(e.target.value)}
-            className={inputClass}
-          >
-            {themes.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="w-28">
-          <label className="block text-sm text-ink-soft mb-2">ტიპი</label>
-          <div className="border border-paper-line rounded-sm px-3 py-2.5 text-ink-soft bg-paper">
-            {TYPE_LABELS[type]}
-          </div>
+      <div>
+        <label className="block text-sm text-ink-soft mb-2">თემა</label>
+        <select
+          value={themeId}
+          onChange={(e) => setThemeId(e.target.value)}
+          className={inputClass}
+        >
+          {themes.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm text-ink-soft mb-2">ტიპი</label>
+        <div className="border border-paper-line rounded-sm px-3 py-2.5 text-ink-soft bg-paper">
+          {TYPE_LABELS[type]}
         </div>
       </div>
 

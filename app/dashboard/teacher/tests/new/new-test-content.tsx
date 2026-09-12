@@ -64,7 +64,9 @@ export default function NewTestContent() {
       >
         ← უკან
       </Link>
-      <h1 className="font-display text-lg text-ink mt-3 mb-5">ახალი ტესტი</h1>
+      <h1 className="font-display text-xl font-medium text-ink mt-3 mb-5 pb-2 border-b border-paper-line">
+        ახალი ტესტი
+      </h1>
 
       <TestForm
         initialThemeId={themeId}
