@@ -8,11 +8,43 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
+type Instructions = { title: string; body: string };
+
+function getInstallInstructions(): Instructions {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isFirefox = /Firefox/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+
+  if (isIOS) {
+    return {
+      title: "ეკრანზე დასამატებლად:",
+      body: 'დააჭირეთ Share ღილაკს (ქვედა პანელზე) და აირჩიეთ "Add to Home Screen".',
+    };
+  }
+  if (isFirefox && isAndroid) {
+    return {
+      title: "ეკრანზე დასამატებლად:",
+      body: 'დააჭირეთ ⋮ მენიუს (ზედა მარჯვნივ) და აირჩიეთ "Add to Home screen" ან "Install".',
+    };
+  }
+  if (isFirefox) {
+    return {
+      title: "სამწუხაროდ, Firefox დესკტოპზე ეს ვერსია არ იძლევა აპლიკაციის ეკრანზე დამატების საშუალებას.",
+      body: 'ამის ნაცვლად შეგიძლიათ გვერდი ჩვეულებრივად ჩამონიშნოთ: დააჭირეთ Ctrl+D (Mac-ზე ⌘+D).',
+    };
+  }
+  return {
+    title: "ეკრანზე დასამატებლად:",
+    body: 'გახსენით ბრაუზერის მენიუ და მოძებნეთ "Add to Home Screen" ან "Install app".',
+  };
+}
+
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [showIosHint, setShowIosHint] = useState(false);
+  const [instructions, setInstructions] = useState<Instructions | null>(null);
 
   useEffect(() => {
     function handler(e: Event) {
@@ -30,9 +62,9 @@ export default function UserMenu() {
       setOpen(false);
       return;
     }
-    // iOS Safari-ს (და სხვა browser-ებს, სადაც native prompt არ არსებობს)
-    // არ აქვს ეს API — ვაჩვენებთ ხელით ინსტრუქციას.
-    setShowIosHint(true);
+    // ბრაუზერი, რომელსაც არ აქვს native prompt (iOS, Firefox და ა.შ.) —
+    // ბრაუზერის მიხედვით მორგებული ინსტრუქცია.
+    setInstructions(getInstallInstructions());
     setOpen(false);
   }
 
@@ -60,7 +92,7 @@ export default function UserMenu() {
             </button>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full text-left px-4 py-2.5 text-sm text-marker-dark hover:bg-paper-line/40 border-t border-paper-line"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
               გასვლა
             </button>
@@ -68,22 +100,19 @@ export default function UserMenu() {
         </>
       )}
 
-      {showIosHint && (
+      {instructions && (
         <>
           <div
             className="fixed inset-0 z-50 bg-black/40"
-            onClick={() => setShowIosHint(false)}
+            onClick={() => setInstructions(null)}
           />
           <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto">
             <p className="text-sm text-ink mb-1 font-medium">
-              ეკრანზე დასამატებლად:
+              {instructions.title}
             </p>
-            <p className="text-sm text-ink-soft">
-              დააჭირეთ Share ღილაკს ბრაუზერის პანელზე და აირჩიეთ &quot;Add to
-              Home Screen&quot;.
-            </p>
+            <p className="text-sm text-ink-soft">{instructions.body}</p>
             <button
-              onClick={() => setShowIosHint(false)}
+              onClick={() => setInstructions(null)}
               className="mt-3 w-full rounded-full border-2 border-marker text-marker text-sm font-medium py-2"
             >
               გასაგებია
