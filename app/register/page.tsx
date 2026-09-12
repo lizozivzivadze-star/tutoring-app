@@ -70,7 +70,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="email" className="block text-sm text-ink-soft mb-2">
-              email
+              Email
             </label>
             <input
               id="email"
