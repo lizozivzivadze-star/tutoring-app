@@ -123,7 +123,7 @@ export default function RegisterPage() {
                        py-2.5 transition-colors hover:bg-marker-dark
                        disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {status === "sending" ? "მუშავდება..." : "დარეგისტრირდი"}
+            {status === "sending" ? "მუშავდება..." : "რეგისტრაცია"}
           </button>
 
           {status === "error" && (
