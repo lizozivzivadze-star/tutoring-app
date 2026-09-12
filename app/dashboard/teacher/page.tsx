@@ -124,11 +124,6 @@ export default function StartTab() {
             </option>
           ))}
         </select>
-        {tests.length === 0 && (
-          <p className="mt-2 text-xs text-ink-soft">
-            გამოქვეყნებული ტესტი ჯერ არ არსებობს.
-          </p>
-        )}
       </div>
 
       <button
