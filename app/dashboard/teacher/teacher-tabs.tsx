@@ -20,7 +20,7 @@ export default function TeacherTabs() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`px-4 pt-3 pb-2.5 text-base font-medium rounded-t-lg transition-colors ${
+            className={`px-4 pt-3 pb-2.5 text-lg font-medium rounded-t-lg transition-colors ${
               active ? "bg-paper text-marker" : "text-ink-soft hover:text-marker"
             }`}
           >

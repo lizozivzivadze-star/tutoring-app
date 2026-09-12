@@ -71,14 +71,14 @@ export default function ThemeCard({
                        focus:outline-none"
           />
         ) : (
-          <span className="flex-1 font-display text-ink">
+          <span className="flex-1 font-display text-ink text-base">
             {themeIndex + 1}. {theme.name}
           </span>
         )}
 
         <button
           onClick={() => setEditing(true)}
-          className="text-xs text-ink-soft hover:text-marker px-1"
+          className="text-[13px] text-ink-soft hover:text-marker px-1"
         >
           edit
         </button>
@@ -105,7 +105,7 @@ export default function ThemeCard({
           const templateReady = type === "type1";
 
           return (
-            <div key={type} className="text-sm">
+            <div key={type} className="text-base">
               <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>{" "}
               {tests.map((test, testIndex) => (
                 <Link
