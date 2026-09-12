@@ -17,7 +17,7 @@ export default function TeacherDashboardLayout({
       <TeacherTabs />
 
       <main className="px-6 py-8 max-w-sm mx-auto">
-        <div className="bg-white border-2 border-marker rounded-md p-5">
+        <div className="p-5">
           {children}
         </div>
       </main>

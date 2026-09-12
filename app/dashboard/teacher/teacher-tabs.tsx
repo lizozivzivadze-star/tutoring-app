@@ -21,7 +21,7 @@ export default function TeacherTabs() {
             key={tab.href}
             href={tab.href}
             className={`px-4 pt-3 pb-2.5 text-base font-medium rounded-t-lg transition-colors ${
-              active ? "bg-paper text-ink" : "text-ink-soft hover:text-ink"
+              active ? "bg-paper text-marker" : "text-ink-soft hover:text-marker"
             }`}
           >
             {tab.label}
