@@ -42,7 +42,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6">
+    <main className="min-h-dvh flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-md px-6 py-4 mb-6 text-center">
           <h1 className="font-display text-xl font-medium text-ink">
@@ -79,6 +79,7 @@ export default function RegisterPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })}
               className="w-full border border-paper-line rounded-sm px-3 py-2.5
                          font-body text-ink
                          focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
