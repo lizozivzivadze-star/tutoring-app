@@ -124,18 +124,18 @@ export default function ThemeCard({
               {templateReady ? (
                 <Link
                   href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                  className="text-marker font-medium"
+                  className="text-marker font-medium text-2xl leading-none inline-flex items-center justify-center px-2 py-1 -my-1 align-middle"
                 >
                   +
                 </Link>
               ) : (
-                <span
-                  className="text-ink-soft/40 cursor-not-allowed"
-                  title="ეს შაბლონი ჯერ არ არის მზად"
-                >
-                  +
-                </span>
-              )}
+                  <span
+                    className="text-ink-soft/40 cursor-not-allowed text-2xl leading-none inline-flex items-center justify-center px-2 py-1 -my-1 align-middle"
+                    title="ეს შაბლონი ჯერ არ არის მზად"
+                  >
+                    +
+                  </span>
+                )}
             </div>
           );
         })}
