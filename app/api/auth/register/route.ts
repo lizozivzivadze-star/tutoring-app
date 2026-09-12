@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { sendMagicLinkEmail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
-  const { name, email, code } = await req.json();
+  const { name, email, code, phone } = await req.json();
 
   if (!name || !email || !code) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await prisma.teacher.create({ data: { email, name } });
+  await prisma.teacher.create({ data: { email, name, phone } });
 
   // Registration hands straight off into the same magic-link flow
   // used for ordinary login — no separate password to set.

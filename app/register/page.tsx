@@ -8,6 +8,7 @@ type Status = "idle" | "sending" | "error";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -22,7 +23,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, code }),
+        body: JSON.stringify({ name, email, code, phone }),
       });
 
       const data = await res.json().catch(() => null);
@@ -83,6 +84,21 @@ export default function RegisterPage() {
                          focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
             />
           </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-sm text-ink-soft mb-2">
+              მობილური
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full border border-paper-line rounded-sm px-3 py-2.5
+                          font-body text-ink
+                          focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
+            />
+          </div>          
 
           <div>
             <label htmlFor="code" className="block text-sm text-ink-soft mb-2">
