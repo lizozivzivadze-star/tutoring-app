@@ -124,13 +124,13 @@ export default function ThemeCard({
               {templateReady ? (
                 <Link
                   href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                  className="text-marker font-medium text-2xl leading-none inline-flex items-center justify-center px-2 py-1 -my-1 align-middle"
+                  className="text-marker font-medium text-xl align-middle px-2 py-0.5"
                 >
                   +
                 </Link>
               ) : (
                   <span
-                    className="text-ink-soft/40 cursor-not-allowed text-2xl leading-none inline-flex items-center justify-center px-2 py-1 -my-1 align-middle"
+                    className="text-ink-soft/40 cursor-not-allowed text-xl align-middle px-2 py-0.5"
                     title="ეს შაბლონი ჯერ არ არის მზად"
                   >
                     +
