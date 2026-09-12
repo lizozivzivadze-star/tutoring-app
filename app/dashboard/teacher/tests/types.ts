@@ -1,4 +1,4 @@
-export type TestTemplate = "type1" | "type2" | "type3";
+export type TestTemplate = "type1" | "type2" | "type3" | "national";
 
 export type TestSummary = {
   id: string;
@@ -44,9 +44,10 @@ export type TestDetail = {
   }[];
 };
 
-export const TYPES: TestTemplate[] = ["type1", "type2", "type3"];
+export const TYPES: TestTemplate[] = ["type1", "type2", "type3", "national"];
 export const TYPE_LABELS: Record<TestTemplate, string> = {
-  type1: "type 1",
-  type2: "type 2",
-  type3: "type 3",
+  type1: "Type 1 (mcq)",
+  type2: "Type 2 (map)",
+  type3: "Type 3 (open)",
+  national: "National",
 };

@@ -83,6 +83,7 @@ enum TestTemplate {
   type1
   type2
   type3
+  national
 }
 
 model Test {
