@@ -42,7 +42,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-6 md:justify-center">
+    <main className="min-h-dvh flex flex-col items-center px-6 md:justify-center">
       <div className="flex-1 md:hidden" />
       <div className="w-full max-w-sm">
         {/* Title block — echoes the marker-boxed card from the sketch.
@@ -62,6 +62,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })}
             placeholder="Email"
             className="w-full border border-paper-line rounded-sm px-3 py-2.5 mb-6
                        font-body text-ink text-center placeholder:text-ink-soft/50
