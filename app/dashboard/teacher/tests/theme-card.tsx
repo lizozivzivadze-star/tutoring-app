@@ -71,7 +71,7 @@ export default function ThemeCard({
                        focus:outline-none"
           />
         ) : (
-          <span className="flex-1 font-display text-ink text-base">
+          <span className="flex-1 font-display font-medium text-ink">
             {themeIndex + 1}. {theme.name}
           </span>
         )}
@@ -97,7 +97,7 @@ export default function ThemeCard({
         <p className="mt-1 pl-6 text-xs text-marker-dark">{deleteError}</p>
       )}
 
-      <div className="mt-3 pl-6 flex flex-col gap-2">
+      <div className="mt-2 pl-6 flex flex-col gap-1.5">
         {TYPES.map((type, typeIndex) => {
           const tests = theme.tests
             .filter((t) => t.type === type)
@@ -105,7 +105,7 @@ export default function ThemeCard({
           const templateReady = type === "type1";
 
           return (
-            <div key={type} className="text-base">
+            <div key={type} className="text-sm">
               <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>{" "}
               {tests.map((test, testIndex) => (
                 <Link
