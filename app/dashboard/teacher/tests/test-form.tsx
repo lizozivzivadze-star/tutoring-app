@@ -55,6 +55,7 @@ export default function TestForm({
   );
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<"save" | "publish" | null>(null);
+  const [savedNotice, setSavedNotice] = useState(false);
 
   useEffect(() => {
     fetch("/api/themes")
@@ -96,6 +97,9 @@ export default function TestForm({
       setError(result);
     } else {
       setPublished(nextPublished);
+      if (action === "save") {
+        setSavedNotice(true);
+      }
     }
     setSaving(null);
   }
@@ -197,6 +201,9 @@ export default function TestForm({
       </div>
 
       {error && <p className="text-sm text-marker-dark">{error}</p>}
+      {!error && savedNotice && (
+        <p className="text-sm text-ledger">შენახულია</p>
+      )}
 
       <div className="flex gap-3 border-t border-paper-line pt-4">
         <button

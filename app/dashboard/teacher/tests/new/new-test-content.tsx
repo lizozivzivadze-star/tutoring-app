@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import TestForm from "../test-form";
@@ -12,37 +13,74 @@ function toApiQuestions(questions: QuestionDraft[]) {
   }));
 }
 
+type FormValues = {
+  themeId: string;
+  title: string;
+  instruction: string;
+  questions: QuestionDraft[];
+  published: boolean;
+};
+
 export default function NewTestContent() {
   const params = useSearchParams();
   const router = useRouter();
   const themeId = params.get("themeId") ?? "";
   const type = (params.get("type") ?? "type1") as TestTemplate;
 
-  async function create(values: {
-    themeId: string;
-    title: string;
-    instruction: string;
-    questions: QuestionDraft[];
-    published: boolean;
-  }) {
-    const res = await fetch(`/api/themes/${values.themeId}/tests`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type,
-        title: values.title,
-        instruction: values.instruction,
-        published: values.published,
-        questions: toApiQuestions(values.questions),
-      }),
-    });
+  // Once the first Save creates the row, we keep its id here and
+  // switch to PATCH — otherwise every subsequent Save would create
+  // another test instead of updating the draft in progress.
+  const [savedTestId, setSavedTestId] = useState<string | null>(null);
+
+  async function persist(
+    values: FormValues
+  ): Promise<{ id: string } | { error: string }> {
+    const res = savedTestId
+      ? await fetch(`/api/tests/${savedTestId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            themeId: values.themeId,
+            title: values.title,
+            instruction: values.instruction,
+            published: values.published,
+            questions: toApiQuestions(values.questions),
+          }),
+        })
+      : await fetch(`/api/themes/${values.themeId}/tests`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type,
+            title: values.title,
+            instruction: values.instruction,
+            published: values.published,
+            questions: toApiQuestions(values.questions),
+          }),
+        });
 
     const data = await res.json().catch(() => null);
     if (!res.ok) {
-      return data?.error ?? "ვერ შეინახა";
+      return { error: data?.error ?? "ვერ შეინახა" };
     }
 
-    router.push(`/dashboard/teacher/tests/${data.test.id}`);
+    setSavedTestId(data.test.id);
+    return { id: data.test.id as string };
+  }
+
+  // Save: keeps the current (possibly unfinished) state, stays on
+  // this screen — no navigation.
+  async function handleSave(values: FormValues) {
+    const result = await persist(values);
+    if ("error" in result) return result.error;
+  }
+
+  // Publish: marks it published and moves on to the test's admin
+  // page, since publishing is the "this is done, manage it" action.
+  async function handlePublish(values: FormValues) {
+    const result = await persist({ ...values, published: true });
+    if ("error" in result) return result.error;
+    router.push(`/dashboard/teacher/tests/${result.id}`);
   }
 
   if (!themeId) {
@@ -71,8 +109,8 @@ export default function NewTestContent() {
       <TestForm
         initialThemeId={themeId}
         type={type}
-        onSave={create}
-        onPublish={create}
+        onSave={handleSave}
+        onPublish={handlePublish}
       />
     </div>
   );
