@@ -42,8 +42,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-6">
-      <div className="flex-1" />
+    <main className="min-h-screen flex flex-col items-center px-6 md:justify-center">
+      <div className="flex-1 md:hidden" />
       <div className="w-full max-w-sm">
         {/* Title block — echoes the marker-boxed card from the sketch.
             One shared entry point now, so the label is role-neutral;
@@ -96,7 +96,7 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
-      <div className="flex-[2]" />    
+      <div className="flex-[2] md:hidden" />   
     </main>
   );
 }
