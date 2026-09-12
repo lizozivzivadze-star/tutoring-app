@@ -93,7 +93,7 @@ export default function RegisterPage() {
               required
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="მიღებული პირადად"
+              placeholder="568 620 658 - დარეკეთ, მიიღებთ"
               className="w-full border border-paper-line rounded-sm px-3 py-2.5
                          font-body text-ink placeholder:text-ink-soft/50
                          focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
