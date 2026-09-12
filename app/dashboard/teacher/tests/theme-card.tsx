@@ -105,37 +105,39 @@ export default function ThemeCard({
           const templateReady = type === "type1";
 
           return (
-            <div key={type} className="flex items-center flex-wrap gap-x-2 gap-y-1 text-sm">
+            <div key={type} className="text-sm">
               <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
-              {tests.map((test, testIndex) => (
-                <Link
-                  key={test.id}
-                  href={`/dashboard/teacher/tests/${test.id}`}
-                  className={
-                    test.published
-                      ? "text-ink hover:text-marker"
-                      : "text-ink-soft/50 hover:text-ink-soft"
-                  }
-                  title={test.published ? "" : "გამოუქვეყნებელი"}
-                >
-                  [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
-                </Link>
-              ))}
-              {templateReady ? (
-                <Link
-                  href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                  className="text-marker font-medium text-[22px] leading-none px-2 py-0.5"
-                >
-                  +
-                </Link>
-              ) : (
-                <span
-                  className="text-ink-soft/40 cursor-not-allowed text-[22px] leading-none px-2 py-0.5"
-                  title="ეს შაბლონი ჯერ არ არის მზად"
-                >
-                  +
-                </span>
-              )}
+              <div className="flex flex-col items-start gap-1 mt-1 pl-3">
+                {tests.map((test, testIndex) => (
+                  <Link
+                    key={test.id}
+                    href={`/dashboard/teacher/tests/${test.id}`}
+                    className={
+                      test.published
+                        ? "text-ink hover:text-marker"
+                        : "text-ink-soft/50 hover:text-ink-soft"
+                    }
+                    title={test.published ? "" : "გამოუქვეყნებელი"}
+                  >
+                    [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                  </Link>
+                ))}
+                {templateReady ? (
+                  <Link
+                    href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
+                    className="text-marker font-medium text-[22px] leading-none px-2 py-0.5"
+                  >
+                    +
+                  </Link>
+                ) : (
+                  <span
+                    className="text-ink-soft/40 cursor-not-allowed text-[22px] leading-none px-2 py-0.5"
+                    title="ეს შაბლონი ჯერ არ არის მზად"
+                  >
+                    +
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
