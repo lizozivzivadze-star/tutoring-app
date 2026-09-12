@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import UserMenu from "@/components/user-menu";
 
 type PendingTest = {
   sentTestId: string;
@@ -34,11 +35,7 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen">
       <header className="ruled-edge bg-white px-6 py-4 flex items-center gap-4">
-        <button aria-label="მენიუ" className="flex flex-col gap-1 w-6 shrink-0">
-          <span className="h-0.5 bg-ink rounded-full" />
-          <span className="h-0.5 bg-ink rounded-full" />
-          <span className="h-0.5 bg-ink rounded-full" />
-        </button>
+        <UserMenu />
       </header>
 
       <main className="px-6 py-8 max-w-sm mx-auto flex flex-col gap-8">
