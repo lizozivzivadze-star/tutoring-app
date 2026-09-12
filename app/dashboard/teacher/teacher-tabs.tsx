@@ -13,17 +13,15 @@ export default function TeacherTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="ruled-edge bg-white px-6 flex justify-center gap-6">
+    <nav className="flex justify-center gap-6 px-6 pt-4 pb-2">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`py-3 text-base font-medium border-b-2 transition-colors ${
-              active
-                ? "border-marker text-marker bg-ink/[0.04]"
-                : "border-transparent text-ink-soft hover:text-ink"
+            className={`text-base font-semibold uppercase tracking-wide transition-colors ${
+              active ? "text-marker" : "text-ink-soft hover:text-ink"
             }`}
           >
             {tab.label}
