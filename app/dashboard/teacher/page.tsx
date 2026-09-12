@@ -89,7 +89,7 @@ export default function StartTab() {
           onChange={(e) => setGroupId(e.target.value)}
           required
           className="w-full border border-paper-line rounded-sm px-3 py-2.5
-                     bg-white font-body text-ink
+                     bg-white font-body text-ink text-sm
                      focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
         >
           <option value="" disabled>
@@ -112,7 +112,7 @@ export default function StartTab() {
           onChange={(e) => setTestId(e.target.value)}
           required
           className="w-full border border-paper-line rounded-sm px-3 py-2.5
-                     bg-white font-body text-ink
+                     bg-white font-body text-ink text-sm
                      focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
         >
           <option value="" disabled>
