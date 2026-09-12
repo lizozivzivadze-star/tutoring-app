@@ -55,7 +55,7 @@ export default function RegisterPage() {
         >
           <div>
             <label htmlFor="name" className="block text-sm text-ink-soft mb-2">
-              სახელი
+              სახელი და გვარი
             </label>
             <input
               id="name"
