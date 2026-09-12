@@ -105,17 +105,17 @@ export default function ThemeCard({
           const templateReady = type === "type1";
 
           return (
-            <div key={type} className="text-sm">
-              <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>{" "}
+            <div key={type} className="flex items-center flex-wrap gap-x-2 gap-y-1 text-sm">
+              <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
               {tests.map((test, testIndex) => (
                 <Link
                   key={test.id}
                   href={`/dashboard/teacher/tests/${test.id}`}
-                  className={`inline-block mr-2 ${
+                  className={
                     test.published
                       ? "text-ink hover:text-marker"
                       : "text-ink-soft/50 hover:text-ink-soft"
-                  }`}
+                  }
                   title={test.published ? "" : "გამოუქვეყნებელი"}
                 >
                   [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
@@ -124,18 +124,18 @@ export default function ThemeCard({
               {templateReady ? (
                 <Link
                   href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                  className="text-marker font-medium text-xl align-middle px-2 py-0.5"
+                  className="text-marker font-medium text-xl leading-none px-2 py-0.5"
                 >
                   +
                 </Link>
               ) : (
-                  <span
-                    className="text-ink-soft/40 cursor-not-allowed text-xl align-middle px-2 py-0.5"
-                    title="ეს შაბლონი ჯერ არ არის მზად"
-                  >
-                    +
-                  </span>
-                )}
+                <span
+                  className="text-ink-soft/40 cursor-not-allowed text-xl leading-none px-2 py-0.5"
+                  title="ეს შაბლონი ჯერ არ არის მზად"
+                >
+                  +
+                </span>
+              )}
             </div>
           );
         })}
