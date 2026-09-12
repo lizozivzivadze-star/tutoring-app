@@ -86,9 +86,9 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-sm text-ink-soft mt-6">
-          ხართ ახალი მასწავლებელი?{" "}
+          მასწავლებელი ხართ?{" "}
           <Link href="/register" className="text-marker font-medium">
-            დარეგისტრირდი
+            დარეგისტრირდით
           </Link>
         </p>
       </div>
