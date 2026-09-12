@@ -43,9 +43,9 @@ export default function RegisterPage() {
   return (
     <main className="min-h-screen flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <div className="index-card px-6 py-4 mb-6 text-center">
+        <div className="bg-white rounded-md px-6 py-4 mb-6 text-center">
           <h1 className="font-display text-xl font-medium text-ink">
-            ახალი მასწავლებელი
+            მასწავლებლის დამატება
           </h1>
         </div>
 
