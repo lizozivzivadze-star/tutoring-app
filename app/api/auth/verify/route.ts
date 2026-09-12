@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { signIn } from "@/lib/auth";
 import { AuthError } from "next-auth";
+import { signIn, auth } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
@@ -16,9 +16,15 @@ export async function GET(req: NextRequest) {
   const isInvalid =
     !record || record.usedAt || record.expiresAt < new Date();
 
-  if (isInvalid) {
-    return NextResponse.redirect(loginUrl);
+if (isInvalid) {
+  const session = await auth();
+  if (session?.user?.role) {
+    const dest =
+      session.user.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+    return NextResponse.redirect(new URL(dest, req.url));
   }
+  return NextResponse.redirect(loginUrl);
+}
 
   await prisma.loginToken.update({
     where: { token },
