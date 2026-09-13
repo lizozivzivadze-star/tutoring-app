@@ -29,10 +29,6 @@ export default function GroupCard({
   group: GroupRecord;
   expanded: boolean;
   onToggleExpand: () => void;
-  draggable: boolean;
-  onDragStart: () => void;
-  onDragOver: (e: React.DragEvent) => void;
-  onDrop: () => void;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => void;
   onAddStudent: () => void;
