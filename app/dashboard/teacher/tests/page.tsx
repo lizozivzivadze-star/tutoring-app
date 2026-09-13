@@ -7,7 +7,7 @@ import AddThemeModal from "./add-theme-modal";
 
 export default function ThemesAndTestsTab() {
   const [themes, setThemes] = useState<ThemeRecord[] | null>(null);
-  const [dragThemeId, setDragThemeId] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
   const [addThemeOpen, setAddThemeOpen] = useState(false);
 
   const load = useCallback(async () => {
@@ -42,25 +42,47 @@ export default function ThemesAndTestsTab() {
     setThemes((prev) => prev?.filter((t) => t.id !== themeId) ?? prev);
   }
 
-  function handleDrop(targetId: string) {
-    if (!themes || !dragThemeId || dragThemeId === targetId) return;
-    const ids = themes.map((t) => t.id);
-    const fromIndex = ids.indexOf(dragThemeId);
-    const toIndex = ids.indexOf(targetId);
-    ids.splice(fromIndex, 1);
-    ids.splice(toIndex, 0, dragThemeId);
+  function startDrag(themeId: string, e: React.PointerEvent) {
+    if (!themes) return;
+    e.preventDefault();
+    let orderedIds = themes.map((t) => t.id);
+    setDraggingId(themeId);
 
-    const reordered = ids
-      .map((id) => themes.find((t) => t.id === id)!)
-      .filter(Boolean);
-    setThemes(reordered);
-    setDragThemeId(null);
+    function onMove(ev: PointerEvent) {
+      const hit = document
+        .elementFromPoint(ev.clientX, ev.clientY)
+        ?.closest<HTMLElement>("[data-theme-id]");
+      const overId = hit?.dataset.themeId;
+      if (!overId || overId === themeId) return;
 
-    fetch("/api/themes/reorder", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderedIds: ids }),
-    });
+      const from = orderedIds.indexOf(themeId);
+      const to = orderedIds.indexOf(overId);
+      if (from === -1 || to === -1 || from === to) return;
+
+      const next = [...orderedIds];
+      next.splice(from, 1);
+      next.splice(to, 0, themeId);
+      orderedIds = next;
+
+      setThemes((prev) => {
+        if (!prev) return prev;
+        return next.map((id) => prev.find((t) => t.id === id)!).filter(Boolean);
+      });
+    }
+
+    function onUp() {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+      setDraggingId(null);
+      fetch("/api/themes/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds }),
+      });
+    }
+
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
   }
 
   if (!themes) {
@@ -86,10 +108,8 @@ export default function ThemesAndTestsTab() {
           key={theme.id}
           theme={theme}
           themeIndex={i}
-          draggable
-          onDragStart={() => setDragThemeId(theme.id)}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleDrop(theme.id)}
+          dragging={draggingId === theme.id}
+          onHandlePointerDown={(e) => startDrag(theme.id, e)}
           onRename={(name) => renameTheme(theme.id, name)}
           onDelete={() => deleteTheme(theme.id)}
         />

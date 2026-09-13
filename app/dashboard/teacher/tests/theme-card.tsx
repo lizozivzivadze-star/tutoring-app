@@ -8,19 +8,15 @@ import ConfirmDialog from "@/components/confirm-dialog";
 export default function ThemeCard({
   theme,
   themeIndex,
-  draggable,
-  onDragStart,
-  onDragOver,
-  onDrop,
+  dragging,
+  onHandlePointerDown,
   onRename,
   onDelete,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
-  draggable: boolean;
-  onDragStart: () => void;
-  onDragOver: (e: React.DragEvent) => void;
-  onDrop: () => void;
+  dragging: boolean;
+  onHandlePointerDown: (e: React.PointerEvent) => void;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => Promise<string | void>;
 }) {
@@ -46,15 +42,16 @@ export default function ThemeCard({
 
   return (
     <div
-      draggable={draggable && !editing}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      className="border border-paper-line rounded-md bg-white px-4 py-3"
+      data-theme-id={theme.id}
+      className={`border border-paper-line rounded-md bg-white px-4 py-3 ${
+        dragging ? "opacity-50" : ""
+      }`}
     >
       <div className="flex items-center gap-2">
         <span
-          className="cursor-grab text-ink-soft/60 select-none"
+          onPointerDown={(e) => !editing && onHandlePointerDown(e)}
+          className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1"
+          style={{ touchAction: "none" }}
           title="გადაადგილება"
         >
           ⠿
