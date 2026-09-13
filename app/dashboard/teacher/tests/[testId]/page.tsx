@@ -53,13 +53,21 @@ export default function TestDetailPage() {
     load();
   }, [load]);
 
-  async function save(values: {
-    themeId: string;
-    title: string;
-    instruction: string;
-    questions: QuestionDraft[];
-    published: boolean;
-  }) {
+  // Save: persists the current (possibly unfinished) state but stays
+  // on the edit screen — it must never kick the teacher out to the
+  // read-only view. Publish is the only action that exits editing,
+  // since publishing is the "this is done, manage it" action (mirrors
+  // the new-test flow's handleSave vs handlePublish split).
+  async function save(
+    values: {
+      themeId: string;
+      title: string;
+      instruction: string;
+      questions: QuestionDraft[];
+      published: boolean;
+    },
+    options?: { exitEditing?: boolean }
+  ) {
     const res = await fetch(`/api/tests/${testId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -82,7 +90,9 @@ export default function TestDetailPage() {
     }
 
     setTest({ ...data.test, locked: test?.locked ?? false });
-    setEditing(false);
+    if (options?.exitEditing) {
+      setEditing(false);
+    }
   }
 
   async function togglePublished() {
@@ -178,8 +188,8 @@ export default function TestDetailPage() {
           initialPublished={test.published}
           initialQuestions={toDrafts(test)}
           locked={test.locked}
-          onSave={save}
-          onPublish={(v) => save({ ...v, published: true })}
+          onSave={(v) => save(v)}
+          onPublish={(v) => save({ ...v, published: true }, { exitEditing: true })}
         />
       ) : (
         <div className="flex flex-col gap-4">
