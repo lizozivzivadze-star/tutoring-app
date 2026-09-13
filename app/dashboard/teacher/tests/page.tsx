@@ -4,10 +4,27 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 export default function ThemesAndTestsTab() {
   const [themes, setThemes] = useState<ThemeRecord[] | null>(null);
-  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const sensors = useSensors(
+  useSensor(PointerSensor, {
+    activationConstraint: { distance: 8 },
+  })
+);
   const [addThemeOpen, setAddThemeOpen] = useState(false);
 
   const load = useCallback(async () => {
@@ -42,48 +59,26 @@ export default function ThemesAndTestsTab() {
     setThemes((prev) => prev?.filter((t) => t.id !== themeId) ?? prev);
   }
 
-  function startDrag(themeId: string, e: React.PointerEvent) {
-    if (!themes) return;
-    e.preventDefault();
-    let orderedIds = themes.map((t) => t.id);
-    setDraggingId(themeId);
+function handleThemeDragEnd(event: DragEndEvent) {
+  const { active, over } = event;
+  if (!themes || !over || active.id === over.id) return;
 
-    function onMove(ev: PointerEvent) {
-      const hit = document
-        .elementFromPoint(ev.clientX, ev.clientY)
-        ?.closest<HTMLElement>("[data-theme-id]");
-      const overId = hit?.dataset.themeId;
-      if (!overId || overId === themeId) return;
+  const ids = themes.map((t) => t.id);
+  const fromIndex = ids.indexOf(active.id as string);
+  const toIndex = ids.indexOf(over.id as string);
+  const newIds = arrayMove(ids, fromIndex, toIndex);
 
-      const from = orderedIds.indexOf(themeId);
-      const to = orderedIds.indexOf(overId);
-      if (from === -1 || to === -1 || from === to) return;
+  const reordered = newIds
+    .map((id) => themes.find((t) => t.id === id)!)
+    .filter(Boolean);
+  setThemes(reordered);
 
-      const next = [...orderedIds];
-      next.splice(from, 1);
-      next.splice(to, 0, themeId);
-      orderedIds = next;
-
-      setThemes((prev) => {
-        if (!prev) return prev;
-        return next.map((id) => prev.find((t) => t.id === id)!).filter(Boolean);
-      });
-    }
-
-    function onUp() {
-      document.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerup", onUp);
-      setDraggingId(null);
-      fetch("/api/themes/reorder", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderedIds }),
-      });
-    }
-
-    document.addEventListener("pointermove", onMove);
-    document.addEventListener("pointerup", onUp);
-  }
+  fetch("/api/themes/reorder", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderedIds: newIds }),
+  });
+}
 
   if (!themes) {
     return (
@@ -103,17 +98,26 @@ export default function ThemesAndTestsTab() {
         </p>
       )}
 
-      {themes.map((theme, i) => (
-        <ThemeCard
-          key={theme.id}
-          theme={theme}
-          themeIndex={i}
-          dragging={draggingId === theme.id}
-          onHandlePointerDown={(e) => startDrag(theme.id, e)}
-          onRename={(name) => renameTheme(theme.id, name)}
-          onDelete={() => deleteTheme(theme.id)}
-        />
-      ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleThemeDragEnd}
+      >
+        <SortableContext
+          items={themes.map((t) => t.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {themes.map((theme, i) => (
+            <ThemeCard
+              key={theme.id}
+              theme={theme}
+              themeIndex={i}
+              onRename={(name) => renameTheme(theme.id, name)}
+              onDelete={() => deleteTheme(theme.id)}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
 
       <button
         onClick={() => setAddThemeOpen(true)}

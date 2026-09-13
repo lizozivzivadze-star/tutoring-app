@@ -4,19 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
 import ConfirmDialog from "@/components/confirm-dialog";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function ThemeCard({
   theme,
   themeIndex,
-  dragging,
-  onHandlePointerDown,
   onRename,
   onDelete,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
-  dragging: boolean;
-  onHandlePointerDown: (e: React.PointerEvent) => void;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => Promise<string | void>;
 }) {
@@ -25,6 +23,21 @@ export default function ThemeCard({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [renameError, setRenameError] = useState("");
   const [deleteError, setDeleteError] = useState("");
+  const {
+  attributes,
+  listeners,
+  setNodeRef,
+  transform,
+  transition,
+  isDragging,
+} = useSortable({ id: theme.id });
+
+const style = {
+  transform: CSS.Transform.toString(transform),
+  transition,
+  opacity: isDragging ? 0.5 : 1,
+  touchAction: "none" as const,
+};
 
   async function saveRename() {
     if (!draftName.trim() || draftName === theme.name) {
@@ -41,22 +54,20 @@ export default function ThemeCard({
   }
 
   return (
-    <div
-      data-theme-id={theme.id}
-      className={`border border-paper-line rounded-md bg-white px-4 py-3 ${
-        dragging ? "opacity-50" : ""
-      }`}
-    >
+<div
+  ref={setNodeRef}
+  style={style}
+  className="border border-paper-line rounded-md bg-white px-4 py-3"
+>
       <div className="flex items-center gap-2">
         <span
-          onPointerDown={(e) => !editing && onHandlePointerDown(e)}
-          className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1"
-          style={{ touchAction: "none" }}
-          title="გადაადგილება"
-        >
-          ⠿
-        </span>
-
+  {...attributes}
+  {...listeners}
+  className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1"
+  title="გადაადგილება"
+>
+  ⠿
+</span>
         {editing ? (
           <input
             autoFocus
