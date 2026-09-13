@@ -15,23 +15,26 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "next": "^16.0.10",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next-auth": "5.0.0-beta.25",
-    "@prisma/client": "^6.0.0",
     "@auth/prisma-adapter": "^2.7.0",
-    "nodemailer": "^6.9.16"
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@prisma/client": "^6.0.0",
+    "next": "^16.0.10",
+    "next-auth": "5.0.0-beta.25",
+    "nodemailer": "^6.9.16",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "prisma": "^6.0.0",
-    "tailwindcss": "^4.0.0",
     "@tailwindcss/postcss": "^4.0.0",
-    "typescript": "^5.6.0",
     "@types/node": "^22.0.0",
+    "@types/nodemailer": "^6.4.16",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/nodemailer": "^6.4.16",
-    "tsx": "^4.19.0"
+    "prisma": "^6.0.0",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
   }
 }

@@ -6,12 +6,23 @@ import GroupCard from "./group-card";
 import AddGroupModal from "./add-group-modal";
 import StudentFormModal from "./student-form-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 export default function GroupsTab() {
   const [groups, setGroups] = useState<GroupRecord[] | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-  const [dragGroupId, setDragGroupId] = useState<string | null>(null);
-
   const [addGroupOpen, setAddGroupOpen] = useState(false);
   const [addStudentGroupId, setAddStudentGroupId] = useState<string | null>(
     null
@@ -21,6 +32,12 @@ export default function GroupsTab() {
   );
   const [deletingStudent, setDeletingStudent] = useState<StudentRecord | null>(
     null
+  );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    })
   );
 
   const load = useCallback(async () => {
@@ -60,27 +77,26 @@ export default function GroupsTab() {
     await fetch(`/api/groups/${groupId}`, { method: "DELETE" });
   }
 
-  function handleGroupDrop(targetId: string) {
-    if (!groups || !dragGroupId || dragGroupId === targetId) return;
-    const ids = groups.map((g) => g.id);
-    const fromIndex = ids.indexOf(dragGroupId);
-    const toIndex = ids.indexOf(targetId);
-    ids.splice(fromIndex, 1);
-    ids.splice(toIndex, 0, dragGroupId);
+function handleGroupDragEnd(event: DragEndEvent) {
+  const { active, over } = event;
+  if (!groups || !over || active.id === over.id) return;
 
-    // Optimistic reorder in the UI, per our AppContext pattern.
-    const reordered = ids
-      .map((id) => groups.find((g) => g.id === id)!)
-      .filter(Boolean);
-    setGroups(reordered);
-    setDragGroupId(null);
+  const ids = groups.map((g) => g.id);
+  const fromIndex = ids.indexOf(active.id as string);
+  const toIndex = ids.indexOf(over.id as string);
+  const newIds = arrayMove(ids, fromIndex, toIndex);
 
-    fetch("/api/groups/reorder", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderedIds: ids }),
-    });
-  }
+  const reordered = newIds
+    .map((id) => groups.find((g) => g.id === id)!)
+    .filter(Boolean);
+  setGroups(reordered);
+
+  fetch("/api/groups/reorder", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderedIds: newIds }),
+  });
+}
 
   async function reorderStudents(groupId: string, orderedIds: string[]) {
     setGroups(
@@ -128,24 +144,31 @@ export default function GroupsTab() {
         </p>
       )}
 
-      {groups.map((group) => (
-        <GroupCard
-          key={group.id}
-          group={group}
-          expanded={expandedIds.has(group.id)}
-          onToggleExpand={() => toggleExpand(group.id)}
-          draggable
-          onDragStart={() => setDragGroupId(group.id)}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleGroupDrop(group.id)}
-          onRename={(name) => renameGroup(group.id, name)}
-          onDelete={() => deleteGroup(group.id)}
-          onAddStudent={() => setAddStudentGroupId(group.id)}
-          onEditStudent={(student) => setEditingStudent(student)}
-          onDeleteStudent={(student) => setDeletingStudent(student)}
-          onReorderStudents={(ids) => reorderStudents(group.id, ids)}
-        />
-      ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleGroupDragEnd}
+      >
+        <SortableContext
+          items={groups.map((g) => g.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {groups.map((group) => (
+            <GroupCard
+              key={group.id}
+              group={group}
+              expanded={expandedIds.has(group.id)}
+              onToggleExpand={() => toggleExpand(group.id)}
+              onRename={(name) => renameGroup(group.id, name)}
+              onDelete={() => deleteGroup(group.id)}
+              onAddStudent={() => setAddStudentGroupId(group.id)}
+              onEditStudent={(student) => setEditingStudent(student)}
+              onDeleteStudent={(student) => setDeletingStudent(student)}
+              onReorderStudents={(ids) => reorderStudents(group.id, ids)}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
 
       <button
         onClick={() => setAddGroupOpen(true)}

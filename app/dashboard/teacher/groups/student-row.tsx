@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StudentRecord } from "./types";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Field = "n" | "s" | "c" | "e";
 
@@ -29,24 +31,29 @@ function valueFor(student: StudentRecord, field: Field) {
 export default function StudentRow({
   student,
   index,
-  draggable,
-  onDragStart,
-  onDragOver,
-  onDrop,
   onEdit,
   onDelete,
 }: {
   student: StudentRecord;
   index: number;
-  draggable: boolean;
-  onDragStart: () => void;
-  onDragOver: (e: React.DragEvent) => void;
-  onDrop: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }) {
   const [revealed, setRevealed] = useState<Set<Field>>(new Set());
+const {
+  attributes,
+  listeners,
+  setNodeRef,
+  transform,
+  transition,
+  isDragging,
+} = useSortable({ id: student.id });
 
+const style = {
+  transform: CSS.Transform.toString(transform),
+  transition,
+  opacity: isDragging ? 0.5 : 1,
+};
   function toggle(field: Field) {
     setRevealed((prev) => {
       const next = new Set(prev);
@@ -57,13 +64,13 @@ export default function StudentRow({
   }
 
   return (
-    <div
-      draggable={draggable}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      className="border border-paper-line rounded-sm bg-paper px-3 py-2.5"
-    >
+<div
+  ref={setNodeRef}
+  style={style}
+  {...attributes}
+  {...listeners}
+  className="border border-paper-line rounded-sm bg-paper px-3 py-2.5"
+>
       <div className="flex items-center gap-2 text-sm">
         <span className="text-ink-soft shrink-0">Δ A{index + 1}</span>
 
