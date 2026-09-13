@@ -73,7 +73,7 @@ const style = {
   className="border border-paper-line rounded-sm bg-paper px-3 py-2.5"
 >
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-ink-soft shrink-0">Δ A{index + 1}</span>
+        <span className="text-ink-soft shrink-0">{index + 1}</span>
 
         <div className="flex gap-1 ml-1">
           {(["n", "s", "c", "e"] as Field[]).map((field) => (
