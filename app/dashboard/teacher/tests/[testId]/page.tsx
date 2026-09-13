@@ -34,8 +34,6 @@ export default function TestDetailPage() {
   const [test, setTest] = useState<TestDetail | null>(null);
   const [editing, setEditing] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [toggling, setToggling] = useState(false);
-  const [toggleError, setToggleError] = useState("");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
@@ -96,42 +94,6 @@ export default function TestDetailPage() {
     }
   }
 
-  async function togglePublished() {
-    if (!test) return;
-    setToggling(true);
-    setToggleError("");
-
-    const res = await fetch(`/api/tests/${testId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        themeId: test.themeId,
-        title: test.title,
-        instruction: test.instruction,
-        published: !test.published,
-        // Flipping unpublished -> published here counts as an
-        // explicit publish too, so it should clear the "dimmed"
-        // unpublished-edits state just like the form's Publish button.
-        republish: !test.published,
-      }),
-    });
-
-    const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      setToggleError(data?.error ?? "ვერ განახლდა");
-      setToggling(false);
-      return;
-    }
-
-    setTest({
-      ...test,
-      published: data.test.published,
-      publishedAt: data.test.publishedAt,
-      updatedAt: data.test.updatedAt,
-    });
-    setToggling(false);
-  }
-
   async function handleDelete() {
     const res = await fetch(`/api/tests/${testId}`, { method: "DELETE" });
     if (!res.ok) {
@@ -160,22 +122,24 @@ export default function TestDetailPage() {
     );
   }
 
-  // True once Save has touched a published test without a follow-up
-  // Publish — the content differs from what was last pushed live.
-  const hasUnpublishedEdits =
-    test.published &&
-    !!test.publishedAt &&
-    new Date(test.updatedAt) > new Date(test.publishedAt);
-
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <Link
-          href="/dashboard/teacher/tests"
-          className="text-sm text-marker font-medium"
-        >
-          ← უკან
-        </Link>
+        {editing ? (
+          <button
+            onClick={() => setEditing(false)}
+            className="text-sm text-marker font-medium"
+          >
+            ← უკან
+          </button>
+        ) : (
+          <Link
+            href="/dashboard/teacher/tests"
+            className="text-sm text-marker font-medium"
+          >
+            ← უკან
+          </Link>
+        )}
         {!editing && (
           <div className="flex items-center gap-3">
             <button
@@ -219,39 +183,21 @@ export default function TestDetailPage() {
                   explicit Publish — the live version students see is
                   still the last-published one, this is just a "you
                   have unpublished edits" nudge, not an unpublish. */}
-              <button
-                onClick={togglePublished}
-                disabled={toggling}
-                className={`text-xs px-2 py-0.5 rounded-full transition-opacity disabled:opacity-50 ${
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full ${
                   test.published
-                    ? hasUnpublishedEdits
-                      ? "bg-ledger-soft/40 text-ledger/60"
-                      : "bg-ledger-soft text-ledger"
+                    ? "bg-ledger-soft text-ledger"
                     : "bg-paper-line/60 text-ink-soft"
                 }`}
-                title={
-                  test.published
-                    ? hasUnpublishedEdits
-                      ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული. დააჭირეთ გასაუქმებლად"
-                      : "დააჭირეთ გასაუქმებლად"
-                    : "დააჭირეთ გამოსაქვეყნებლად"
-                }
               >
-                {toggling
-                  ? "..."
-                  : test.published
-                  ? "published (unpublish)"
-                  : "unpublished (publish)"}
-              </button>
+                {test.published ? "published" : "unpublished"}
+              </span>
               {test.locked && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-paper-line/60 text-ink-soft">
                   გაგზავნილი — ჩაკეტილი
                 </span>
               )}
             </div>
-            {toggleError && (
-              <p className="text-xs text-marker-dark mb-1">{toggleError}</p>
-            )}
             <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
             {test.instruction && (
               <p className="text-sm text-ink-soft mt-2">{test.instruction}</p>
