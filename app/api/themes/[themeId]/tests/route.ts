@@ -64,6 +64,22 @@ export async function POST(
     orderBy: { order: "desc" },
   });
 
+  const snapshot = published
+    ? {
+        title: title.trim(),
+        instruction: instruction?.trim() || null,
+        questions: questions.map(
+          (q: { prompt: string; options: { text: string; isCorrect: boolean }[] }) => ({
+            prompt: q.prompt.trim(),
+            options: q.options.map((o) => ({
+              text: o.text.trim(),
+              isCorrect: Boolean(o.isCorrect),
+            })),
+          })
+        ),
+      }
+    : null;
+
   const test = await prisma.test.create({
     data: {
       themeId,
@@ -72,6 +88,7 @@ export async function POST(
       instruction: instruction?.trim() || null,
       published: Boolean(published),
       publishedAt: published ? new Date() : null,
+      publishedSnapshot: snapshot ?? undefined,
       order: (last?.order ?? -1) + 1,
       questions: {
         create: questions.map(

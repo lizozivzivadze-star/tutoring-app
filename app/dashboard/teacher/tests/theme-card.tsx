@@ -108,20 +108,34 @@ export default function ThemeCard({
             <div key={type} className="text-sm">
               <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
               <div className="flex flex-col items-start gap-1 mt-1 pl-3">
-                {tests.map((test, testIndex) => (
-                  <Link
-                    key={test.id}
-                    href={`/dashboard/teacher/tests/${test.id}`}
-                    className={
-                      test.published
-                        ? "text-ink hover:text-marker"
-                        : "text-ink-soft/50 hover:text-ink-soft"
-                    }
-                    title={test.published ? "" : "გამოუქვეყნებელი"}
-                  >
-                    [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
-                  </Link>
-                ))}
+                {tests.map((test, testIndex) => {
+                  const hasUnpublishedEdits =
+                    test.published &&
+                    !!test.publishedAt &&
+                    new Date(test.updatedAt) > new Date(test.publishedAt);
+                  const dimmed = !test.published || hasUnpublishedEdits;
+
+                  return (
+                    <Link
+                      key={test.id}
+                      href={`/dashboard/teacher/tests/${test.id}`}
+                      className={
+                        dimmed
+                          ? "text-ink-soft/50 hover:text-ink-soft"
+                          : "text-ink hover:text-marker"
+                      }
+                      title={
+                        !test.published
+                          ? "გამოუქვეყნებელი"
+                          : hasUnpublishedEdits
+                          ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული"
+                          : ""
+                      }
+                    >
+                      [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                    </Link>
+                  );
+                })}
                 {templateReady ? (
                   <Link
                     href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}

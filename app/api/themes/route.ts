@@ -20,6 +20,8 @@ export async function GET() {
           order: true,
           title: true,
           published: true,
+          updatedAt: true,
+          publishedAt: true,
         },
       },
     },

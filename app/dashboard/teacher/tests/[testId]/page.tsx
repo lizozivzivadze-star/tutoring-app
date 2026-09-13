@@ -122,6 +122,25 @@ export default function TestDetailPage() {
     );
   }
 
+  const snapshot = test.published ? test.publishedSnapshot : null;
+  const display: {
+    title: string;
+    instruction: string | null;
+    questions: {
+      id?: string;
+      prompt: string;
+      options: { id?: string; text: string; isCorrect: boolean }[];
+    }[];
+  } = snapshot ?? {
+    title: test.title,
+    instruction: test.instruction,
+    questions: test.questions,
+  };
+  const hasUnpublishedEdits =
+    test.published &&
+    !!test.publishedAt &&
+    new Date(test.updatedAt) > new Date(test.publishedAt);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
@@ -178,7 +197,7 @@ export default function TestDetailPage() {
         <div className="flex flex-col gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <h1 className="font-display text-lg text-ink">{test.title}</h1>
+              {display.title}
               {/* Dimmed when the test has been Saved since its last
                   explicit Publish — the live version students see is
                   still the last-published one, this is just a "you
@@ -198,16 +217,21 @@ export default function TestDetailPage() {
                 </span>
               )}
             </div>
+            {hasUnpublishedEdits && (
+              <p className="text-xs text-ink-soft/70 mb-1">
+                შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული.
+              </p>
+            )}
             <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
             {test.instruction && (
-              <p className="text-sm text-ink-soft mt-2">{test.instruction}</p>
+              <p className="text-sm text-ink-soft mt-2">{display.instruction}</p>
             )}
           </div>
 
           <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
-            {test.questions.map((q, i) => (
+            {display.questions.map((q, i) => (
               <div
-                key={q.id}
+                key={q.id ?? i}
                 className="border border-paper-line rounded-sm p-3 bg-paper"
               >
                 <p className="text-sm text-ink mb-2">
@@ -216,7 +240,7 @@ export default function TestDetailPage() {
                 <div className="flex flex-col gap-1 pl-5">
                   {q.options.map((o, oi) => (
                     <p
-                      key={o.id}
+                      key={o.id ?? oi}
                       className={`text-sm ${
                         o.isCorrect ? "text-ledger font-medium" : "text-ink-soft"
                       }`}

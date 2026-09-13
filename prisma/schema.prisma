@@ -95,6 +95,7 @@ model Test {
   title       String
   instruction String?
   published   Boolean      @default(false)
+  publishedSnapshot Json?
   questions   Question[]
   sentTests   SentTest[]
   createdAt   DateTime     @default(now())

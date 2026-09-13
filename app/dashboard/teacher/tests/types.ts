@@ -6,6 +6,8 @@ export type TestSummary = {
   order: number;
   title: string;
   published: boolean;
+  updatedAt: string;
+  publishedAt: string | null;
 };
 
 export type ThemeRecord = {
@@ -29,6 +31,15 @@ export type QuestionDraft = {
   options: OptionDraft[];
 };
 
+export type PublishedSnapshot = {
+  title: string;
+  instruction: string | null;
+  questions: {
+    prompt: string;
+    options: { text: string; isCorrect: boolean }[];
+  }[];
+};
+
 export type TestDetail = {
   id: string;
   themeId: string;
@@ -38,6 +49,7 @@ export type TestDetail = {
   published: boolean;
   updatedAt: string;
   publishedAt: string | null;
+  publishedSnapshot: PublishedSnapshot | null;
   locked: boolean;
   questions: {
     id: string;

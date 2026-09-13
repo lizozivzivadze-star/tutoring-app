@@ -116,7 +116,7 @@ export async function PATCH(
       await tx.question.deleteMany({ where: { testId } });
     }
 
-    return tx.test.update({
+    const updated = await tx.test.update({
       where: { id: testId },
       data: {
         themeId: themeId ?? existing.themeId,
@@ -152,6 +152,27 @@ export async function PATCH(
       },
       include: { questions: { include: { options: true } } },
     });
+
+    if (republish) {
+      const snapshot = {
+        title: updated.title,
+        instruction: updated.instruction,
+        questions: updated.questions.map((q) => ({
+          prompt: q.prompt,
+          options: q.options.map((o) => ({
+            text: o.text,
+            isCorrect: o.isCorrect,
+          })),
+        })),
+      };
+      return tx.test.update({
+        where: { id: testId },
+        data: { publishedSnapshot: snapshot },
+        include: { questions: { include: { options: true } } },
+      });
+    }
+
+    return updated;
   });
 
   return NextResponse.json({ test });
