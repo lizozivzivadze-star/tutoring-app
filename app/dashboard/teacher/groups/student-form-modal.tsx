@@ -73,7 +73,7 @@ export default function StudentFormModal({
           />
         </div>
         <div>
-          <label className="block text-sm text-ink-soft mb-2">email</label>
+          <label className="block text-sm text-ink-soft mb-2">Email</label>
           <input
             type="email"
             required

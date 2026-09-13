@@ -58,25 +58,25 @@ export default function StudentRow({
           {fullName(student)}
         </button>
 
-        <Link
-          href={`/dashboard/teacher/groups/students/${student.id}/history`}
-          className="text-xs text-ink-soft hover:text-ledger px-1 shrink-0"
-        >
-          results
-        </Link>
+<Link
+  href={`/dashboard/teacher/groups/students/${student.id}/history`}
+  className="text-2xl text-ink-soft hover:text-ledger px-1 shrink-0"
+>
+  results
+</Link>
 
-        <button
-          onClick={onEdit}
-          className="text-xs text-ink-soft hover:text-marker px-1 shrink-0"
-        >
-          edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="text-xs text-ink-soft hover:text-marker-dark px-1 shrink-0"
-        >
-          ×
-        </button>
+<button
+  onClick={onEdit}
+  className="text-2xl text-ink-soft hover:text-marker px-1 shrink-0"
+>
+  edit
+</button>
+<button
+  onClick={onDelete}
+  className="text-2xl text-ink-soft hover:text-marker-dark px-1 shrink-0"
+>
+  ×
+</button>
         <span
           className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0"
           title="გადაადგილება"
