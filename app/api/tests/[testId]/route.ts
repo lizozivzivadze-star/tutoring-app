@@ -93,9 +93,9 @@ export async function PATCH(
       if (!q.prompt?.trim()) {
         return NextResponse.json({ error: "ყველა კითხვას სჭირდება ტექსტი" }, { status: 400 });
       }
-      if (!Array.isArray(q.options) || q.options.length < 2 || q.options.length > 6) {
+      if (!Array.isArray(q.options) || q.options.length < 2 || q.options.length > 4) {
         return NextResponse.json(
-          { error: "თითო კითხვას სჭირდება 2-დან 6 პასუხამდე" },
+          { error: "თითო კითხვას სჭირდება 2-დან 4-მდე პასუხი" },
           { status: 400 }
         );
       }

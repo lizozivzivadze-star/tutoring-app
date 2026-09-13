@@ -51,7 +51,7 @@ export default function QuestionEditor({
   }
 
   function addOption() {
-    if (question.options.length >= 6) return;
+    if (question.options.length >= 4) return;
     onChange({ ...question, options: [...question.options, makeOption()] });
   }
 
@@ -122,7 +122,7 @@ export default function QuestionEditor({
           </div>
         ))}
 
-        {question.options.length < 6 && (
+        {question.options.length < 4 && (
           <button
             onClick={addOption}
             className="text-xs text-marker font-medium text-left mt-1"
