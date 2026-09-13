@@ -60,20 +60,20 @@ export default function StudentRow({
 
 <Link
   href={`/dashboard/teacher/groups/students/${student.id}/history`}
-  className="text-2xl text-ink-soft hover:text-ledger px-1 shrink-0"
+  className="text-xs text-ink-soft hover:text-ledger px-1 shrink-0"
 >
   results
 </Link>
 
 <button
   onClick={onEdit}
-  className="text-2xl text-ink-soft hover:text-marker px-1 shrink-0"
+  className="text-xs text-ink-soft hover:text-marker px-1 shrink-0"
 >
   edit
 </button>
 <button
   onClick={onDelete}
-  className="text-2xl text-ink-soft hover:text-marker-dark px-1 shrink-0"
+  className="text-xs text-ink-soft hover:text-marker-dark px-1 shrink-0"
 >
   ×
 </button>
