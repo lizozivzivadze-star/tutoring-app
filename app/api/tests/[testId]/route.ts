@@ -52,7 +52,7 @@ export async function PATCH(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  const { themeId, title, instruction, published, questions } =
+  const { themeId, title, instruction, published, questions, republish } =
     await req.json();
 
   const locked = existing._count.sentTests > 0;
@@ -123,6 +123,7 @@ export async function PATCH(
         title: title.trim(),
         instruction: instruction?.trim() || null,
         published: published ?? existing.published,
+        ...(republish && { publishedAt: new Date() }),
         ...(questions && {
           questions: {
             create: questions.map(

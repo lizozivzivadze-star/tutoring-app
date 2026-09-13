@@ -71,6 +71,7 @@ export async function POST(
       title: title.trim(),
       instruction: instruction?.trim() || null,
       published: Boolean(published),
+      publishedAt: published ? new Date() : null,
       order: (last?.order ?? -1) + 1,
       questions: {
         create: questions.map(

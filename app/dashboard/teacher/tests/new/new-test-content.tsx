@@ -32,21 +32,23 @@ export default function NewTestContent() {
   // another test instead of updating the draft in progress.
   const [savedTestId, setSavedTestId] = useState<string | null>(null);
 
-  async function persist(
-    values: FormValues
-  ): Promise<{ id: string } | { error: string }> {
-    const res = savedTestId
-      ? await fetch(`/api/tests/${savedTestId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            themeId: values.themeId,
-            title: values.title,
-            instruction: values.instruction,
-            published: values.published,
-            questions: toApiQuestions(values.questions),
-          }),
-        })
+async function persist(
+  values: FormValues,
+  options?: { republish?: boolean }
+): Promise<{ id: string } | { error: string }> {
+  const res = savedTestId
+    ? await fetch(`/api/tests/${savedTestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          themeId: values.themeId,
+          title: values.title,
+          instruction: values.instruction,
+          published: values.published,
+          questions: toApiQuestions(values.questions),
+          republish: options?.republish ?? false,
+        }),
+      })
       : await fetch(`/api/themes/${values.themeId}/tests`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,10 +80,13 @@ export default function NewTestContent() {
   // Publish: marks it published and moves on to the test's admin
   // page, since publishing is the "this is done, manage it" action.
   async function handlePublish(values: FormValues) {
-    const result = await persist({ ...values, published: true });
-    if ("error" in result) return result.error;
-    router.push(`/dashboard/teacher/tests/${result.id}`);
-  }
+  const result = await persist(
+    { ...values, published: true },
+    { republish: true }
+  );
+  if ("error" in result) return result.error;
+  router.push(`/dashboard/teacher/tests/${result.id}`);
+}
 
   if (!themeId) {
     return (

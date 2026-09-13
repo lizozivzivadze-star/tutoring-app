@@ -66,7 +66,7 @@ export default function TestDetailPage() {
       questions: QuestionDraft[];
       published: boolean;
     },
-    options?: { exitEditing?: boolean }
+    options?: { exitEditing?: boolean; republish?: boolean }
   ) {
     const res = await fetch(`/api/tests/${testId}`, {
       method: "PATCH",
@@ -76,6 +76,7 @@ export default function TestDetailPage() {
         title: values.title,
         instruction: values.instruction,
         published: values.published,
+        republish: options?.republish ?? false,
         // Locked tests keep their questions server-side no matter
         // what — but we still avoid sending a payload that would be
         // rejected outright, so the rest of the save (title etc.)
@@ -108,6 +109,10 @@ export default function TestDetailPage() {
         title: test.title,
         instruction: test.instruction,
         published: !test.published,
+        // Flipping unpublished -> published here counts as an
+        // explicit publish too, so it should clear the "dimmed"
+        // unpublished-edits state just like the form's Publish button.
+        republish: !test.published,
       }),
     });
 
@@ -118,7 +123,12 @@ export default function TestDetailPage() {
       return;
     }
 
-    setTest({ ...test, published: data.test.published });
+    setTest({
+      ...test,
+      published: data.test.published,
+      publishedAt: data.test.publishedAt,
+      updatedAt: data.test.updatedAt,
+    });
     setToggling(false);
   }
 
@@ -149,6 +159,13 @@ export default function TestDetailPage() {
       <p className="text-ink-soft text-sm text-center py-12">იტვირთება...</p>
     );
   }
+
+  // True once Save has touched a published test without a follow-up
+  // Publish — the content differs from what was last pushed live.
+  const hasUnpublishedEdits =
+    test.published &&
+    !!test.publishedAt &&
+    new Date(test.updatedAt) > new Date(test.publishedAt);
 
   return (
     <div>
@@ -189,22 +206,36 @@ export default function TestDetailPage() {
           initialQuestions={toDrafts(test)}
           locked={test.locked}
           onSave={(v) => save(v)}
-          onPublish={(v) => save({ ...v, published: true }, { exitEditing: true })}
+          onPublish={(v) =>
+            save({ ...v, published: true }, { exitEditing: true, republish: true })
+          }
         />
       ) : (
         <div className="flex flex-col gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h1 className="font-display text-lg text-ink">{test.title}</h1>
+              {/* Dimmed when the test has been Saved since its last
+                  explicit Publish — the live version students see is
+                  still the last-published one, this is just a "you
+                  have unpublished edits" nudge, not an unpublish. */}
               <button
                 onClick={togglePublished}
                 disabled={toggling}
                 className={`text-xs px-2 py-0.5 rounded-full transition-opacity disabled:opacity-50 ${
                   test.published
-                    ? "bg-ledger-soft text-ledger"
+                    ? hasUnpublishedEdits
+                      ? "bg-ledger-soft/40 text-ledger/60"
+                      : "bg-ledger-soft text-ledger"
                     : "bg-paper-line/60 text-ink-soft"
                 }`}
-                title={test.published ? "დააჭირეთ გასაუქმებლად" : "დააჭირეთ გამოსაქვეყნებლად"}
+                title={
+                  test.published
+                    ? hasUnpublishedEdits
+                      ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული. დააჭირეთ გასაუქმებლად"
+                      : "დააჭირეთ გასაუქმებლად"
+                    : "დააჭირეთ გამოსაქვეყნებლად"
+                }
               >
                 {toggling
                   ? "..."

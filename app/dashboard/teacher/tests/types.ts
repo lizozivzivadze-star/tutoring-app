@@ -36,6 +36,8 @@ export type TestDetail = {
   title: string;
   instruction: string | null;
   published: boolean;
+  updatedAt: string;
+  publishedAt: string | null;
   locked: boolean;
   questions: {
     id: string;

@@ -215,16 +215,14 @@ export default function TestForm({
         >
           {saving === "save" ? "ინახება..." : saveLabel}
         </button>
-        {!published && (
-          <button
-            onClick={() => run("publish")}
-            disabled={saving !== null}
-            className="flex-1 rounded-full bg-ledger text-white font-medium py-2.5
-                       hover:opacity-90 transition-colors disabled:opacity-50"
-          >
-            {saving === "publish" ? "ქვეყნდება..." : "Publish"}
-          </button>
-        )}
+        <button
+          onClick={() => run("publish")}
+          disabled={saving !== null}
+          className="flex-1 rounded-full bg-ledger text-white font-medium py-2.5
+                     hover:opacity-90 transition-colors disabled:opacity-50"
+        >
+          {saving === "publish" ? "ქვეყნდება..." : "Publish"}
+        </button>
       </div>
     </div>
   );
