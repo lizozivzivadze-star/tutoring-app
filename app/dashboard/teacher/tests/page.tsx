@@ -20,6 +20,9 @@ import {
 
 export default function ThemesAndTestsTab() {
   const [themes, setThemes] = useState<ThemeRecord[] | null>(null);
+  const [deleteConfirmTemplate, setDeleteConfirmTemplate] = useState<
+    string | undefined
+  >(undefined);
   const sensors = useSensors(
   useSensor(PointerSensor, {
     activationConstraint: { distance: 8 },
@@ -35,6 +38,10 @@ export default function ThemesAndTestsTab() {
 
   useEffect(() => {
     load();
+    fetch("/api/settings/texts")
+      .then((r) => r.json())
+      .then((data) => setDeleteConfirmTemplate(data.themeDeleteConfirmText))
+      .catch(() => {});
   }, [load]);
 
   async function renameTheme(themeId: string, name: string) {
@@ -114,6 +121,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
               themeIndex={i}
               onRename={(name) => renameTheme(theme.id, name)}
               onDelete={() => deleteTheme(theme.id)}
+              deleteConfirmTemplate={deleteConfirmTemplate}
             />
           ))}
         </SortableContext>

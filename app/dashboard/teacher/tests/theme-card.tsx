@@ -4,19 +4,29 @@ import { useState } from "react";
 import Link from "next/link";
 import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
 import ConfirmDialog from "@/components/confirm-dialog";
+import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+const DEFAULT_DELETE_CONFIRM =
+  "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
 
 export default function ThemeCard({
   theme,
   themeIndex,
   onRename,
   onDelete,
+  deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => Promise<string | void>;
+  // Admin-edited text (Settings.themeDeleteConfirmText), passed down
+  // from the tests tab so it's only fetched once per page, not once
+  // per theme card. Falls back to the original hardcoded wording
+  // until that fetch resolves.
+  deleteConfirmTemplate?: string;
 }) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(theme.name);
@@ -167,7 +177,7 @@ const style = {
 
       {confirmingDelete && (
         <ConfirmDialog
-          message={`დარწმუნებული ხარ, რომ გინდა „${theme.name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.`}
+          message={fillTemplate(deleteConfirmTemplate, { name: theme.name })}
           onConfirm={async () => {
             setConfirmingDelete(false);
             const error = await onDelete();

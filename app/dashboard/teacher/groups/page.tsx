@@ -33,6 +33,11 @@ export default function GroupsTab() {
   const [deletingStudent, setDeletingStudent] = useState<StudentRecord | null>(
     null
   );
+  const [groupDeleteConfirmTemplate, setGroupDeleteConfirmTemplate] =
+    useState<string | undefined>(undefined);
+  const [studentDeleteConfirmText, setStudentDeleteConfirmText] = useState(
+    "დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?"
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -48,6 +53,15 @@ export default function GroupsTab() {
 
   useEffect(() => {
     load();
+    fetch("/api/settings/texts")
+      .then((r) => r.json())
+      .then((data) => {
+        setGroupDeleteConfirmTemplate(data.groupDeleteConfirmText);
+        if (data.studentDeleteConfirmText) {
+          setStudentDeleteConfirmText(data.studentDeleteConfirmText);
+        }
+      })
+      .catch(() => {});
   }, [load]);
 
   function toggleExpand(id: string) {
@@ -165,6 +179,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
               onEditStudent={(student) => setEditingStudent(student)}
               onDeleteStudent={(student) => setDeletingStudent(student)}
               onReorderStudents={(ids) => reorderStudents(group.id, ids)}
+              deleteConfirmTemplate={groupDeleteConfirmTemplate}
             />
           ))}
         </SortableContext>
@@ -234,7 +249,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
 
       {deletingStudent && (
         <ConfirmDialog
-          message="დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?"
+          message={studentDeleteConfirmText}
           onConfirm={() => {
             deleteStudent(deletingStudent);
             setDeletingStudent(null);

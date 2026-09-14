@@ -1,0 +1,33 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const TABS = [
+  { href: "/dashboard/admin", label: "წვდომა" },
+  { href: "/dashboard/admin/texts", label: "ტექსტები" },
+  { href: "/dashboard/admin/site", label: "საიტი" },
+];
+
+export default function AdminTabs() {
+  const pathname = usePathname();
+
+  return (
+    <nav className="bg-white px-6 flex justify-center gap-5">
+      {TABS.map((tab) => {
+        const active = pathname === tab.href;
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`px-4 pt-3 pb-2.5 text-[17.5px] font-medium rounded-t-lg transition-colors ${
+              active ? "bg-paper text-marker" : "text-ink-soft hover:text-marker"
+            }`}
+          >
+            {tab.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import TestForm from "../test-form";
@@ -31,6 +31,22 @@ export default function NewTestContent() {
   // switch to PATCH — otherwise every subsequent Save would create
   // another test instead of updating the draft in progress.
   const [savedTestId, setSavedTestId] = useState<string | null>(null);
+
+  // Admin-edited default instruction (Settings.defaultTestInstruction).
+  // Only prefills a brand-new test's instruction field — the teacher
+  // can freely overwrite it right there, same field, no separate UI.
+  // Starts as null (not yet loaded) so TestForm isn't mounted with a
+  // premature empty default before the fetch resolves.
+  const [defaultInstruction, setDefaultInstruction] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    fetch("/api/settings/texts")
+      .then((r) => r.json())
+      .then((data) => setDefaultInstruction(data.defaultTestInstruction ?? ""))
+      .catch(() => setDefaultInstruction(""));
+  }, []);
 
 async function persist(
   values: FormValues,
@@ -111,12 +127,19 @@ async function persist(
         ახალი ტესტი
       </h1>
 
-      <TestForm
-        initialThemeId={themeId}
-        type={type}
-        onSave={handleSave}
-        onPublish={handlePublish}
-      />
+      {defaultInstruction === null ? (
+        <p className="text-ink-soft text-sm text-center py-12">
+          იტვირთება...
+        </p>
+      ) : (
+        <TestForm
+          initialThemeId={themeId}
+          type={type}
+          initialInstruction={defaultInstruction}
+          onSave={handleSave}
+          onPublish={handlePublish}
+        />
+      )}
     </div>
   );
 }

@@ -9,10 +9,19 @@ sketches. Built so far:
   see the `SMTP_*` vars below — falls back to logging the link to the
   console if they're unset). Unknown emails get a 404, nothing
   is created.
-- **Teacher registration** (`/register`) — name + email + a secret
-  `TEACHER_SIGNUP_CODE` handed out personally to legitimate new
-  teachers. This is the *only* way a Teacher row can be created from
-  the public app.
+- **Teacher registration** (`/register`) — name + email + an invite
+  code handed out personally to legitimate new teachers. The code is
+  admin-editable (`Settings.teacherInviteCode`, set/regenerated from
+  `/dashboard/admin`) rather than a static env var, so it can be
+  rotated without a redeploy. This is the *only* way a Teacher row
+  can be created from the public app.
+- **Admin dashboard** (`/dashboard/admin`) — a third user type
+  (`Admin`, matched on a login/identity email; mail is delivered to
+  a separate notification email so the two don't have to be the
+  same inbox). Editable from here: the teacher invite code, the
+  default test instruction, five notification/copy texts (unknown-
+  email message, magic-link subject/body, theme/group/student
+  delete confirmations), and the site title/description.
 - **Check email screen** (`/login/check-email`)
 - **Magic-link verification** (`/api/auth/verify`) — validates the token,
   then redirects to `/dashboard/teacher` (success) or back to `/login`
@@ -106,11 +115,12 @@ either — not asked for so far.
 npm install --legacy-peer-deps   # next-auth@5 beta hasn't listed Next 16
                                    # in its peer range yet; harmless here
 cp .env.example .env   # fill in DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL,
-                        # INTERNAL_AUTH_SECRET, TEACHER_SIGNUP_CODE,
-                        # SEED_TEACHER_EMAIL/NAME, SMTP_* (optional — omit
-                        # to just log magic links to the console instead)
+                        # INTERNAL_AUTH_SECRET, SEED_TEACHER_EMAIL/NAME,
+                        # SEED_ADMIN_IDENTITY_EMAIL/NOTIFICATION_EMAIL/NAME,
+                        # SMTP_* (optional — omit to just log magic links
+                        # to the console instead)
 npx prisma migrate dev --name init
-npx prisma db seed     # creates Natia's teacher account
+npx prisma db seed     # creates Natia's teacher account + the first admin
 npm run dev
 ```
 
@@ -156,13 +166,17 @@ by the time you read this may already be behind.
    - `NEXTAUTH_URL` — your Vercel deployment URL, e.g.
      `https://your-project.vercel.app` (update this once Vercel
      assigns the final domain)
-   - `TEACHER_SIGNUP_CODE` — a code you'll hand to any new teacher
+   - `TEACHER_SIGNUP_CODE` was here before — it no longer exists as an
+     env var. Set/rotate the invite code from `/dashboard/admin` once
+     the app is deployed and you've logged in as admin instead.
    - `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` /
      `SMTP_FROM` — real values, or magic links just log to Vercel's
      function logs instead of emailing (fine for testing, not for
      Natia's actual students)
    - `SEED_TEACHER_EMAIL` / `SEED_TEACHER_NAME` — only needed for the
      one-time seed step below, not required at runtime
+   - `SEED_ADMIN_IDENTITY_EMAIL` / `SEED_ADMIN_NOTIFICATION_EMAIL` /
+     `SEED_ADMIN_NAME` — same, one-time seed only
 
 5. **Run the migration + seed against the Neon database** — this
    needs your local machine (Vercel doesn't run one-off commands):

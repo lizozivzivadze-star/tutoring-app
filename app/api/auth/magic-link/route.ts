@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { sendMagicLinkEmail } from "@/lib/mailer";
+import { getSettings } from "@/lib/settings";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
@@ -14,19 +15,23 @@ export async function POST(req: NextRequest) {
   // from the client. We look up which table this email belongs to.
   // There is no path here (or anywhere in the public app) that
   // creates a Teacher record, so this can never be used to become
-  // a teacher — only to log in as one that already exists.
-  const [teacher, student] = await Promise.all([
+  // a teacher — only to log in as one that already exists. Admins
+  // are matched on identityEmail, same principle.
+  const [teacher, student, admin] = await Promise.all([
     prisma.teacher.findUnique({ where: { email } }),
     prisma.student.findUnique({ where: { email } }),
+    prisma.admin.findUnique({ where: { identityEmail: email } }),
   ]);
 
-  const role = teacher ? "teacher" : student ? "student" : null;
+  const role = teacher ? "teacher" : student ? "student" : admin ? "admin" : null;
+
+  const settings = await getSettings();
 
   if (!role) {
     // Deliberately vague: don't reveal whether the email exists,
     // just that no login link can be sent for it.
     return NextResponse.json(
-      { error: "ეს ელფოსტა სისტემაში ვერ მოიძებნა" },
+      { error: settings.notFoundEmailText },
       { status: 404 }
     );
   }
@@ -40,7 +45,18 @@ export async function POST(req: NextRequest) {
 
   const url = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`;
 
-  await sendMagicLinkEmail({ to: email, role, url });
+  // For every role the login form is filled in with the identity
+  // email, but only admins have a separate inbox the mail should
+  // actually land in.
+  const deliverTo = admin ? admin.notificationEmail : email;
+
+  await sendMagicLinkEmail({
+    to: deliverTo,
+    role,
+    url,
+    subjectTemplate: settings.magicLinkSubject,
+    bodyTemplate: settings.magicLinkBodyText,
+  });
 
   return NextResponse.json({ ok: true });
 }

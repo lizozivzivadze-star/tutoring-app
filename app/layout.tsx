@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { getSettings } from "@/lib/settings";
 
-export const metadata: Metadata = {
-  title: "რეპეტიტორის პლატფორმა",
-  description: "ჯგუფების, ტესტებისა და მოსწავლეების მართვის პლატფორმა",
-};
+// Title/description are admin-editable (Settings.siteTitle /
+// siteDescription, set from /dashboard/admin), so metadata has to be
+// generated per-request instead of the static export this started as.
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  return {
+    title: settings.siteTitle,
+    description: settings.siteDescription,
+  };
+}
 
 export default function RootLayout({
   children,

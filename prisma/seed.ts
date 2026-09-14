@@ -27,6 +27,25 @@ async function main() {
     });
     console.log(`[seed] teacher ready: ${t.email}`);
   }
+
+  // Admin is only ever created here — same reasoning as teachers
+  // above, just one level up. identityEmail is what gets typed on
+  // the shared login form; notificationEmail is the real inbox the
+  // magic-link mail lands in (can be any address, including one
+  // that's already a Teacher/Student's own email — it plays no part
+  // in role resolution).
+  const admin = {
+    identityEmail: process.env.SEED_ADMIN_IDENTITY_EMAIL ?? "lizozivzivadze123@gmail.com",
+    notificationEmail: process.env.SEED_ADMIN_NOTIFICATION_EMAIL ?? "lizozivzivadze@gmail.com",
+    name: process.env.SEED_ADMIN_NAME ?? "Lizi",
+  };
+
+  await prisma.admin.upsert({
+    where: { identityEmail: admin.identityEmail },
+    update: { notificationEmail: admin.notificationEmail, name: admin.name },
+    create: admin,
+  });
+  console.log(`[seed] admin ready: ${admin.identityEmail} -> mail to ${admin.notificationEmail}`);
 }
 
 main()

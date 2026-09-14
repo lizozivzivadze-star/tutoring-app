@@ -4,6 +4,7 @@ import { useState } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import StudentRow from "./student-row";
 import ConfirmDialog from "@/components/confirm-dialog";
+import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -16,6 +17,8 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 
+const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
+
 export default function GroupCard({
   group,
   expanded,
@@ -25,6 +28,7 @@ export default function GroupCard({
   onEditStudent,
   onDeleteStudent,
   onReorderStudents,
+  deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
 }: {
   group: GroupRecord;
   expanded: boolean;
@@ -35,6 +39,10 @@ export default function GroupCard({
   onEditStudent: (student: StudentRecord) => void;
   onDeleteStudent: (student: StudentRecord) => void;
   onReorderStudents: (orderedIds: string[]) => void;
+  // Admin-edited text (Settings.groupDeleteConfirmText), passed down
+  // from the groups tab so it's fetched once per page, not once per
+  // group card.
+  deleteConfirmTemplate?: string;
 }) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(group.name);
@@ -177,7 +185,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
 
       {confirmingDelete && (
         <ConfirmDialog
-          message={`დარწმუნებული ხარ, რომ გინდა „${group.name}“-ის წაშლა?`}
+          message={fillTemplate(deleteConfirmTemplate, { name: group.name })}
           onConfirm={() => {
             setConfirmingDelete(false);
             onDelete();

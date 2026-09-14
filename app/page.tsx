@@ -10,6 +10,9 @@ export default async function RootPage() {
   if (session?.user?.role === "student") {
     redirect("/dashboard/student");
   }
+  if (session?.user?.role === "admin") {
+    redirect("/dashboard/admin");
+  }
 
   redirect("/login");
 }

@@ -61,6 +61,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           };
         }
 
+        if (role === "admin") {
+          // Admins are looked up by identityEmail — the address typed
+          // into the shared login form — not by notificationEmail,
+          // which is only where the mail physically lands.
+          const admin = await prisma.admin.findUnique({
+            where: { identityEmail: email },
+          });
+          if (!admin) return null;
+          return {
+            id: admin.id,
+            email: admin.identityEmail,
+            name: admin.name,
+            role: "admin" as const,
+          };
+        }
+
         return null;
       },
     }),
@@ -69,14 +85,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.uid = user.id;
-        token.role = (user as { role: "teacher" | "student" }).role;
+        token.role = (user as { role: "teacher" | "student" | "admin" }).role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.uid as string;
-        session.user.role = token.role as "teacher" | "student";
+        session.user.role = token.role as "teacher" | "student" | "admin";
       }
       return session;
     },

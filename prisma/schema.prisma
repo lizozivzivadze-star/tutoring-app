@@ -63,6 +63,41 @@ model LoginToken {
 enum Role {
   teacher
   student
+  admin
+}
+
+// Third user type. identityEmail is what's typed on the shared login
+// form and is what the one-email-one-role uniqueness check runs
+// against (checked against Teacher.email / Student.email elsewhere).
+// notificationEmail is only a delivery address for the magic-link
+// mail — it never needs to be unique and is never used to resolve a
+// role, so it's free to already belong to a Teacher/Student who is
+// just reading their own admin mail in the same inbox.
+model Admin {
+  id                 String   @id @default(cuid())
+  identityEmail      String   @unique
+  notificationEmail  String
+  name               String?
+  createdAt          DateTime @default(now())
+}
+
+// Single-row settings table the admin dashboard edits. Always
+// queried/created via lib/settings.ts with a fixed id, so there is
+// exactly one row. Every editable notification/copy text described
+// in the admin dashboard spec lives here instead of being hardcoded.
+model Settings {
+  id                       String   @id @default("singleton")
+  teacherInviteCode        String   @default("")
+  defaultTestInstruction   String?
+  notFoundEmailText        String   @default("ეს ელფოსტა სისტემაში ვერ მოიძებნა")
+  magicLinkSubject         String   @default("შესვლის ბმული")
+  magicLinkBodyText        String   @default("თქვენი {roleLabel} ანგარიშზე შესასვლელად გადადით ბმულზე (მოქმედია 15 წუთი):\n\n{url}\n\nთუ ეს მოთხოვნა თქვენ არ გაგზავნიათ, უბრალოდ იგნორირება გაუკეთეთ ამ წერილს.")
+  themeDeleteConfirmText   String   @default("დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.")
+  groupDeleteConfirmText   String   @default("დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?")
+  studentDeleteConfirmText String   @default("დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?")
+  siteTitle                String   @default("რეპეტიტორის პლატფორმა")
+  siteDescription          String   @default("ჯგუფების, ტესტებისა და მოსწავლეების მართვის პლატფორმა")
+  updatedAt                DateTime @updatedAt
 }
 
 // Themes & Tests cube. "type" is which question-template the test
