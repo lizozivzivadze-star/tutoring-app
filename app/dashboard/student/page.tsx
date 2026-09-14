@@ -83,12 +83,12 @@ export default function StudentDashboard() {
           )}
 {completed && completed.length > 0 && (
   <table className="w-full text-sm table-fixed border border-paper-line">
-    <colgroup>
-      <col className="w-[34%]" />
-      <col className="w-[26%]" />
-      <col className="w-[20%]" />
-      <col className="w-[20%]" />
-    </colgroup>
+<colgroup>
+  <col className="w-[30%]" />
+  <col className="w-[26%]" />
+  <col className="w-[24%]" />
+  <col className="w-[20%]" />
+</colgroup>
     <thead>
       <tr className="text-left text-ink-soft border-b border-paper-line">
         <th className="py-2 px-2 font-medium border-r border-paper-line text-left">ტესტი</th>
@@ -106,9 +106,7 @@ export default function StudentDashboard() {
           <td className="py-2 px-2 text-ink-soft border-r border-paper-line text-left">
             {new Date(c.completedAt).toLocaleDateString("ka-GE")}
           </td>
-          <td className="py-2 px-2 text-ink border-r border-paper-line text-left">
-            {c.score}/{c.totalQuestions}
-          </td>
+          <th className="py-2 px-2 font-medium border-r border-paper-line text-left whitespace-nowrap">შედეგი</th>
           <td className="py-2 px-2 text-left">
             <Link
               href={`/dashboard/student/results/${c.attemptId}/review`}
