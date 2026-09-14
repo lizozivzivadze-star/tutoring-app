@@ -117,26 +117,12 @@ export default function TakeTestPage() {
   if (!test) return null;
 
   if (stage === "instructions") {
-    const optionCounts = new Set(test.questions.map((q) => q.options.length));
-    const optionsLabel =
-      optionCounts.size === 1
-        ? `${[...optionCounts][0]}`
-        : `${Math.min(...optionCounts)}-${Math.max(...optionCounts)}`;
-
     return (
       <main className="min-h-screen flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4">
             ინსტრუქცია
           </h1>
-          <ul className="flex flex-col gap-2 text-ink text-sm mb-8">
-            <li>• სულ არის {test.questions.length} შეკითხვა</li>
-            <li>• თითოს აქვს {optionsLabel} პასუხის ალტერნატივა</li>
-            <li>• მხოლოდ 1 არის სწორი</li>
-            <li>• თითოს დრო {QUESTION_TIME_SECONDS} წმ</li>
-            <li>• მონიშნავთ</li>
-            <li>• დაადასტურებთ & გადახვალთ</li>
-          </ul>
           {test.instruction && (
             <p className="text-sm text-ink-soft mb-6">{test.instruction}</p>
           )}
