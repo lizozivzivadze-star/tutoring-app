@@ -217,11 +217,6 @@ export default function TestDetailPage() {
                 </span>
               )}
             </div>
-            {hasUnpublishedEdits && (
-              <p className="text-xs text-ink-soft/70 mb-1">
-                შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული.
-              </p>
-            )}
             <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
             {test.instruction && (
               <p className="text-sm text-ink-soft mt-2">{display.instruction}</p>
