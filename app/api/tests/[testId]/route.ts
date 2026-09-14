@@ -116,14 +116,57 @@ export async function PATCH(
       await tx.question.deleteMany({ where: { testId } });
     }
 
+    const finalTitle = title.trim();
+    const finalInstruction = instruction?.trim() || null;
+    const now = new Date();
+
+    // Built from the incoming payload (or, if questions weren't part
+    // of this save, from the existing rows) — not from a post-update
+    // read — so the snapshot can be written in the SAME update call
+    // as publishedAt/updatedAt. Doing it in a second .update() call
+    // was the bug: Prisma bumps @updatedAt on every .update(), so a
+    // second call always left updatedAt newer than publishedAt, even
+    // seconds after a fresh publish.
+    const snapshot = republish
+      ? {
+          title: finalTitle,
+          instruction: finalInstruction,
+          questions: (
+            questions ??
+            existing.questions.map((q) => ({
+              prompt: q.prompt,
+              options: q.options.map((o) => ({
+                text: o.text,
+                isCorrect: o.isCorrect,
+              })),
+            }))
+          ).map(
+            (q: {
+              prompt: string;
+              options: { text: string; isCorrect: boolean }[];
+            }) => ({
+              prompt: q.prompt.trim ? q.prompt.trim() : q.prompt,
+              options: q.options.map((o) => ({
+                text: o.text.trim ? o.text.trim() : o.text,
+                isCorrect: Boolean(o.isCorrect),
+              })),
+            })
+          ),
+        }
+      : undefined;
+
     const updated = await tx.test.update({
       where: { id: testId },
       data: {
         themeId: themeId ?? existing.themeId,
-        title: title.trim(),
-        instruction: instruction?.trim() || null,
+        title: finalTitle,
+        instruction: finalInstruction,
         published: published ?? existing.published,
-        ...(republish && { publishedAt: new Date() }),
+        ...(republish && {
+          publishedAt: now,
+          updatedAt: now,
+          publishedSnapshot: snapshot,
+        }),
         ...(questions && {
           questions: {
             create: questions.map(
@@ -152,25 +195,6 @@ export async function PATCH(
       },
       include: { questions: { include: { options: true } } },
     });
-
-    if (republish) {
-      const snapshot = {
-        title: updated.title,
-        instruction: updated.instruction,
-        questions: updated.questions.map((q) => ({
-          prompt: q.prompt,
-          options: q.options.map((o) => ({
-            text: o.text,
-            isCorrect: o.isCorrect,
-          })),
-        })),
-      };
-      return tx.test.update({
-        where: { id: testId },
-        data: { publishedSnapshot: snapshot },
-        include: { questions: { include: { options: true } } },
-      });
-    }
 
     return updated;
   });
