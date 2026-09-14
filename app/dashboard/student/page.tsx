@@ -81,39 +81,47 @@ export default function StudentDashboard() {
           {completed?.length === 0 && (
             <p className="text-ink-soft text-sm">ჯერ არაფერი გაქვთ გაკეთებული.</p>
           )}
-          {completed && completed.length > 0 && (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-ink-soft border-b border-paper-line">
-                  <th className="py-2 font-medium">ტესტი</th>
-                  <th className="py-2 font-medium">თარიღი</th>
-                  <th className="py-2 font-medium">შედეგი</th>
-                  <th className="py-2 font-medium">review</th>
-                </tr>
-              </thead>
-              <tbody>
-                {completed.map((c) => (
-                  <tr key={c.attemptId} className="border-b border-paper-line">
-                    <td className="py-2 text-ink">{c.testTitle}</td>
-                    <td className="py-2 text-ink-soft">
-                      {new Date(c.completedAt).toLocaleDateString("ka-GE")}
-                    </td>
-                    <td className="py-2 text-ink">
-                      {c.score}/{c.totalQuestions}
-                    </td>
-                    <td className="py-2">
-                      <Link
-                        href={`/dashboard/student/results/${c.attemptId}/review`}
-                        className="text-marker font-medium"
-                      >
-                        review
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+{completed && completed.length > 0 && (
+  <table className="w-full text-sm table-fixed border border-paper-line">
+    <colgroup>
+      <col className="w-[40%]" />
+      <col className="w-[22%]" />
+      <col className="w-[18%]" />
+      <col className="w-[20%]" />
+    </colgroup>
+    <thead>
+      <tr className="text-left text-ink-soft border-b border-paper-line">
+        <th className="py-2 px-2 font-medium border-r border-paper-line">ტესტი</th>
+        <th className="py-2 px-2 font-medium border-r border-paper-line">თარიღი</th>
+        <th className="py-2 px-2 font-medium border-r border-paper-line">შედეგი</th>
+        <th className="py-2 px-2 font-medium">review</th>
+      </tr>
+    </thead>
+    <tbody>
+      {completed.map((c) => (
+        <tr key={c.attemptId} className="border-b border-paper-line">
+          <td className="py-2 px-2 text-ink break-words border-r border-paper-line">
+            {c.testTitle}
+          </td>
+          <td className="py-2 px-2 text-ink-soft border-r border-paper-line">
+            {new Date(c.completedAt).toLocaleDateString("ka-GE")}
+          </td>
+          <td className="py-2 px-2 text-ink border-r border-paper-line">
+            {c.score}/{c.totalQuestions}
+          </td>
+          <td className="py-2 px-2">
+            <Link
+              href={`/dashboard/student/results/${c.attemptId}/review`}
+              className="text-marker font-medium"
+            >
+              review
+            </Link>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+)}
         </section>
       </main>
     </div>
