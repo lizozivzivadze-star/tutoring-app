@@ -106,7 +106,9 @@ export default function StudentDashboard() {
           <td className="py-2 px-2 text-ink-soft border-r border-paper-line text-left">
             {new Date(c.completedAt).toLocaleDateString("ka-GE")}
           </td>
-          <th className="py-2 px-2 font-medium border-r border-paper-line text-left whitespace-nowrap">შედეგი</th>
+          <td className="py-2 px-2 text-ink border-r border-paper-line text-left whitespace-nowrap">
+  {c.score}/{c.totalQuestions}
+</td>
           <td className="py-2 px-2 text-left">
             <Link
               href={`/dashboard/student/results/${c.attemptId}/review`}
