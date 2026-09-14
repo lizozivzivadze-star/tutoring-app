@@ -44,8 +44,6 @@ export default function StudentRow({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className="border border-paper-line rounded-sm bg-paper px-3 py-2.5"
     >
       <div className="flex items-center gap-2 text-sm">
@@ -78,6 +76,8 @@ export default function StudentRow({
   ×
 </button>
         <span
+          {...attributes}
+          {...listeners}
           className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 text-[18px]"
           title="გადაადგილება"
         >

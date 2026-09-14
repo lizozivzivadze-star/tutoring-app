@@ -95,8 +95,6 @@ function handleStudentDragEnd(event: DragEndEvent) {
     <div
   ref={setNodeRef}
   style={style}
-  {...attributes}
-  {...listeners}
   className="border border-paper-line rounded-md bg-white"
 >
       <div className="flex items-center gap-3 px-4 py-3">
@@ -140,6 +138,8 @@ function handleStudentDragEnd(event: DragEndEvent) {
           ×
         </button>
         <span
+          {...attributes}
+          {...listeners}
           className="cursor-grab text-ink-soft/60 px-1 select-none text-[18px]"
           title="გადაადგილება"
         >
