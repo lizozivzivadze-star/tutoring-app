@@ -94,7 +94,7 @@ export default function UserMenu() {
               onClick={() => signOut({ callbackUrl: "/login" })}
               className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
-              გასვლა
+              Log out
             </button>
           </div>
         </>
