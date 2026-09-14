@@ -204,12 +204,12 @@ export default function TestDetailPage() {
                   have unpublished edits" nudge, not an unpublish. */}
               <span
                 className={`text-xs px-2 py-0.5 rounded-full ${
-                  test.published
+                  test.published && !hasUnpublishedEdits
                     ? "bg-ledger-soft text-ledger"
                     : "bg-paper-line/60 text-ink-soft"
                 }`}
               >
-                {test.published ? "published" : "unpublished"}
+                {!test.published ? "unpublished" : hasUnpublishedEdits ? "draft" : "published"}
               </span>
               {test.locked && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-paper-line/60 text-ink-soft">
