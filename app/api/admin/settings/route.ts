@@ -9,6 +9,7 @@ const EDITABLE_FIELDS = [
   "notFoundEmailText",
   "magicLinkSubject",
   "magicLinkBodyText",
+  "checkEmailText",
   "themeDeleteConfirmText",
   "groupDeleteConfirmText",
   "studentDeleteConfirmText",

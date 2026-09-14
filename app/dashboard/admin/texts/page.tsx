@@ -8,6 +8,7 @@ type Settings = {
   notFoundEmailText: string;
   magicLinkSubject: string;
   magicLinkBodyText: string;
+  checkEmailText: string;
   themeDeleteConfirmText: string;
   groupDeleteConfirmText: string;
   studentDeleteConfirmText: string;
@@ -62,6 +63,12 @@ export default function AdminTextsTab() {
         hint="{roleLabel} და {url} შეიცვლება რეალური მნიშვნელობებით."
         initialValue={settings.magicLinkBodyText}
         multiline
+      />
+      <SettingsField
+        fieldKey="checkEmailText"
+        label="URL გამოგზავნის შემდეგ ეკრანის ტექსტი"
+        hint="{email} შეიცვლება შეყვანილი მეილით."
+        initialValue={settings.checkEmailText}
       />
       <SettingsField
         fieldKey="themeDeleteConfirmText"

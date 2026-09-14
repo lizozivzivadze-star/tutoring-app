@@ -92,6 +92,7 @@ model Settings {
   notFoundEmailText        String   @default("ეს ელფოსტა სისტემაში ვერ მოიძებნა")
   magicLinkSubject         String   @default("შესვლის ბმული")
   magicLinkBodyText        String   @default("თქვენი {roleLabel} ანგარიშზე შესასვლელად გადადით ბმულზე (მოქმედია 15 წუთი):\n\n{url}\n\nთუ ეს მოთხოვნა თქვენ არ გაგზავნიათ, უბრალოდ იგნორირება გაუკეთეთ ამ წერილს.")
+  checkEmailText           String   @default("შესვლის ბმული გაიგზავნა მისამართზე {email}. გახსენით ის ფოსტიდან, რომ გააგრძელოთ.")
   themeDeleteConfirmText   String   @default("დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.")
   groupDeleteConfirmText   String   @default("დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?")
   studentDeleteConfirmText String   @default("დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?")

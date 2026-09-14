@@ -2,9 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 
-export default function CheckEmailContent() {
+export default function CheckEmailContent({ template }: { template: string }) {
   const params = useSearchParams();
-  const email = params.get("email");
+  const email = params.get("email") ?? "";
+  const [before, after] = template.split("{email}");
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6">
@@ -14,9 +15,9 @@ export default function CheckEmailContent() {
             URL გამოგზავნილია
           </h1>
           <p className="text-ink-soft text-sm leading-relaxed">
-            შესვლის ბმული გაიგზავნა
-            {email ? <> მისამართზე{" "}<span className="text-ink font-medium">{email}</span></> : " თქვენს ელფოსტაზე"}
-            . გახსენით ის ფოსტიდან, რომ გააგრძელოთ.
+            {before}
+            <span className="text-ink font-medium">{email}</span>
+            {after}
           </p>
         </div>
       </div>
