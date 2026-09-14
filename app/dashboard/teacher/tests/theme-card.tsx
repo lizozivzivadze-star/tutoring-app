@@ -67,13 +67,13 @@ const style = {
 <div
   ref={setNodeRef}
   style={style}
+  {...attributes}
+  {...listeners}
   className="border border-paper-line rounded-md bg-white px-4 py-3"
 >
       <div className="flex items-center gap-2">
         <span
-  {...attributes}
-  {...listeners}
-  className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1"
+  className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1 text-[18px]"
   title="გადაადგილება"
 >
   ⠿

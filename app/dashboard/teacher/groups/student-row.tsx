@@ -78,7 +78,7 @@ export default function StudentRow({
   ×
 </button>
         <span
-          className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0"
+          className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 text-[18px]"
           title="გადაადგილება"
         >
           ⠿

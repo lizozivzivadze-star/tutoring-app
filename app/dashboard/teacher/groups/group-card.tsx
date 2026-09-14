@@ -140,7 +140,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
           ×
         </button>
         <span
-          className="cursor-grab text-ink-soft/60 px-1 select-none"
+          className="cursor-grab text-ink-soft/60 px-1 select-none text-[18px]"
           title="გადაადგილება"
         >
           ⠿
