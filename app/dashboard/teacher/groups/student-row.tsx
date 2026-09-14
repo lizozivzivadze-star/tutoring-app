@@ -65,7 +65,7 @@ export default function StudentRow({
 
 <button
   onClick={onEdit}
-  className="text-xs text-ink-soft hover:text-marker px-1 shrink-0"
+  className="text-[13px] text-ink-soft hover:text-marker px-1 shrink-0"
 >
   edit
 </button>

@@ -127,7 +127,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
 
         <button
           onClick={() => setEditing(true)}
-          className="text-xs text-ink-soft hover:text-marker px-1"
+          className="text-[13px] text-ink-soft hover:text-marker px-1"
         >
           edit
         </button>

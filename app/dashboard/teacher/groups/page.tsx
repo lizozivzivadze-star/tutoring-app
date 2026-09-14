@@ -187,7 +187,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
 
       <button
         onClick={() => setAddGroupOpen(true)}
-        className="mt-2 text-sm text-marker font-medium text-left hover:text-marker-dark"
+        className="mt-2 text-[15px] text-marker font-medium text-left hover:text-marker-dark"
       >
         + ჯგუფის დამატება
       </button>
