@@ -53,8 +53,14 @@ export default function AdminTextsTab() {
         initialValue={settings.notFoundEmailText}
       />
       <SettingsField
+        fieldKey="checkEmailText"
+        label="URL გამოგზავნის ტექსტი"
+        hint="{email} შეიცვლება შეყვანილი მეილით."
+        initialValue={settings.checkEmailText}
+      />
+      <SettingsField
         fieldKey="magicLinkSubject"
-        label="URL გამოგზავნის ტექსტი (მეილის თემა)"
+        label="URL მეილის თემა"
         initialValue={settings.magicLinkSubject}
       />
       <SettingsField
@@ -63,12 +69,6 @@ export default function AdminTextsTab() {
         hint="{roleLabel} და {url} შეიცვლება რეალური მნიშვნელობებით."
         initialValue={settings.magicLinkBodyText}
         multiline
-      />
-      <SettingsField
-        fieldKey="checkEmailText"
-        label="URL გამოგზავნის შემდეგ ეკრანის ტექსტი"
-        hint="{email} შეიცვლება შეყვანილი მეილით."
-        initialValue={settings.checkEmailText}
       />
       <SettingsField
         fieldKey="themeDeleteConfirmText"
