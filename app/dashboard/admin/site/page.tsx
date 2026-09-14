@@ -43,10 +43,6 @@ export default function AdminSiteTab() {
         <p className="text-ink font-body text-sm break-all">
           https://tutoring-app-dusky.vercel.app/
         </p>
-        <p className="text-xs text-ink-soft/70 mt-1">
-          დომეინის მისამართი მხოლოდ საცნობარო ჩანაწერია — ჰოსტინგ-პროვაიდერზეა
-          დამოკიდებული და აქედან არ იცვლება.
-        </p>
       </div>
     </div>
   );

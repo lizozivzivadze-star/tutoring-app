@@ -50,7 +50,6 @@ export default function AdminAccessTab() {
         key={settings.teacherInviteCode}
         fieldKey="teacherInviteCode"
         label="მოწვევის კოდი"
-        hint="ეს კოდი სჭირდება ახალ მასწავლებელს რეგისტრაციისას /register გვერდზე."
         initialValue={settings.teacherInviteCode}
       />
 

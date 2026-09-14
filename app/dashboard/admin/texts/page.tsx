@@ -37,7 +37,6 @@ export default function AdminTextsTab() {
       <SettingsField
         fieldKey="defaultTestInstruction"
         label="საერთო ინსტრუქცია"
-        hint="ეს ტექსტი წინასწარ ივსება ყველა ახალი ტესტის ინსტრუქციის ველში — მასწავლებელს შეუძლია იქვე გადაწეროს."
         initialValue={settings.defaultTestInstruction ?? ""}
         multiline
       />
@@ -49,13 +48,11 @@ export default function AdminTextsTab() {
       <SettingsField
         fieldKey="notFoundEmailText"
         label="უცხო მეილით შესვლის მცდელობა"
-        hint="ჩანს, როცა login-გვერდზე შეყვანილი მეილი სისტემაში ვერ მოიძებნა."
         initialValue={settings.notFoundEmailText}
       />
       <SettingsField
         fieldKey="checkEmailText"
         label="URL გამოგზავნის ტექსტი"
-        hint="{email} შეიცვლება შეყვანილი მეილით."
         initialValue={settings.checkEmailText}
       />
       <SettingsField
@@ -66,20 +63,17 @@ export default function AdminTextsTab() {
       <SettingsField
         fieldKey="magicLinkBodyText"
         label="მეილზე URL-ის თანხლები ტექსტი"
-        hint="{roleLabel} და {url} შეიცვლება რეალური მნიშვნელობებით."
         initialValue={settings.magicLinkBodyText}
         multiline
       />
       <SettingsField
         fieldKey="themeDeleteConfirmText"
         label="თემის წაშლის დადასტურება"
-        hint="{name} შეიცვლება თემის სახელით."
         initialValue={settings.themeDeleteConfirmText}
       />
       <SettingsField
         fieldKey="groupDeleteConfirmText"
         label="ჯგუფის წაშლის დადასტურება"
-        hint="{name} შეიცვლება ჯგუფის სახელით."
         initialValue={settings.groupDeleteConfirmText}
       />
       <SettingsField
