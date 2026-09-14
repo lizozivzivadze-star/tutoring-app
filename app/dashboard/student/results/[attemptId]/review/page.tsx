@@ -39,11 +39,11 @@ export default function ReviewPage() {
     <main className="min-h-screen px-6 py-8">
       <div className="max-w-sm mx-auto">
         <Link
-          href={`/dashboard/student/results/${attemptId}`}
-          className="text-sm text-marker font-medium"
-        >
-          ← უკან
-        </Link>
+  href="/dashboard/student"
+  className="text-sm text-marker font-medium"
+>
+  ← დაშბორდზე დაბრუნება
+</Link>
 
         <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mt-4 mb-4">
           შედეგის განხილვა
