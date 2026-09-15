@@ -25,10 +25,11 @@ function getTransporter(): Transporter | null {
   return transporter;
 }
 
-const ROLE_LABELS: Record<"teacher" | "student" | "admin", string> = {
+const ROLE_LABELS: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "მასწავლებლის",
   student: "მოსწავლის",
   admin: "ადმინისტრატორის",
+  tester: "ტესტერის",
 };
 
 export async function sendMagicLinkEmail({
@@ -39,7 +40,7 @@ export async function sendMagicLinkEmail({
   bodyTemplate,
 }: {
   to: string;
-  role: "teacher" | "student" | "admin";
+  role: "teacher" | "student" | "admin" | "tester";
   url: string;
   // Admin-edited templates from Settings. Callers always pass these
   // (via getSettings()) so the copy stays admin-controlled; the
