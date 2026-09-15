@@ -60,7 +60,6 @@ async function main() {
     },
   ];
 
-  let primaryTester;
   for (const t of testers) {
     const tester = await prisma.tester.upsert({
       where: { identityEmail: t.identityEmail },
@@ -68,19 +67,6 @@ async function main() {
       create: t,
     });
     console.log(`[seed] tester ready: ${t.identityEmail} -> mail to ${t.notificationEmail}`);
-    if (t.identityEmail === testers[0].identityEmail) primaryTester = tester;
-  }
-
-  // ერთჯერადი ჩანაცვლება: ძველი Theme-ები Teacher-ს ეკუთვნოდა,
-  // ახლა Tester-ს უნდა ეკუთვნოდეს — ვაბამთ პირველ (tariel) ტესტერზე.
-  if (primaryTester) {
-    const { count } = await prisma.theme.updateMany({
-      where: { testerId: null },
-      data: { testerId: primaryTester.id },
-    });
-    if (count > 0) {
-      console.log(`[seed] backfilled ${count} theme(s) onto ${primaryTester.identityEmail}`);
-    }
   }
 }
 
