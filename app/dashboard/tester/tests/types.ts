@@ -1,0 +1,67 @@
+export type TestTemplate = "type1" | "type2" | "type3" | "national";
+
+export type TestSummary = {
+  id: string;
+  type: TestTemplate;
+  order: number;
+  title: string;
+  published: boolean;
+  updatedAt: string;
+  publishedAt: string | null;
+};
+
+export type ThemeRecord = {
+  id: string;
+  name: string;
+  order: number;
+  tests: TestSummary[];
+};
+
+export type OptionDraft = {
+  id?: string; // present once saved
+  clientId: string; // stable key for React before it's saved
+  text: string;
+  isCorrect: boolean;
+};
+
+export type QuestionDraft = {
+  id?: string;
+  clientId: string;
+  prompt: string;
+  options: OptionDraft[];
+};
+
+export type PublishedSnapshot = {
+  title: string;
+  instruction: string | null;
+  questions: {
+    prompt: string;
+    options: { text: string; isCorrect: boolean }[];
+  }[];
+};
+
+export type TestDetail = {
+  id: string;
+  themeId: string;
+  type: TestTemplate;
+  title: string;
+  instruction: string | null;
+  published: boolean;
+  updatedAt: string;
+  publishedAt: string | null;
+  publishedSnapshot: PublishedSnapshot | null;
+  locked: boolean;
+  questions: {
+    id: string;
+    prompt: string;
+    options: { id: string; text: string; isCorrect: boolean }[];
+  }[];
+};
+
+export const TYPES: TestTemplate[] = ["type1", "type2", "type3", "national"];
+export const TYPE_LABELS: Record<TestTemplate, string> = {
+  type1: "Type 1 (mcq)",
+  type2: "Type 2 (map)",
+  type3: "Type 3 (open)",
+  national: "National",
+};
