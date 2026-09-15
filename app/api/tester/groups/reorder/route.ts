@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
   }
 
-  const owned = await prisma.theme.findMany({
+  const owned = await prisma.group.findMany({
     where: { id: { in: orderedIds }, testerId },
     select: { id: true },
   });
@@ -23,7 +23,10 @@ export async function POST(req: NextRequest) {
 
   await prisma.$transaction(
     orderedIds.map((id, index) =>
-      prisma.theme.update({ where: { id }, data: { order: index } })
+      prisma.group.update({
+        where: { id },
+        data: { order: index },
+      })
     )
   );
 

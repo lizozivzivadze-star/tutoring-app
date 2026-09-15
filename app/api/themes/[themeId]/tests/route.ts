@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
 const VALID_TYPES = ["type1", "type2", "type3"] as const;
 
@@ -9,13 +9,13 @@ export async function POST(
   { params }: { params: Promise<{ themeId: string }> }
 ) {
   const { themeId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
   const theme = await prisma.theme.findUnique({ where: { id: themeId } });
-  if (!theme || theme.teacherId !== teacherId) {
+  if (!theme || theme.testerId !== testerId) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 

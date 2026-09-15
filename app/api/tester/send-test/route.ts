@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
 export async function POST(req: NextRequest) {
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
     prisma.test.findUnique({ where: { id: testId }, include: { theme: true } }),
   ]);
 
-  if (!group || group.teacherId !== teacherId) {
+  if (!group || group.testerId !== testerId) {
     return NextResponse.json({ error: "ჯგუფი ვერ მოიძებნა" }, { status: 404 });
   }
-  if (!test) {
+  if (!test || test.theme.testerId !== testerId) {
     return NextResponse.json({ error: "ტესტი ვერ მოიძებნა" }, { status: 404 });
   }
   if (!test.published) {

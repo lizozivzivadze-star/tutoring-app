@@ -8,13 +8,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const { orderedIds }: { orderedIds: string[] } = await req.json();
-  if (!Array.isArray(orderedIds)) {
+  const { groupId, orderedIds }: { groupId: string; orderedIds: string[] } =
+    await req.json();
+
+  if (!groupId || !Array.isArray(orderedIds)) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
   }
 
-  const owned = await prisma.theme.findMany({
-    where: { id: { in: orderedIds }, testerId },
+  const group = await prisma.group.findUnique({ where: { id: groupId } });
+  if (!group || group.testerId !== testerId) {
+    return NextResponse.json({ error: "not found" }, { status: 404 });
+  }
+
+  const owned = await prisma.student.findMany({
+    where: { id: { in: orderedIds }, groupId },
     select: { id: true },
   });
   if (owned.length !== orderedIds.length) {
@@ -23,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   await prisma.$transaction(
     orderedIds.map((id, index) =>
-      prisma.theme.update({ where: { id }, data: { order: index } })
+      prisma.student.update({ where: { id }, data: { order: index } })
     )
   );
 

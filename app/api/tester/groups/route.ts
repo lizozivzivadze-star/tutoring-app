@@ -1,35 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId, getCurrentTesterId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
 export async function GET() {
   const testerId = await getCurrentTesterId();
-  const teacherId = testerId ? null : await getCurrentTeacherId();
-
-  if (!testerId && !teacherId) {
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const themes = await prisma.theme.findMany({
-    where: testerId ? { testerId } : undefined,
+  const groups = await prisma.group.findMany({
+    where: { testerId },
     orderBy: { order: "asc" },
     include: {
-      tests: {
-        orderBy: { order: "asc" },
-        select: {
-          id: true,
-          type: true,
-          order: true,
-          title: true,
-          published: true,
-          updatedAt: true,
-          publishedAt: true,
-        },
-      },
+      students: { orderBy: { order: "asc" } },
     },
   });
 
-  return NextResponse.json({ themes });
+  return NextResponse.json({ groups });
 }
 
 export async function POST(req: NextRequest) {
@@ -43,19 +30,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "სახელი აუცილებელია" }, { status: 400 });
   }
 
-  const last = await prisma.theme.findFirst({
+  const last = await prisma.group.findFirst({
     where: { testerId },
     orderBy: { order: "desc" },
   });
 
-  const theme = await prisma.theme.create({
+  const group = await prisma.group.create({
     data: {
       name: name.trim(),
       testerId,
       order: (last?.order ?? -1) + 1,
     },
-    include: { tests: true },
+    include: { students: true },
   });
 
-  return NextResponse.json({ theme });
+  return NextResponse.json({ group });
 }

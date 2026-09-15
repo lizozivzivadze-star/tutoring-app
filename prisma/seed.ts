@@ -46,6 +46,42 @@ async function main() {
     create: admin,
   });
   console.log(`[seed] admin ready: ${admin.identityEmail} -> mail to ${admin.notificationEmail}`);
+
+  const testers = [
+    {
+      identityEmail: process.env.SEED_TESTER1_IDENTITY_EMAIL ?? "tariel.zivzivadze.tester@gmail.com",
+      notificationEmail: process.env.SEED_TESTER1_NOTIFICATION_EMAIL ?? "tariel.zivzivadze@gmail.com",
+      name: process.env.SEED_TESTER1_NAME ?? "Tariel",
+    },
+    {
+      identityEmail: process.env.SEED_TESTER2_IDENTITY_EMAIL ?? "lizozivzivadze.tester@gmail.com",
+      notificationEmail: process.env.SEED_TESTER2_NOTIFICATION_EMAIL ?? "lizozivzivadze@gmail.com",
+      name: process.env.SEED_TESTER2_NAME ?? "Lizi (tester)",
+    },
+  ];
+
+  let primaryTester;
+  for (const t of testers) {
+    const tester = await prisma.tester.upsert({
+      where: { identityEmail: t.identityEmail },
+      update: { notificationEmail: t.notificationEmail, name: t.name },
+      create: t,
+    });
+    console.log(`[seed] tester ready: ${t.identityEmail} -> mail to ${t.notificationEmail}`);
+    if (t.identityEmail === testers[0].identityEmail) primaryTester = tester;
+  }
+
+  // ერთჯერადი ჩანაცვლება: ძველი Theme-ები Teacher-ს ეკუთვნოდა,
+  // ახლა Tester-ს უნდა ეკუთვნოდეს — ვაბამთ პირველ (tariel) ტესტერზე.
+  if (primaryTester) {
+    const { count } = await prisma.theme.updateMany({
+      where: { testerId: null },
+      data: { testerId: primaryTester.id },
+    });
+    if (count > 0) {
+      console.log(`[seed] backfilled ${count} theme(s) onto ${primaryTester.identityEmail}`);
+    }
+  }
 }
 
 main()

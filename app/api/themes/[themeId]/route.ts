@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
-async function assertOwnership(themeId: string, teacherId: string) {
+async function assertOwnership(themeId: string, testerId: string) {
   const theme = await prisma.theme.findUnique({ where: { id: themeId } });
-  return theme && theme.teacherId === teacherId ? theme : null;
+  return theme && theme.testerId === testerId ? theme : null;
 }
 
 export async function PATCH(
@@ -12,12 +12,12 @@ export async function PATCH(
   { params }: { params: Promise<{ themeId: string }> }
 ) {
   const { themeId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const owned = await assertOwnership(themeId, teacherId);
+  const owned = await assertOwnership(themeId, testerId);
   if (!owned) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
@@ -40,12 +40,12 @@ export async function DELETE(
   { params }: { params: Promise<{ themeId: string }> }
 ) {
   const { themeId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const owned = await assertOwnership(themeId, teacherId);
+  const owned = await assertOwnership(themeId, testerId);
   if (!owned) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }

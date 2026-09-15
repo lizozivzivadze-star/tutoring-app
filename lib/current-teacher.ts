@@ -8,3 +8,10 @@ export async function getCurrentTeacherId(): Promise<string | null> {
   if (session?.user?.role !== "teacher") return null;
   return session.user.id;
 }
+
+// Same pattern for the tester role.
+export async function getCurrentTesterId(): Promise<string | null> {
+  const session = await auth();
+  if (session?.user?.role !== "tester") return null;
+  return session.user.id;
+}

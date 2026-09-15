@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import { signIn, auth } from "@/lib/auth";
 
-const DASHBOARD_BY_ROLE: Record<"teacher" | "student" | "admin", string> = {
+const DASHBOARD_BY_ROLE: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "/dashboard/teacher",
   student: "/dashboard/student",
   admin: "/dashboard/admin",
+  tester: "/dashboard/tester",
 };
 
 export async function GET(req: NextRequest) {

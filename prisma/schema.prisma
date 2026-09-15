@@ -24,13 +24,16 @@ model Group {
   id        String    @id @default(cuid())
   name      String
   order     Int       @default(0)
-  teacherId String
-  teacher   Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId String?
+  teacher   Teacher?  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  testerId  String?
+  tester    Tester?   @relation(fields: [testerId], references: [id], onDelete: Cascade)
   students  Student[]
   sentTests SentTest[]
   createdAt DateTime  @default(now())
 
   @@index([teacherId])
+  @@index([testerId])
 }
 
 model Student {
@@ -64,6 +67,7 @@ enum Role {
   teacher
   student
   admin
+  tester
 }
 
 // Third user type. identityEmail is what's typed on the shared login
@@ -79,6 +83,16 @@ model Admin {
   notificationEmail  String
   name               String?
   createdAt          DateTime @default(now())
+}
+
+model Tester {
+  id                String   @id @default(cuid())
+  identityEmail     String   @unique
+  notificationEmail String
+  name              String?
+  createdAt         DateTime @default(now())
+  groups            Group[]
+  themes            Theme[]
 }
 
 // Single-row settings table the admin dashboard edits. Always
@@ -108,11 +122,12 @@ model Theme {
   id        String   @id @default(cuid())
   name      String
   order     Int      @default(0)
-  teacherId String
+  testerId  String
+  tester    Tester   @relation(fields: [testerId], references: [id], onDelete: Cascade)
   tests     Test[]
   createdAt DateTime @default(now())
 
-  @@index([teacherId])
+  @@index([testerId])
 }
 
 enum TestTemplate {

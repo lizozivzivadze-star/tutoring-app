@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
-async function loadOwned(testId: string, teacherId: string) {
+async function loadOwned(testId: string, testerId: string) {
   const test = await prisma.test.findUnique({
     where: { id: testId },
     include: {
@@ -14,7 +14,7 @@ async function loadOwned(testId: string, teacherId: string) {
       _count: { select: { sentTests: true } },
     },
   });
-  return test && test.theme.teacherId === teacherId ? test : null;
+  return test && test.theme.testerId === testerId ? test : null;
 }
 
 export async function GET(
@@ -22,12 +22,12 @@ export async function GET(
   { params }: { params: Promise<{ testId: string }> }
 ) {
   const { testId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const test = await loadOwned(testId, teacherId);
+  const test = await loadOwned(testId, testerId);
   if (!test) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
@@ -42,12 +42,12 @@ export async function PATCH(
   { params }: { params: Promise<{ testId: string }> }
 ) {
   const { testId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const existing = await loadOwned(testId, teacherId);
+  const existing = await loadOwned(testId, testerId);
   if (!existing) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
@@ -73,7 +73,7 @@ export async function PATCH(
 
   if (themeId && themeId !== existing.themeId) {
     const newTheme = await prisma.theme.findUnique({ where: { id: themeId } });
-    if (!newTheme || newTheme.teacherId !== teacherId) {
+    if (!newTheme || newTheme.testerId !== testerId) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
   }
@@ -207,12 +207,12 @@ export async function DELETE(
   { params }: { params: Promise<{ testId: string }> }
 ) {
   const { testId } = await params;
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const existing = await loadOwned(testId, teacherId);
+  const existing = await loadOwned(testId, testerId);
   if (!existing) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }

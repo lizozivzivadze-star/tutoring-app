@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/dashboard/teacher", label: "START" },
-  { href: "/dashboard/teacher/groups", label: "ჯგუფები" },
+  { href: "/dashboard/tester", label: "START" },
+  { href: "/dashboard/tester/tests", label: "ტესტები" },
+  { href: "/dashboard/tester/groups", label: "ჯგუფები" },
 ];
 
-export default function TeacherTabs() {
+export default function TesterTabs() {
   const pathname = usePathname();
 
   return (

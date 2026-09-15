@@ -77,6 +77,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           };
         }
 
+        if (role === "tester") {
+          // Same identityEmail lookup as admin, for the same reason.
+          const tester = await prisma.tester.findUnique({
+            where: { identityEmail: email },
+          });
+          if (!tester) return null;
+          return {
+            id: tester.id,
+            email: tester.identityEmail,
+            name: tester.name,
+            role: "tester" as const,
+          };
+        }
+
         return null;
       },
     }),
@@ -85,14 +99,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.uid = user.id;
-        token.role = (user as { role: "teacher" | "student" | "admin" }).role;
+        token.role = (user as { role: "teacher" | "student" | "admin" | "tester" }).role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.uid as string;
-        session.user.role = token.role as "teacher" | "student" | "admin";
+        session.user.role = token.role as "teacher" | "student" | "admin" | "tester";
       }
       return session;
     },

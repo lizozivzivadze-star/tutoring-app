@@ -25,13 +25,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const [existingTeacher, existingStudent, existingAdmin] = await Promise.all([
+  const [existingTeacher, existingStudent, existingAdmin, existingTester] = await Promise.all([
     prisma.teacher.findUnique({ where: { email } }),
     prisma.student.findUnique({ where: { email } }),
     prisma.admin.findUnique({ where: { identityEmail: email } }),
+    prisma.tester.findUnique({ where: { identityEmail: email } }),
   ]);
 
-  if (existingTeacher || existingStudent || existingAdmin) {
+  if (existingTeacher || existingStudent || existingAdmin || existingTester) {
     return NextResponse.json(
       { error: "ეს ელფოსტა უკვე რეგისტრირებულია" },
       { status: 409 }
