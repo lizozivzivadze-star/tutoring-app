@@ -121,7 +121,7 @@ async function persist(
         href="/dashboard/teacher/tests"
         className="text-sm text-marker font-medium"
       >
-        ← უკან
+        ← დაშბორდზე დაბრუნება
       </Link>
       <h1 className="font-display text-xl font-medium text-ink mt-3 mb-5 pb-2 border-b border-paper-line">
         ახალი ტესტის დამატება
