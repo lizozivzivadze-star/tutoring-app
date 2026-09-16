@@ -151,6 +151,7 @@ export default function GroupsTab() {
   }
 
   return (
+    <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
     <div className="flex flex-col gap-3">
       {groups.length === 0 && (
         <p className="text-ink-soft text-sm text-center py-8">
@@ -257,6 +258,7 @@ export default function GroupsTab() {
           onCancel={() => setDeletingStudent(null)}
         />
       )}
+    </div>
     </div>
   );
 }
