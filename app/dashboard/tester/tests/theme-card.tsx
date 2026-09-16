@@ -150,7 +150,7 @@ const style = {
                           : ""
                       }
                     >
-                      [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                      {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
                     </Link>
                   );
                 })}
