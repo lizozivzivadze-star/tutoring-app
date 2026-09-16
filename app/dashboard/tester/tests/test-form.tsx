@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import QuestionEditor, { newQuestion } from "./question-editor";
 import { QuestionDraft, TestTemplate, TYPE_LABELS } from "./types";
+import DropdownSelect from "@/components/dropdown-select";
 
 type ThemeOption = { id: string; name: string };
 
@@ -115,17 +116,11 @@ export default function TestForm({
 
       <div>
         <label className="block text-sm text-ink-soft mb-2">თემა</label>
-        <select
+        <DropdownSelect
           value={themeId}
-          onChange={(e) => setThemeId(e.target.value)}
-          className={inputClass}
-        >
-          {themes.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
+          onChange={setThemeId}
+          options={themes.map((t) => ({ value: t.id, label: t.name }))}
+        />
       </div>
 
       <div>

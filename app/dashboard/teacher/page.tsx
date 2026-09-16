@@ -2,6 +2,7 @@
 
 import { useEffect, useState, FormEvent } from "react";
 import { TYPE_LABELS, TestTemplate } from "./tests/types";
+import DropdownSelect from "@/components/dropdown-select";
 
 type GroupOption = { id: string; name: string };
 type TestOption = {
@@ -84,46 +85,24 @@ export default function StartTab() {
         <label className="block text-sm text-ink-soft mb-2">
           აირჩიე ჯგუფი
         </label>
-        <select
+        <DropdownSelect
           value={groupId}
-          onChange={(e) => setGroupId(e.target.value)}
+          onChange={setGroupId}
           required
-          className="w-full border border-paper-line rounded-sm px-3 py-2.5
-                     bg-white font-body text-ink text-sm
-                     focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
-        >
-          <option value="" disabled>
-            — აირჩიეთ —
-          </option>
-          {groups.map((g) => (
-            <option key={g.id} value={g.id}>
-              {g.name}
-            </option>
-          ))}
-        </select>
+          options={groups.map((g) => ({ value: g.id, label: g.name }))}
+        />
       </div>
 
       <div>
         <label className="block text-sm text-ink-soft mb-2">
           აირჩიე ტესტი
         </label>
-        <select
+        <DropdownSelect
           value={testId}
-          onChange={(e) => setTestId(e.target.value)}
+          onChange={setTestId}
           required
-          className="w-full border border-paper-line rounded-sm px-3 py-2.5
-                     bg-white font-body text-ink text-sm
-                     focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker"
-        >
-          <option value="" disabled>
-            — აირჩიეთ —
-          </option>
-          {tests.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.label}
-            </option>
-          ))}
-        </select>
+          options={tests.map((t) => ({ value: t.id, label: t.label }))}
+        />
       </div>
 
       <button
