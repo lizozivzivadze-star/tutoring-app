@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import UserMenu from "@/components/user-menu";
 
 type ReviewData = {
   attemptId: string;
@@ -29,14 +30,23 @@ export default function ReviewPage() {
 
   if (!data) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-ink-soft text-sm">იტვირთება...</p>
-      </main>
+      <div className="min-h-screen">
+        <header className="ruled-edge bg-white px-6 py-4 flex items-center gap-4">
+          <UserMenu />
+        </header>
+        <main className="min-h-screen flex items-center justify-center">
+          <p className="text-ink-soft text-sm">იტვირთება...</p>
+        </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen px-6 py-8">
+    <div className="min-h-screen">
+      <header className="ruled-edge bg-white px-6 py-4 flex items-center gap-4">
+        <UserMenu />
+      </header>
+      <main className="px-6 py-8">
       <div className="max-w-sm mx-auto">
         <Link
   href="/dashboard/student"
@@ -80,6 +90,7 @@ export default function ReviewPage() {
           ))}
         </div>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }
