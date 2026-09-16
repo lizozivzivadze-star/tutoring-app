@@ -46,7 +46,6 @@ const style = {
   transform: CSS.Transform.toString(transform),
   transition,
   opacity: isDragging ? 0.5 : 1,
-  touchAction: "none" as const,
 };
 
   async function saveRename() {
@@ -73,6 +72,7 @@ const style = {
         <span
   {...attributes}
   {...listeners}
+  style={{ touchAction: "none" }}
   className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1 text-[18px]"
   title="გადაადგილება"
 >

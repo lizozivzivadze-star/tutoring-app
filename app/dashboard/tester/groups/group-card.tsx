@@ -58,7 +58,6 @@ export default function GroupCard({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: "none" as const,
   };
 
   const studentSensors = useSensors(
@@ -137,6 +136,7 @@ export default function GroupCard({
         <span
           {...attributes}
           {...listeners}
+          style={{ touchAction: "none" }}
           className="cursor-grab text-ink-soft/60 px-1 select-none text-[18px]"
           title="გადაადგილება"
         >
