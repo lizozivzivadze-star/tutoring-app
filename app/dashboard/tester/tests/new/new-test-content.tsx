@@ -124,7 +124,7 @@ async function persist(
         ← უკან
       </Link>
       <h1 className="font-display text-xl font-medium text-ink mt-3 mb-5 pb-2 border-b border-paper-line">
-        ახალი ტესტი
+        ახალი ტესტის დამატება
       </h1>
 
       {defaultInstruction === null ? (
