@@ -64,11 +64,11 @@ export default function ReviewPage() {
               <p className="text-ink text-sm mb-2">
                 <span className="text-ink-soft">შ{i + 1}.</span> {q.prompt}
               </p>
-              <p className="text-sm text-ledger">
+              <p className="text-sm text-ledger font-semibold">
                 სწორი პასუხია: {q.correctAnswer}
               </p>
               <p
-                className={`text-sm ${
+                className={`text-sm font-semibold ${
                   q.yourAnswer === q.correctAnswer
                     ? "text-ledger"
                     : "text-marker-dark"
