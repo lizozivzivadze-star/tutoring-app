@@ -13,6 +13,9 @@ export default async function RootPage() {
   if (session?.user?.role === "admin") {
     redirect("/dashboard/admin");
   }
+  if (session?.user?.role === "tester") {
+    redirect("/dashboard/tester");
+  }
 
   redirect("/login");
 }
