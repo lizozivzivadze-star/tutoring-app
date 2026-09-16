@@ -7,7 +7,7 @@ import { QuestionDraft, TestTemplate, TYPE_LABELS } from "./types";
 type ThemeOption = { id: string; name: string };
 
 const inputClass =
-  "w-full border border-paper-line rounded-sm px-3 py-2.5 font-body text-ink bg-white " +
+  "w-full border border-paper-line rounded-sm px-3 py-2.5 font-body text-sm text-ink bg-white " +
   "focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker";
 
 export default function TestForm({
