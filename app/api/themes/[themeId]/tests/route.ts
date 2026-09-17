@@ -64,6 +64,12 @@ export async function POST(
     orderBy: { order: "desc" },
   });
 
+  // Same instant used for both timestamps below — otherwise
+  // updatedAt (set by Prisma's @updatedAt at actual insert time)
+  // always lands a beat after publishedAt, making a just-published
+  // test look like it has unpublished edits.
+  const now = new Date();
+
   const snapshot = published
     ? {
         title: title.trim(),
@@ -87,7 +93,8 @@ export async function POST(
       title: title.trim(),
       instruction: instruction?.trim() || null,
       published: Boolean(published),
-      publishedAt: published ? new Date() : null,
+      publishedAt: published ? now : null,
+      updatedAt: now,
       publishedSnapshot: snapshot ?? undefined,
       order: (last?.order ?? -1) + 1,
       questions: {
