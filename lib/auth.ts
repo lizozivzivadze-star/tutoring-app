@@ -100,7 +100,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.uid = user.id;
         token.role = (user as { role: "teacher" | "student" | "admin" | "tester" }).role;
+        return token;
       }
+
+      // Existing session, not a fresh sign-in: re-check that the
+      // student account behind this token still exists. If it was
+      // deleted (e.g. via group deletion), invalidate the token so
+      // the browser is signed out automatically on the next request,
+      // instead of the stale session lingering until it expires.
+      if (token.role === "student" && token.uid) {
+        const student = await prisma.student.findUnique({
+          where: { id: token.uid as string },
+        });
+        if (!student) return null;
+      }
+
       return token;
     },
     async session({ session, token }) {
