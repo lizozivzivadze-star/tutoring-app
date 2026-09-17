@@ -50,25 +50,9 @@ export async function DELETE(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  const sentCount = await prisma.sentTest.count({
-    where: { test: { themeId } },
-  });
-  if (sentCount > 0) {
-    // Same rule as deleting an individual test: once any test under
-    // this theme has been sent, the theme can't cascade-delete it
-    // out from under students' results.
-    return NextResponse.json(
-      {
-        error:
-          "ამ თემაში არის უკვე გაგზავნილი ტესტი — თემის წაშლა შეუძლებელია, სანამ ის ტესტი არსებობს.",
-      },
-      { status: 409 }
-    );
-  }
-
-  // Deleting a theme cascades to its (never-sent) tests/questions/
-  // options (schema: onDelete Cascade) — safe now that we've ruled
-  // out any sent tests above.
+  // Deletable unconditionally — cascades to Test → Question/Option
+  // and (via Test's own cascade) SentTest/TestAttempt/AttemptAnswer,
+  // so every test under this theme disappears with it, sent or not.
   await prisma.theme.delete({ where: { id: themeId } });
 
   return NextResponse.json({ ok: true });

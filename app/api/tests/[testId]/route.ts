@@ -217,19 +217,9 @@ export async function DELETE(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  if (existing._count.sentTests > 0) {
-    // Same rule as editing questions: once sent, a test (and any
-    // attempts/results riding on it) is kept for the record instead
-    // of being deletable.
-    return NextResponse.json(
-      {
-        error:
-          "ეს ტესტი უკვე გაგზავნილია — წაშლა აღარ შეიძლება, რომ მოსწავლეების შედეგები არ დაიკარგოს.",
-      },
-      { status: 409 }
-    );
-  }
-
+  // Deletable unconditionally — cascades to SentTest/TestAttempt/
+  // AttemptAnswer (schema: onDelete Cascade), wiping any student
+  // history tied to this test.
   await prisma.test.delete({ where: { id: testId } });
 
   return NextResponse.json({ ok: true });
