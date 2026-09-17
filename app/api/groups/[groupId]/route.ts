@@ -50,10 +50,14 @@ export async function DELETE(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  // Students in the group are kept (their groupId is cleared, per the
-  // schema's onDelete: SetNull) rather than deleted, so removing a
-  // group by mistake can't wipe out student records with it.
-  await prisma.group.delete({ where: { id: groupId } });
+  // Students in the group are permanently deleted along with it —
+  // their email, access code and full test history are freed up.
+  // TestAttempt/AttemptAnswer cascade-delete automatically via the
+  // Student relation's onDelete: Cascade.
+  await prisma.$transaction([
+    prisma.student.deleteMany({ where: { groupId } }),
+    prisma.group.delete({ where: { id: groupId } }),
+  ]);
 
   return NextResponse.json({ ok: true });
 }

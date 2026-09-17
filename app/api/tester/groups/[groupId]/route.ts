@@ -50,7 +50,12 @@ export async function DELETE(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  await prisma.group.delete({ where: { id: groupId } });
+  // Students in the group are permanently deleted along with it —
+  // their email, access code and full test history are freed up.
+  await prisma.$transaction([
+    prisma.student.deleteMany({ where: { groupId } }),
+    prisma.group.delete({ where: { id: groupId } }),
+  ]);
 
   return NextResponse.json({ ok: true });
 }
