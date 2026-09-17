@@ -167,14 +167,12 @@ export default function TestDetailPage() {
             >
               edit
             </button>
-            {!test.locked && (
-              <button
-                onClick={() => setConfirmingDelete(true)}
-                className="text-sm text-ink-soft hover:text-marker-dark"
-              >
-                ×
-              </button>
-            )}
+            <button
+              onClick={() => setConfirmingDelete(true)}
+              className="text-sm text-ink-soft hover:text-marker-dark"
+            >
+              ×
+            </button>
           </div>
         )}
       </div>
