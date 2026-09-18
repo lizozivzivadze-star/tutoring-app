@@ -81,28 +81,30 @@ export default function TesterStartTab() {
 
   return (
     <form onSubmit={handleSend} className="flex flex-col gap-5">
-      <div>
-        <label className="block text-sm text-ink-soft mb-2">
-          აირჩიე ჯგუფი
-        </label>
-        <DropdownSelect
-          value={groupId}
-          onChange={setGroupId}
-          required
-          options={groups.map((g) => ({ value: g.id, label: g.name }))}
-        />
-      </div>
+      <div className="w-screen relative left-1/2 -ml-[50vw] flex flex-col items-center gap-5">
+        <div className="w-[80vw]">
+          <label className="block text-sm text-ink-soft mb-2">
+            აირჩიე ჯგუფი
+          </label>
+          <DropdownSelect
+            value={groupId}
+            onChange={setGroupId}
+            required
+            options={groups.map((g) => ({ value: g.id, label: g.name }))}
+          />
+        </div>
 
-      <div>
-        <label className="block text-sm text-ink-soft mb-2">
-          აირჩიე ტესტი
-        </label>
-        <DropdownSelect
-          value={testId}
-          onChange={setTestId}
-          required
-          options={tests.map((t) => ({ value: t.id, label: t.label }))}
-        />
+        <div className="w-[80vw]">
+          <label className="block text-sm text-ink-soft mb-2">
+            აირჩიე ტესტი
+          </label>
+          <DropdownSelect
+            value={testId}
+            onChange={setTestId}
+            required
+            options={tests.map((t) => ({ value: t.id, label: t.label }))}
+          />
+        </div>
       </div>
 
       <button
