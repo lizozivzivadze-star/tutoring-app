@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function CheckEmailContent({ template }: { template: string }) {
@@ -106,12 +105,6 @@ export default function CheckEmailContent({ template }: { template: string }) {
             {after}
           </p>
         </div>
-
-        <p className="text-sm text-ink-soft mt-6">
-          <Link href="/login" className="text-marker font-medium">
-            სხვა მისამართის შეყვანა
-          </Link>
-        </p>
       </div>
     </main>
   );
