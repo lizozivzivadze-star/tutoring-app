@@ -10,25 +10,17 @@ export default function CheckEmailContent({ template }: { template: string }) {
   const [before, after] = template.split("{email}");
   const [finished, setFinished] = useState(false);
 
-  // ეს გვერდი ხშირად ჩაშენებულ ბრაუზერშია (Messenger და ა.შ.), ბმულს კი
-  // მეილიდან სხვა ბრაუზერში ხსნიან — ამიტომ აქედან ვერ ვხვდებით, რომ
-  // შესვლა უკვე მოხდა და გვერდი "გაყინული" რჩება. ვამოწმებთ ორ რამეს:
-  //  1) ამავე ბრაუზერში შევიდა? (საერთო cookie) → პირდაპირ დაფაზე გადავდივართ;
-  //  2) ბმული სადმე სხვაგან გამოიყენეს? → ვაჩვენებთ "შესვლა დასრულდა".
+  // ეს გვერდი (ორიგინალი tab) აღარასდროს გადადის თავად დაფაზე — session
+  // cookie საერთოა tab-ებს შორის, ამიტომ session-ის დანახვა არ ნიშნავს, რომ
+  // სწორედ ეს tab-ი დალოგინდა (შესაძლოა სხვა tab-ში მოხდა). დაფაზე მხოლოდ
+  // ის tab გადადის, სადაც მეილის ლინკი რეალურად გაიხსნა. ეს tab მხოლოდ
+  // poll-ის სტატუსს უსმენს: თუ ლინკი გამოყენებულია → "შესვლა დასრულდა".
   useEffect(() => {
     let done = false;
 
     async function check() {
       if (done) return;
       try {
-        const sRes = await fetch("/api/auth/session", { cache: "no-store" });
-        const session = await sRes.json();
-        if (session?.user?.role) {
-          done = true;
-          window.location.replace("/");
-          return;
-        }
-
         if (pollId) {
           const pRes = await fetch(
             `/api/auth/poll?id=${encodeURIComponent(pollId)}`,
