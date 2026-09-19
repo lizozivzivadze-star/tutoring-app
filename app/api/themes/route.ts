@@ -11,7 +11,9 @@ export async function GET() {
   }
 
   const themes = await prisma.theme.findMany({
-    where: testerId ? { testerId } : undefined,
+    where: testerId
+      ? { testerId }
+      : { tester: { teacherAccess: { some: { teacherId: teacherId! } } } },
     orderBy: { order: "asc" },
     include: {
       tests: {

@@ -18,6 +18,7 @@ model Teacher {
   phone     String?
   createdAt DateTime @default(now())
   groups    Group[]
+  testerAccess TesterTeacherAccess[]
 }
 
 model Group {
@@ -94,6 +95,22 @@ model Tester {
   createdAt         DateTime @default(now())
   groups            Group[]
   themes            Theme[]
+  teacherAccess     TesterTeacherAccess[]
+}
+
+// Which teachers are allowed to see a given tester's published tests
+// in their "აირჩიე ტესტი" list. Without a row here for a
+// tester/teacher pair, that teacher never sees that tester's tests.
+model TesterTeacherAccess {
+  id        String   @id @default(cuid())
+  testerId  String
+  teacherId String
+  tester    Tester   @relation(fields: [testerId], references: [id], onDelete: Cascade)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([testerId, teacherId])
+  @@index([teacherId])
 }
 
 // Single-row settings table the admin dashboard edits. Always

@@ -21,6 +21,44 @@ async function main() {
     create: admin,
   });
   console.log(`[seed] admin ready: ${admin.identityEmail} -> mail to ${admin.notificationEmail}`);
+
+  // Two teachers, plus one tester whose tests should show up only in
+  // these two teachers' "აირჩიე ტესტი" list (TesterTeacherAccess
+  // below), not for any other teacher.
+  const teacher1 = await prisma.teacher.upsert({
+    where: { email: "tariel.zivzivadze@gmail.com" },
+    update: {},
+    create: { email: "tariel.zivzivadze@gmail.com" },
+  });
+  console.log(`[seed] teacher ready: ${teacher1.email}`);
+
+  const teacher2 = await prisma.teacher.upsert({
+    where: { email: "n.deisadze@gmail.com" },
+    update: {},
+    create: { email: "n.deisadze@gmail.com" },
+  });
+  console.log(`[seed] teacher ready: ${teacher2.email}`);
+
+  const tester = await prisma.tester.upsert({
+    where: { identityEmail: "tariel.zivzivadze.tester@gmail.com" },
+    update: { notificationEmail: "tariel.zivzivadze@gmail.com" },
+    create: {
+      identityEmail: "tariel.zivzivadze.tester@gmail.com",
+      notificationEmail: "tariel.zivzivadze@gmail.com",
+    },
+  });
+  console.log(`[seed] tester ready: ${tester.identityEmail} -> mail to ${tester.notificationEmail}`);
+
+  for (const teacher of [teacher1, teacher2]) {
+    await prisma.testerTeacherAccess.upsert({
+      where: {
+        testerId_teacherId: { testerId: tester.id, teacherId: teacher.id },
+      },
+      update: {},
+      create: { testerId: tester.id, teacherId: teacher.id },
+    });
+    console.log(`[seed] access ready: ${tester.identityEmail} -> ${teacher.email}`);
+  }
 }
 
 main()

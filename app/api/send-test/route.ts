@@ -24,6 +24,14 @@ export async function POST(req: NextRequest) {
   if (!test) {
     return NextResponse.json({ error: "ტესტი ვერ მოიძებნა" }, { status: 404 });
   }
+  const hasAccess = await prisma.testerTeacherAccess.findUnique({
+    where: {
+      testerId_teacherId: { testerId: test.theme.testerId, teacherId },
+    },
+  });
+  if (!hasAccess) {
+    return NextResponse.json({ error: "ტესტი ვერ მოიძებნა" }, { status: 404 });
+  }
   if (!test.published) {
     return NextResponse.json(
       { error: "გამოუქვეყნებელი ტესტის გაგზავნა არ შეიძლება" },
