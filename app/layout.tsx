@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { getSettings } from "@/lib/settings";
+import InstallProvider from "@/components/install-provider";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -10,6 +11,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: settings.siteTitle,
     description: settings.siteDescription,
+        appleWebApp: {
+      capable: true,
+      title: "ტუტორი",
+      statusBarStyle: "default",
+    },
   };
 }
 
@@ -30,8 +36,16 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="theme-color" content="#b33f2e" />
+                <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;});",
+          }}
+        />
       </head>
-      <body>{children}</body>
+            <body>
+        <InstallProvider>{children}</InstallProvider>
+      </body>
     </html>
   );
 }
