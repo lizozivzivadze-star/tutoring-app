@@ -117,11 +117,11 @@ export default function StartTab() {
         {status === "sending" ? "იგზავნება..." : "გააგზავნე"}
       </button>
 
-{status === "sent" && (
-  <p className="text-xl font-display font-semibold text-ledger text-center">
-    ტესტი წარმატებით გაიგზავნა ✓
-  </p>
-)}
+      {status === "sent" && (
+        <p className="text-[15px] font-display font-semibold text-ledger text-center">
+          ტესტი წარმატებით გაიგზავნა ✓
+        </p>
+      )}
       {status === "error" && (
         <p className="text-sm text-marker-dark text-center">{error}</p>
       )}
