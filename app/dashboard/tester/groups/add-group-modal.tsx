@@ -12,7 +12,7 @@ export default function AddGroupModal({
   onCreated,
 }: {
   onClose: () => void;
-  onCreated: () => void;
+  onCreated: (groupId: string) => void;
 }) {
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
@@ -36,7 +36,8 @@ export default function AddGroupModal({
       return;
     }
 
-    onCreated();
+    const data = await res.json();
+    onCreated(data.group.id);
   }
 
   return (

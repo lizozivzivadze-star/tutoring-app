@@ -196,8 +196,9 @@ export default function GroupsTab() {
       {addGroupOpen && (
         <AddGroupModal
           onClose={() => setAddGroupOpen(false)}
-          onCreated={() => {
+          onCreated={(groupId) => {
             setAddGroupOpen(false);
+            setExpandedIds((prev) => new Set(prev).add(groupId));
             load();
           }}
         />
