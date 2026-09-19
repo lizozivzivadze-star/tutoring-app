@@ -46,10 +46,11 @@ export async function POST(req: NextRequest) {
   }
 
   const token = randomBytes(24).toString("hex");
+  const pollId = randomBytes(24).toString("hex");
   const expiresAt = new Date(Date.now() + 1000 * 60 * 15); // 15 min
 
   await prisma.loginToken.create({
-    data: { token, email, role, expiresAt },
+        data: { token, pollId, email, role, expiresAt },
   });
 
   const url = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`;
@@ -71,5 +72,5 @@ export async function POST(req: NextRequest) {
     bodyTemplate: settings.magicLinkBodyText,
   });
 
-  return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, pollId });
 }

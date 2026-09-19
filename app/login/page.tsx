@@ -23,8 +23,9 @@ export default function LoginPage() {
         body: JSON.stringify({ email }),
       });
 
+            const data = await res.json().catch(() => null);
+
       if (!res.ok) {
-        const data = await res.json().catch(() => null);
         setErrorMessage(data?.error ?? "ვერ გაიგზავნა. სცადეთ ხელახლა.");
         setStatus("error");
         return;
@@ -33,7 +34,10 @@ export default function LoginPage() {
       // One shared form for both roles — the server decided the role
       // from the email, we never send or know it here.
       setStatus("sent");
-      router.push(`/login/check-email?email=${encodeURIComponent(email)}`);
+      const poll = data?.pollId
+        ? `&poll=${encodeURIComponent(data.pollId)}`
+        : "";
+      router.push(`/login/check-email?email=${encodeURIComponent(email)}${poll}`);
     } catch {
       setErrorMessage("ვერ გაიგზავნა. სცადეთ ხელახლა.");
       setStatus("error");

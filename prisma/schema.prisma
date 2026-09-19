@@ -56,6 +56,7 @@ model Student {
 model LoginToken {
   id        String   @id @default(cuid())
   token     String   @unique
+  pollId    String?  @unique
   email     String
   role      Role
   expiresAt DateTime
