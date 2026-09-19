@@ -2,7 +2,6 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -86,13 +85,6 @@ export default function LoginPage() {
             <p className="mt-4 text-sm text-marker-dark">{errorMessage}</p>
           )}
         </form>
-
-        <p className="text-center text-sm text-ink-soft mt-6">
-          მასწავლებელი ხართ?{" "}
-          <Link href="/register" className="text-marker font-medium">
-            დარეგისტრირდით
-          </Link>
-        </p>
       </div>
       <div className="flex-[2] md:hidden" />   
     </main>

@@ -101,7 +101,6 @@ model Tester {
 // in the admin dashboard spec lives here instead of being hardcoded.
 model Settings {
   id                       String   @id @default("singleton")
-  teacherInviteCode        String   @default("")
   defaultTestInstruction   String?
   notFoundEmailText        String   @default("ეს ელფოსტა სისტემაში ვერ მოიძებნა")
   magicLinkSubject         String   @default("შესვლის ბმული")

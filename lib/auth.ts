@@ -114,6 +114,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
         if (!student) return null;
       }
+            if (token.role === "teacher" && token.uid) {
+        const teacher = await prisma.teacher.findUnique({
+          where: { id: token.uid as string },
+        });
+        if (!teacher) return null;
+      }
 
       return token;
     },

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/dashboard/admin", label: "წვდომა" },
   { href: "/dashboard/admin/texts", label: "ტექსტები" },
   { href: "/dashboard/admin/site", label: "საიტი" },
 ];

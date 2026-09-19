@@ -4,7 +4,6 @@ import { getCurrentAdminId } from "@/lib/current-admin";
 import { getSettings, updateSettings } from "@/lib/settings";
 
 const EDITABLE_FIELDS = [
-  "teacherInviteCode",
   "defaultTestInstruction",
   "notFoundEmailText",
   "magicLinkSubject",

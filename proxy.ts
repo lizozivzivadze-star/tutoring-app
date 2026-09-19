@@ -8,8 +8,9 @@ export default auth((req) => {
   const wantsTeacher = pathname.startsWith("/dashboard/teacher");
   const wantsStudent = pathname.startsWith("/dashboard/student");
   const wantsAdmin = pathname.startsWith("/dashboard/admin");
+  const wantsTester = pathname.startsWith("/dashboard/tester");
 
-  if (!role && (wantsTeacher || wantsStudent || wantsAdmin)) {
+  if (!role && (wantsTeacher || wantsStudent || wantsAdmin || wantsTester)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
   if (wantsTeacher && role !== "teacher") {
@@ -19,6 +20,9 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
   if (wantsAdmin && role !== "admin") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+  if (wantsTester && role !== "tester") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 });
