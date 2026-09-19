@@ -8,11 +8,13 @@ export default function TesterDashboardLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <header className="ruled-edge bg-white px-6 py-6 flex items-center gap-4">
-        <UserMenu />
-      </header>
+      <div className="sticky top-0 z-20 bg-white">
+        <header className="ruled-edge bg-white px-6 py-6 flex items-center gap-4">
+          <UserMenu />
+        </header>
 
-      <TesterTabs />
+        <TesterTabs />
+      </div>
 
       <main className="px-6 py-8 max-w-sm mx-auto">
         <div className="p-5">
