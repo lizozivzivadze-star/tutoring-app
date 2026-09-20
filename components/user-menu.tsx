@@ -133,7 +133,7 @@ export default function UserMenu() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm min-w-[200px] py-1 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm min-w-[200px] py-1 overflow-hidden">
             {!installed && (
               <button
                 onClick={handleAddToHome}
