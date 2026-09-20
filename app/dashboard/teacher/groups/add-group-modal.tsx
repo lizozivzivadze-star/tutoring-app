@@ -41,7 +41,7 @@ export default function AddGroupModal({
   }
 
   return (
-    <Modal title="ჯგუფის დამატება" onClose={onClose}>
+    <Modal title="ჯგუფის დამატება" onClose={onClose} topAligned>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="block text-sm text-ink-soft mb-2">

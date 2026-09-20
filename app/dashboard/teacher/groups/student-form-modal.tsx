@@ -44,7 +44,7 @@ export default function StudentFormModal({
   }
 
   return (
-    <Modal title={title} onClose={onClose}>
+    <Modal title={title} onClose={onClose} topAligned>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="block text-sm text-ink-soft mb-2">სახელი</label>
