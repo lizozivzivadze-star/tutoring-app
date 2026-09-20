@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
+import IosInstallAnimation from "@/components/ios-install-animation";
 import {
   chromeIntentUrl,
   copyText,
@@ -16,18 +17,20 @@ type Guide = {
   steps: string[];
   note?: string;
   actions?: ("copy" | "chrome")[];
+  animation?: "ios";
 };
 
 const GUIDES: Record<InstallEnv, Guide> = {
-  "ios-safari": {
+    "ios-safari": {
     title: "ეკრანზე დასამატებლად:",
     steps: [
       "დააჭირეთ Share ღილაკს (კვადრატი ისრით ↑) ბრაუზერის ქვედა პანელზე, ან ⋯ მენიუს",
       "გადაფურცლეთ ქვემოთ და აირჩიეთ „Add to Home Screen“",
       "დააჭირეთ „Add“",
     ],
+    animation: "ios",
   },
-  "ios-other": {
+    "ios-other": {
     title: "ეკრანზე დასამატებლად:",
     steps: [
       "დააჭირეთ Share ღილაკს (კვადრატი ისრით ↑) — მისამართის ველთან ან ⋯ მენიუში",
@@ -35,6 +38,7 @@ const GUIDES: Record<InstallEnv, Guide> = {
     ],
     note: "თუ ასეთ პუნქტს ვერ ხედავთ, გახსენით ეს გვერდი Safari-ში და იქიდან დაამატეთ.",
     actions: ["copy"],
+    animation: "ios",
   },
   "inapp-ios": {
     title: "ჯერ ბრაუზერში გახსენით",
@@ -87,6 +91,16 @@ const GUIDES: Record<InstallEnv, Guide> = {
   },
 };
 
+// ღილაკი ახლა ყოველთვის ჩანს. თუ საიტი უკვე ხატულადანაა გახსნილი
+// (standalone), დაჭერისას ამას ვეუბნებით და ვუხსნით, როგორ დაამატოს ხელახლა.
+const INSTALLED_GUIDE: Guide = {
+  title: "აპლიკაცია უკვე დამატებულია",
+  steps: [
+    "ამჟამად საიტი მთავარი ეკრანის ხატულადან გაქვთ გახსნილი",
+    "ხატულის ხელახლა დასამატებლად გახსენით საიტი ბრაუზერში (Safari / Chrome) და იქიდან დააჭირეთ „Add to HOME“-ს",
+  ],
+};
+
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
@@ -95,6 +109,11 @@ export default function UserMenu() {
 
   async function handleAddToHome() {
     setOpen(false);
+        if (installed) {
+      setCopied(false);
+      setGuide(INSTALLED_GUIDE);
+      return;
+    }
 
     // Chrome / Edge / Samsung Internet (Android და დესკტოპი): ნამდვილი
     // ერთ-დაწკაპუნებიანი დაინსტალირება.
@@ -134,19 +153,15 @@ export default function UserMenu() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm min-w-[200px] py-1 overflow-hidden">
-            {!installed && (
-              <button
-                onClick={handleAddToHome}
-                className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40"
-              >
-                Add to HOME
-              </button>
-            )}
+            <button
+              onClick={handleAddToHome}
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40"
+            >
+              Add to HOME
+            </button>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className={`w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 ${
-                installed ? "" : "border-t border-paper-line"
-              }`}
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
               Log out
             </button>
@@ -163,11 +178,15 @@ export default function UserMenu() {
           <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[80dvh] overflow-y-auto">
             <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
 
-            <ol className="text-sm text-ink-soft flex flex-col gap-2 list-decimal pl-5">
-              {guide.steps.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ol>
+            {guide.animation === "ios" && <IosInstallAnimation />}
+
+            {!guide.animation && (
+              <ol className="text-sm text-ink-soft flex flex-col gap-2 list-decimal pl-5">
+                {guide.steps.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ol>
+            )}
 
             {guide.note && (
               <p className="text-xs text-ink-soft/80 mt-3">{guide.note}</p>
