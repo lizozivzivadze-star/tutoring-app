@@ -5,9 +5,10 @@ import { sendMagicLinkEmail } from "@/lib/mailer";
 import { getSettings } from "@/lib/settings";
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
+  const { email: rawEmail } = await req.json();
+  const typedEmail = typeof rawEmail === "string" ? rawEmail.trim() : "";
 
-  if (!email) {
+  if (!typedEmail) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
   }
 
@@ -17,11 +18,12 @@ export async function POST(req: NextRequest) {
   // creates a Teacher record, so this can never be used to become
   // a teacher — only to log in as one that already exists. Admins
   // and testers are matched on identityEmail, same principle.
+  const ci = { equals: typedEmail, mode: "insensitive" as const };
   const [teacher, student, admin, tester] = await Promise.all([
-    prisma.teacher.findUnique({ where: { email } }),
-    prisma.student.findUnique({ where: { email } }),
-    prisma.admin.findUnique({ where: { identityEmail: email } }),
-    prisma.tester.findUnique({ where: { identityEmail: email } }),
+    prisma.teacher.findFirst({ where: { email: ci } }),
+    prisma.student.findFirst({ where: { email: ci } }),
+    prisma.admin.findFirst({ where: { identityEmail: ci } }),
+    prisma.tester.findFirst({ where: { identityEmail: ci } }),
   ]);
 
   const role = teacher
@@ -44,6 +46,11 @@ export async function POST(req: NextRequest) {
       { status: 404 }
     );
   }
+  
+    const email = (teacher?.email ??
+    student?.email ??
+    admin?.identityEmail ??
+    tester?.identityEmail) as string;
 
   const token = randomBytes(24).toString("hex");
   const pollId = randomBytes(24).toString("hex");

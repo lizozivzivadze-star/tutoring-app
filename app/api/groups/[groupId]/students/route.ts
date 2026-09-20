@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTeacherId } from "@/lib/current-teacher";
 import { generateAccessCode } from "@/lib/access-code";
+import { isStaffEmail } from "@/lib/staff-email";
 
 export async function POST(
   req: NextRequest,
@@ -26,10 +27,20 @@ export async function POST(
     );
   }
 
-  const existing = await prisma.student.findUnique({ where: { email } });
+  const cleanEmail = email.trim();
+
+  const existing = await prisma.student.findFirst({
+    where: { email: { equals: cleanEmail, mode: "insensitive" } },
+  });
   if (existing) {
     return NextResponse.json(
       { error: "ეს email უკვე რეგისტრირებულია" },
+      { status: 409 }
+    );
+  }
+  if (await isStaffEmail(cleanEmail)) {
+    return NextResponse.json(
+      { error: "ეს email უკვე გამოიყენება სხვა ანგარიშზე" },
       { status: 409 }
     );
   }

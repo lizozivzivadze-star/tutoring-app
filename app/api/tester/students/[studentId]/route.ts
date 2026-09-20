@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTesterId } from "@/lib/current-teacher";
+import { isStaffEmail } from "@/lib/staff-email";
 
 async function assertOwnership(studentId: string, testerId: string) {
   const student = await prisma.student.findUnique({
@@ -56,11 +57,21 @@ export async function PATCH(
     );
   }
 
-  if (email !== owned.email) {
-    const clash = await prisma.student.findUnique({ where: { email } });
+  const cleanEmail = email.trim();
+
+  if (cleanEmail.toLowerCase() !== owned.email.toLowerCase()) {
+    const clash = await prisma.student.findFirst({
+      where: { email: { equals: cleanEmail, mode: "insensitive" } },
+    });
     if (clash) {
       return NextResponse.json(
         { error: "ეს email უკვე გამოყენებულია" },
+        { status: 409 }
+      );
+    }
+    if (await isStaffEmail(cleanEmail)) {
+      return NextResponse.json(
+        { error: "ეს email უკვე გამოიყენება სხვა ანგარიშზე" },
         { status: 409 }
       );
     }
