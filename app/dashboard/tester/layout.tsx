@@ -16,8 +16,8 @@ export default async function TesterDashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <div data-app-menu className="sticky top-0 z-20 bg-white">
-        <header className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-20 bg-white">
+        <header data-app-menu className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
           <Greeting name={tester?.name} />
           <UserMenu />
         </header>
