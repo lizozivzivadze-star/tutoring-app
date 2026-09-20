@@ -175,9 +175,13 @@ export default function UserMenu() {
             className="fixed inset-0 z-50 bg-black/40"
             onClick={() => setGuide(null)}
           />
-          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[80dvh] overflow-y-auto">
-            <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
+          <div
+            className={`fixed left-4 right-4 ${
+              guide.animation ? "top-4" : "bottom-6"
+            } z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[80dvh] overflow-y-auto`}
+          >
 
+          <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
             {guide.animation === "ios" && <IosInstallAnimation />}
 
             {!guide.animation && (

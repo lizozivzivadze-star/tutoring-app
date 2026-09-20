@@ -197,6 +197,24 @@ export default function IosInstallAnimation() {
     <div className="mb-3">
       <style>{`@keyframes iosGuideSlideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}`}</style>
 
+      {/* ნაბიჯების სია ზემოთ დგას: Safari-ს მენიუები ქვემოდან იხსნება და
+          ზედა ნაწილს არ ფარავს, ამიტომ ნაბიჯები მთელი დროის განმავლობაში ჩანს */}
+      <ol className="flex flex-col gap-1.5 mb-3">
+        {STEPS.map((s, i) => (
+          <li key={s.title}>
+            <button
+              type="button"
+              onClick={() => setStep(i)}
+              className={`w-full text-left text-sm ${
+                i === step ? "text-marker font-medium" : "text-ink-soft"
+              }`}
+            >
+              {s.title}
+            </button>
+          </li>
+        ))}
+      </ol>
+
       {/* key={step} — ყოველ ნაბიჯზე ანიმაცია თავიდან იწყება */}
       <div
         key={step}
@@ -208,10 +226,7 @@ export default function IosInstallAnimation() {
         {step === 3 && <StepAdd />}
       </div>
 
-      <p className="text-sm text-ink font-medium text-center mt-3">
-        {STEPS[step].title}
-      </p>
-      <p className="text-xs text-ink-soft text-center mt-1">
+      <p className="text-xs text-ink-soft text-center mt-3">
         {STEPS[step].hint}
       </p>
 
