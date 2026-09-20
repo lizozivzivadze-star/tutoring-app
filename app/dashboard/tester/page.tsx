@@ -4,7 +4,11 @@ import { useEffect, useState, FormEvent } from "react";
 import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
 
-type GroupOption = { id: string; name: string };
+type GroupOption = {
+  id: string;
+  name: string;
+  students: { id: string; label: string }[];
+};
 type TestOption = {
   id: string;
   label: string;
@@ -25,10 +29,24 @@ export default function TesterStartTab() {
       .then((r) => r.json())
       .then((data) =>
         setGroups(
-          (data.groups ?? []).map((g: { id: string; name: string }) => ({
-            id: g.id,
-            name: g.name,
-          }))
+          (data.groups ?? []).map(
+  (g: {
+    id: string;
+    name: string;
+    students?: {
+      id: string;
+      name: string | null;
+      surname: string | null;
+    }[];
+  }) => ({
+    id: g.id,
+    name: g.name,
+    students: (g.students ?? []).map((s) => ({
+      id: s.id,
+      label: [s.name, s.surname].filter(Boolean).join(" ") || "—",
+    })),
+  })
+)
         )
       );
 
@@ -90,7 +108,14 @@ export default function TesterStartTab() {
             value={groupId}
             onChange={setGroupId}
             required
-            options={groups.map((g) => ({ value: g.id, label: g.name }))}
+            options={groups.flatMap((g) => [
+  { value: g.id, label: g.name },
+  ...g.students.map((s) => ({
+    value: s.id,
+    label: s.label,
+    disabled: true,
+  })),
+])}
           />
         </div>
 

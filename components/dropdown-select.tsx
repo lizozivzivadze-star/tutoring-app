@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export type DropdownOption = { value: string; label: string };
+export type DropdownOption = {
+  value: string;
+  label: string;
+  disabled?: boolean; // dimmed, non-selectable row
+};
 
 export default function DropdownSelect({
   value,
@@ -68,22 +72,32 @@ export default function DropdownSelect({
 
       {open && (
         <ul className="absolute z-40 mt-1 w-full max-h-64 overflow-auto bg-white border border-paper-line rounded-sm shadow-lg">
-          {options.map((o) => (
-            <li key={o.value}>
-              <button
-                type="button"
-                onClick={() => {
-                  onChange(o.value);
-                  setOpen(false);
-                }}
-                className={`w-full text-left px-3 py-2.5 font-body text-sm hover:bg-paper ${
-                  o.value === value ? "bg-paper text-marker" : "text-ink"
-                }`}
-              >
-                {o.label}
-              </button>
-            </li>
-          ))}
+{options.map((o) =>
+  o.disabled ? (
+    <li
+      key={o.value}
+      aria-disabled="true"
+      className="px-3 py-2.5 font-body text-sm text-ink-soft/60 cursor-default select-none"
+    >
+      {o.label}
+    </li>
+  ) : (
+    <li key={o.value}>
+      <button
+        type="button"
+        onClick={() => {
+          onChange(o.value);
+          setOpen(false);
+        }}
+        className={`w-full text-left px-3 py-2.5 font-body text-sm hover:bg-paper ${
+          o.value === value ? "bg-paper text-marker" : "text-ink"
+        }`}
+      >
+        {o.label}
+      </button>
+    </li>
+  )
+)}
         </ul>
       )}
     </div>
