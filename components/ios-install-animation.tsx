@@ -2,27 +2,32 @@
 
 import { useEffect, useState } from "react";
 
+// iOS 26 Safari: ⋯ (ქვედა მარჯვენა) → Share → Add to Home Screen → Add.
 const STEPS = [
   {
-    title: "1. დააჭირეთ Share ღილაკს",
-    hint: "კვადრატი ისრით ↑, ბრაუზერის პანელზე ან ⋯ მენიუში",
+    title: "1. დააჭირეთ ⋯ (სამ წერტილს)",
+    hint: "ბრაუზერის ქვედა მარჯვენა კუთხეში. თუ ⋯ არ გიჩანთ და პანელზე პირდაპირ Share ხატულაა (კვადრატი ისრით ↑), დააჭირეთ მას და გადადით მე-3 ნაბიჯზე",
   },
   {
-    title: "2. აირჩიეთ „Add to Home Screen“",
-    hint: "თუ ვერ ხედავთ, გადაფურცლეთ მენიუ ქვემოთ",
+    title: "2. აირჩიეთ „Share“",
+    hint: "მენიუში, რომელიც გაიხსნება",
   },
   {
-    title: "3. დააჭირეთ „Add“",
-    hint: "ხატულა გამოჩნდება მთავარ ეკრანზე",
+    title: "3. აირჩიეთ „Add to Home Screen“",
+    hint: "გადაფურცლეთ ქვემოთ. თუ ვერ ხედავთ, მენიუს ბოლოში „Edit Actions“ → დაამატეთ",
+  },
+  {
+    title: "4. დააჭირეთ „Add“",
+    hint: "ზედა მარჯვენა კუთხეში. „Open as Web App“ დატოვეთ ჩართული",
   },
 ];
 
-function ShareIcon() {
+function ShareIcon({ size = 16 }: { size?: number }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="22"
-      height="22"
+      width={size}
+      height={size}
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -39,31 +44,80 @@ function ShareIcon() {
 // პულსირებადი რგოლი იმ ელემენტის გარშემო, რომელზეც უნდა დააჭიროს
 function Ring() {
   return (
-    <span className="absolute -inset-2 rounded-full border-2 border-marker animate-ping motion-reduce:animate-none" />
+    <span className="absolute -inset-1.5 rounded-full border-2 border-marker animate-ping motion-reduce:animate-none" />
+  );
+}
+
+// iOS 26 Safari-ს ქვედა მოტივტივე პანელი: უკან · მისამართი · ⋯
+function BottomBar({ highlightMore }: { highlightMore?: boolean }) {
+  return (
+    <div className="absolute bottom-2 inset-x-2 flex items-center gap-1.5">
+      <span className="w-9 h-9 shrink-0 rounded-full bg-paper border border-paper-line flex items-center justify-center text-ink-soft text-lg">
+        ‹
+      </span>
+      <span className="flex-1 min-w-0 h-9 rounded-full bg-paper border border-paper-line px-3 flex items-center justify-between text-[10px] text-ink-soft">
+        <span className="truncate">tutoring-app…</span>
+        <span>↻</span>
+      </span>
+      <span
+        className={`relative w-9 h-9 shrink-0 rounded-full bg-paper border flex items-center justify-center text-lg ${
+          highlightMore
+            ? "border-marker text-marker"
+            : "border-paper-line text-ink-soft"
+        }`}
+      >
+        {highlightMore && <Ring />}
+        {highlightMore && (
+          <span className="absolute -top-9 left-1/2 -translate-x-1/2 text-xl animate-bounce motion-reduce:animate-none">
+            👇
+          </span>
+        )}
+        ⋯
+      </span>
+    </div>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <div className="p-3 flex flex-col gap-2">
+      <div className="h-2 w-2/3 rounded bg-paper-line" />
+      <div className="h-2 w-full rounded bg-paper-line" />
+      <div className="h-2 w-4/5 rounded bg-paper-line" />
+    </div>
+  );
+}
+
+function StepMore() {
+  return (
+    <>
+      <PageSkeleton />
+      <BottomBar highlightMore />
+    </>
   );
 }
 
 function StepShare() {
   return (
     <>
-      <div className="p-3 flex flex-col gap-2">
-        <div className="h-2 w-2/3 rounded bg-paper-line" />
-        <div className="h-2 w-full rounded bg-paper-line" />
-        <div className="h-2 w-4/5 rounded bg-paper-line" />
-      </div>
-      <div className="absolute bottom-0 inset-x-0 h-12 border-t border-paper-line bg-paper flex items-center justify-around px-3 text-ink-soft">
-        <span className="text-lg">‹</span>
-        <span className="text-lg">›</span>
-        <span className="relative text-marker">
-          <Ring />
-          <span className="absolute -top-9 left-1/2 -translate-x-1/2 text-xl animate-bounce motion-reduce:animate-none">
-            👇
-          </span>
+      <PageSkeleton />
+      <div className="absolute inset-0 bg-ink/10" />
+      <div
+        className="absolute bottom-14 right-2 w-36 bg-white rounded-xl border border-paper-line shadow-lg p-1 flex flex-col gap-0.5"
+        style={{ animation: "iosGuideSlideUp .5s ease-out both" }}
+      >
+        <div className="rounded-md px-2.5 py-1.5 text-xs text-ink-soft">
+          New Tab
+        </div>
+        <div className="rounded-md px-2.5 py-1.5 text-xs text-ink font-medium flex items-center justify-between ring-2 ring-marker animate-pulse motion-reduce:animate-none">
+          <span>Share</span>
           <ShareIcon />
-        </span>
-        <span className="text-lg">▢</span>
-        <span className="text-lg">⋯</span>
+        </div>
+        <div className="rounded-md px-2.5 py-1.5 text-xs text-ink-soft">
+          Add Bookmark
+        </div>
       </div>
+      <BottomBar />
     </>
   );
 }
@@ -120,6 +174,12 @@ function StepAdd() {
           />
           <span className="text-sm text-ink">ტუტორი</span>
         </div>
+        <div className="mt-3 flex items-center justify-between text-[11px] text-ink-soft">
+          <span>Open as Web App</span>
+          <span className="relative w-7 h-4 rounded-full bg-ledger">
+            <span className="absolute right-0.5 top-0.5 w-3 h-3 rounded-full bg-white" />
+          </span>
+        </div>
       </div>
     </>
   );
@@ -129,7 +189,7 @@ export default function IosInstallAnimation() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setStep((s) => (s + 1) % STEPS.length), 3500);
+    const t = setInterval(() => setStep((s) => (s + 1) % STEPS.length), 4000);
     return () => clearInterval(t);
   }, []);
 
@@ -142,9 +202,10 @@ export default function IosInstallAnimation() {
         key={step}
         className="relative mx-auto w-[200px] h-[230px] rounded-[26px] border-2 border-ink/70 bg-white overflow-hidden"
       >
-        {step === 0 && <StepShare />}
-        {step === 1 && <StepAddToHome />}
-        {step === 2 && <StepAdd />}
+        {step === 0 && <StepMore />}
+        {step === 1 && <StepShare />}
+        {step === 2 && <StepAddToHome />}
+        {step === 3 && <StepAdd />}
       </div>
 
       <p className="text-sm text-ink font-medium text-center mt-3">
