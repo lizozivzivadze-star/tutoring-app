@@ -30,6 +30,13 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+  const studentCount = await prisma.student.count({ where: { groupId } });
+if (studentCount === 0) {
+  return NextResponse.json(
+    { error: "ჯგუფში მოსწავლე არ არის დამატებული, ტესტი ვერ გაიგზავნება" },
+    { status: 400 }
+  );
+}
 
   const sentTest = await prisma.sentTest.create({
     data: { groupId, testId },
