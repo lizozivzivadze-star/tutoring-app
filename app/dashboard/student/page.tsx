@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
+import Greeting from "@/components/greeting";
 
 type PendingTest = {
   sentTestId: string;
@@ -22,6 +23,7 @@ type CompletedTest = {
 export default function StudentDashboard() {
   const [pending, setPending] = useState<PendingTest[] | null>(null);
   const [completed, setCompleted] = useState<CompletedTest[] | null>(null);
+  const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/student/dashboard")
@@ -29,14 +31,16 @@ export default function StudentDashboard() {
       .then((data) => {
         setPending(data.pending ?? []);
         setCompleted(data.completed ?? []);
+        setName(data.name ?? null);
       });
   }, []);
 
   return (
     <div className="min-h-screen">
-      <header className="ruled-edge bg-white px-6 py-6 flex items-center gap-4">
-        <UserMenu />
-      </header>
+      <header className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
+  <Greeting name={name} />
+  <UserMenu />
+</header>
 
       <main className="px-6 py-8 max-w-sm mx-auto flex flex-col gap-8">
         <section className="rounded-lg p-4 bg-[#fff7e6] border border-[#f0dfb5]">

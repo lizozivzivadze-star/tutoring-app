@@ -47,6 +47,7 @@ export async function GET(
     score: attempt.score,
     totalQuestions: attempt.totalQuestions,
     studentEmail: attempt.student.email,
+    studentName: attempt.student.name,
     questions: attempt.sentTest.test.questions.map((q) => {
       const selectedOptionId = answerByQuestion.get(q.id) ?? null;
       const correctOption = q.options.find((o) => o.isCorrect);

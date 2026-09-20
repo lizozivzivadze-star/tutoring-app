@@ -13,7 +13,7 @@ export async function GET() {
     where: { id: studentId },
   });
   if (!student?.groupId) {
-    return NextResponse.json({ pending: [], completed: [] });
+    return NextResponse.json({ pending: [], completed: [], name: student?.name ?? null });
   }
 
   const [sentTests, attempts] = await Promise.all([
@@ -50,5 +50,5 @@ export async function GET() {
     totalQuestions: a.totalQuestions,
   }));
 
-  return NextResponse.json({ pending, completed });
+  return NextResponse.json({ pending, completed, name: student.name });
 }

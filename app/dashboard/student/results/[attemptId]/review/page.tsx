@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
+import Greeting from "@/components/greeting";
 
 type ReviewData = {
   attemptId: string;
   testTitle: string;
   completedAt: string;
   studentEmail: string;
+  studentName: string | null;
   questions: {
     id: string;
     prompt: string;
@@ -31,9 +33,10 @@ export default function ReviewPage() {
   if (!data) {
     return (
       <div className="min-h-screen">
-        <header className="ruled-edge bg-white px-6 py-4 flex items-center gap-4">
-          <UserMenu />
-        </header>
+<header className="ruled-edge bg-white px-6 py-4 flex items-center justify-between gap-4">
+  <Greeting />
+  <UserMenu />
+</header>
         <main className="min-h-screen flex items-center justify-center">
           <p className="text-ink-soft text-sm">იტვირთება...</p>
         </main>
@@ -43,7 +46,8 @@ export default function ReviewPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="ruled-edge bg-white px-6 py-4 flex items-center gap-4">
+      <header className="ruled-edge bg-white px-6 py-4 flex items-center justify-between gap-4">
+        <Greeting />
         <UserMenu />
       </header>
       <main className="px-6 py-8">
