@@ -10,8 +10,10 @@ type GroupOption = {
   students: { id: string; label: string }[];
 };
 type TestOption = {
-  id: string;
+  value: string;
   label: string;
+  disabled?: boolean;
+  indent?: boolean;
 };
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -54,6 +56,7 @@ export default function TesterStartTab() {
       .then((r) => r.json())
       .then((data) => {
         type ThemeWithTests = {
+          id: string;
           name: string;
           tests: {
             id: string;
@@ -62,15 +65,26 @@ export default function TesterStartTab() {
             published: boolean;
           }[];
         };
-        const flattened: TestOption[] = (data.themes ?? []).flatMap(
-          (theme: ThemeWithTests) =>
-            theme.tests
-              .filter((t) => t.published)
-              .map((t) => ({
-                id: t.id,
-                label: `${theme.name} · ${TYPE_LABELS[t.type]} · ${t.title}`,
-              }))
-        );
+
+        const flattened: TestOption[] = [];
+        (data.themes ?? []).forEach((theme: ThemeWithTests) => {
+          const published = theme.tests.filter((t) => t.published);
+          const types = Array.from(new Set(published.map((t) => t.type)));
+
+          types.forEach((type) => {
+            flattened.push({
+              value: `header:${theme.id}:${type}`,
+              label: `${theme.name} · ${TYPE_LABELS[type]}`,
+              disabled: true,
+            });
+            published
+              .filter((t) => t.type === type)
+              .forEach((t) => {
+                flattened.push({ value: t.id, label: t.title, indent: true });
+              });
+          });
+        });
+
         setTests(flattened);
       });
   }, []);
@@ -130,7 +144,7 @@ export default function TesterStartTab() {
             value={testId}
             onChange={setTestId}
             required
-            options={tests.map((t) => ({ value: t.id, label: t.label, indent: true }))}
+            options={tests}
           />
         </div>
       </div>

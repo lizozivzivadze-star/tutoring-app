@@ -78,7 +78,7 @@ export default function DropdownSelect({
     <li
       key={o.value}
       aria-disabled="true"
-      className="pl-[22px] pr-3 py-2.5 font-body text-sm text-ink-soft/60 cursor-default select-none"
+      className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm text-ink-soft/60 cursor-default select-none`}
     >
       {o.label}
     </li>
