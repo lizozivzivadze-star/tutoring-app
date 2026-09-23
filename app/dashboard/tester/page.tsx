@@ -130,7 +130,7 @@ export default function TesterStartTab() {
             value={testId}
             onChange={setTestId}
             required
-            options={tests.map((t) => ({ value: t.id, label: t.label }))}
+            options={tests.map((t) => ({ value: t.id, label: t.label, indent: true }))}
           />
         </div>
       </div>
