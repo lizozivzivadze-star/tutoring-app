@@ -101,10 +101,12 @@ const INSTALLED_GUIDE: Guide = {
   ],
 };
 
-export default function UserMenu() {
+export default function UserMenu({ showCancelPending = false }: { showCancelPending?: boolean }) {
   const [open, setOpen] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const { canPrompt, installed, promptInstall } = useInstall();
 
   async function handleAddToHome() {
@@ -137,6 +139,14 @@ export default function UserMenu() {
     window.location.href = chromeIntentUrl();
   }
 
+  async function handleCancelPending() {
+    setCancelling(true);
+    await fetch("/api/teacher/cancel-pending-tests", { method: "POST" });
+    setCancelling(false);
+    setConfirmCancel(false);
+    setOpen(false);
+  }
+
   return (
     <div className="relative">
       <button
@@ -165,6 +175,17 @@ export default function UserMenu() {
             >
               Log out
             </button>
+            {showCancelPending && (
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setConfirmCancel(true);
+                }}
+                className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line"
+              >
+                ყველა გაგზავნილი ტესტის გაუქმება
+              </button>
+            )}
           </div>
         </>
       )}
@@ -219,6 +240,32 @@ export default function UserMenu() {
             >
               გასაგებია
             </button>
+          </div>
+        </>
+      )}
+
+      {confirmCancel && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setConfirmCancel(false)} />
+          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto">
+            <p className="text-sm text-ink mb-4">
+              გსურთ გააუქმოთ ყველა გაგზავნილი და ამ მომენტისთვის შეუსრულებელი ტესტი?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmCancel(false)}
+                className="flex-1 rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
+              >
+                არა
+              </button>
+              <button
+                onClick={handleCancelPending}
+                disabled={cancelling}
+                className="flex-1 rounded-full bg-marker text-white text-sm font-medium py-2 disabled:opacity-50"
+              >
+                {cancelling ? "..." : "დიახ"}
+              </button>
+            </div>
           </div>
         </>
       )}
