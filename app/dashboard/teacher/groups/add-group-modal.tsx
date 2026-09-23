@@ -50,9 +50,11 @@ export default function AddGroupModal({
           <input
             autoFocus
             required
+            maxLength={30}
+            placeholder="30-მდე სიმბოლო"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={inputClass}
+            className={`${inputClass} placeholder:text-ink-soft/40`}
           />
         </div>
         {error && <p className="text-sm text-marker-dark">{error}</p>}

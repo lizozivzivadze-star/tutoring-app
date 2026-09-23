@@ -26,8 +26,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { name } = await req.json();
-  if (!name?.trim()) {
+  const trimmedName = name?.trim();
+  if (!trimmedName) {
     return NextResponse.json({ error: "სახელი აუცილებელია" }, { status: 400 });
+  }
+  if (trimmedName.length > 30) {
+    return NextResponse.json({ error: "სახელი არ უნდა აღემატებოდეს 30 სიმბოლოს" }, { status: 400 });
   }
 
   const last = await prisma.group.findFirst({
@@ -37,7 +41,7 @@ export async function POST(req: NextRequest) {
 
   const group = await prisma.group.create({
     data: {
-      name: name.trim(),
+      name: trimmedName,
       testerId,
       order: (last?.order ?? -1) + 1,
     },
