@@ -34,7 +34,7 @@ export default function TesterStudentHistoryPage() {
   }, [studentId]);
 
   return (
-    <main className="min-h-screen px-6 py-8 max-w-sm mx-auto">
+    <main className="min-h-screen px-6 py-8 max-w-[80vw] mx-auto">
       <Link
         href="/dashboard/tester/groups"
         className="text-sm text-marker font-medium"
