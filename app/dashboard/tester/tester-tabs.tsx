@@ -11,11 +11,14 @@ const TABS = [
 
 export default function TesterTabs() {
   const pathname = usePathname();
+  const activeHref = [...TABS]
+    .sort((a, b) => b.href.length - a.href.length)
+    .find((t) => pathname === t.href || pathname.startsWith(t.href + "/"))?.href;
 
   return (
     <nav className="bg-white px-6 flex justify-center gap-5">
       {TABS.map((tab) => {
-        const active = pathname === tab.href;
+        const active = tab.href === activeHref;
         return (
           <Link
             key={tab.href}
