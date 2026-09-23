@@ -19,7 +19,7 @@ type Status = "idle" | "sending" | "sent" | "error";
 export default function TesterStartTab() {
   const [groups, setGroups] = useState<GroupOption[]>([]);
   const [tests, setTests] = useState<TestOption[]>([]);
-  const [groupId, setGroupId] = useState("");
+  const [selection, setSelection] = useState(""); // "group:<id>" ან "student:<id>"
   const [testId, setTestId] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -77,14 +77,17 @@ export default function TesterStartTab() {
 
   async function handleSend(e: FormEvent) {
     e.preventDefault();
-    if (!groupId || !testId) return;
+    if (!selection || !testId) return;
     setStatus("sending");
     setError("");
+
+    const [kind, id] = selection.split(":");
+    const body = kind === "student" ? { studentId: id, testId } : { groupId: id, testId };
 
     const res = await fetch("/api/tester/send-test", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ groupId, testId }),
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
@@ -102,18 +105,17 @@ export default function TesterStartTab() {
       <div className="w-screen relative left-1/2 -ml-[50vw] flex flex-col items-center gap-5">
         <div className="w-[80vw]">
           <label className="block text-sm text-ink-soft mb-2">
-            აირჩიე ჯგუფი
+            აირჩიე ჯგუფი ან მოსწავლე
           </label>
           <DropdownSelect
-            value={groupId}
-            onChange={setGroupId}
+            value={selection}
+            onChange={setSelection}
             required
             options={groups.flatMap((g) => [
-  { value: g.id, label: g.name },
+  { value: `group:${g.id}`, label: g.name },
   ...g.students.map((s) => ({
-    value: s.id,
-    label: s.label,
-    disabled: true,
+    value: `student:${s.id}`,
+    label: `↳ ${s.label}`,
   })),
 ])}
           />

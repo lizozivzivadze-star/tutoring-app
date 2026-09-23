@@ -9,16 +9,19 @@ export async function GET() {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-  });
-  if (!student?.groupId) {
-    return NextResponse.json({ pending: [], completed: [], name: student?.name ?? null });
+  const student = await prisma.student.findUnique({ where: { id: studentId } });
+  if (!student) {
+    return NextResponse.json({ pending: [], completed: [], name: null });
   }
 
   const [sentTests, attempts] = await Promise.all([
     prisma.sentTest.findMany({
-      where: { groupId: student.groupId },
+      where: {
+        OR: [
+          ...(student.groupId ? [{ groupId: student.groupId }] : []),
+          { studentId: student.id },
+        ],
+      },
       include: { test: { include: { theme: true } } },
       orderBy: { sentAt: "desc" },
     }),

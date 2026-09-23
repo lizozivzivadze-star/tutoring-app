@@ -19,10 +19,10 @@ type Status = "idle" | "sending" | "sent" | "error";
 export default function StartTab() {
   const [groups, setGroups] = useState<GroupOption[]>([]);
   const [tests, setTests] = useState<TestOption[]>([]);
-  const [groupId, setGroupId] = useState("");
   const [testId, setTestId] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [selection, setSelection] = useState(""); // "group:<id>" ან "student:<id>"
 
   useEffect(() => {
     fetch("/api/groups")
@@ -75,27 +75,30 @@ export default function StartTab() {
       });
   }, []);
 
-  async function handleSend(e: FormEvent) {
-    e.preventDefault();
-    if (!groupId || !testId) return;
-    setStatus("sending");
-    setError("");
+async function handleSend(e: FormEvent) {
+  e.preventDefault();
+  if (!selection || !testId) return;
+  setStatus("sending");
+  setError("");
 
-    const res = await fetch("/api/send-test", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ groupId, testId }),
-    });
+  const [kind, id] = selection.split(":");
+  const body = kind === "student" ? { studentId: id, testId } : { selection: id, testId };
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => null);
-      setError(data?.error ?? "გაგზავნა ვერ მოხერხდა.");
-      setStatus("error");
-      return;
-    }
+  const res = await fetch("/api/send-test", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 
-    setStatus("sent");
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    setError(data?.error ?? "გაგზავნა ვერ მოხერხდა.");
+    setStatus("error");
+    return;
   }
+
+  setStatus("sent");
+}
 
   return (
     <form onSubmit={handleSend} className="flex flex-col gap-5">
@@ -105,18 +108,17 @@ export default function StartTab() {
             აირჩიე ჯგუფი
           </label>
           <DropdownSelect
-            value={groupId}
-            onChange={setGroupId}
-            required
-            options={groups.flatMap((g) => [
-  { value: g.id, label: g.name },
-  ...g.students.map((s) => ({
-    value: s.id,
-    label: s.label,
-    disabled: true,
-  })),
-])}
-          />
+  value={selection}
+  onChange={setSelection}
+  required
+  options={groups.flatMap((g) => [
+    { value: `group:${g.id}`, label: g.name },
+    ...g.students.map((s) => ({
+      value: `student:${s.id}`,
+      label: `↳ ${s.label}`,
+    })),
+  ])}
+/>
         </div>
 
         <div className="w-[80vw]">

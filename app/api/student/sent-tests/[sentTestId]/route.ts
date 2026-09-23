@@ -28,7 +28,12 @@ export async function GET(
     },
   });
 
-  if (!sentTest || !student?.groupId || sentTest.groupId !== student.groupId) {
+  const authorized =
+  !!sentTest &&
+  ((sentTest.groupId && sentTest.groupId === student?.groupId) ||
+    sentTest.studentId === studentId);
+
+if (!authorized) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
