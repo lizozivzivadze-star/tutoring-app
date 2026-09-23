@@ -115,7 +115,7 @@ export default function TesterStartTab() {
   { value: `group:${g.id}`, label: g.name },
   ...g.students.map((s) => ({
     value: `student:${s.id}`,
-    label: `↳ ${s.label}`,
+       label: s.label,
   })),
 ])}
           />
