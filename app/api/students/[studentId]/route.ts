@@ -56,6 +56,12 @@ export async function PATCH(
       { status: 400 }
     );
   }
+  if (name.trim().length > 30 || (surname && surname.trim().length > 30)) {
+    return NextResponse.json(
+      { error: "სახელი და გვარი არ უნდა აღემატებოდეს 30 სიმბოლოს" },
+      { status: 400 }
+    );
+  }
 
   const cleanEmail = email.trim();
 

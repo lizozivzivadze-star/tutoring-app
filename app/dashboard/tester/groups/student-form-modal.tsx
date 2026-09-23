@@ -51,17 +51,21 @@ export default function StudentFormModal({
           <input
             autoFocus
             required
+            maxLength={30}
+            placeholder="30-მდე სიმბოლო"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={inputClass}
+            className={`${inputClass} placeholder:text-ink-soft/40`}
           />
         </div>
         <div>
           <label className="block text-sm text-ink-soft mb-2">გვარი</label>
           <input
+            maxLength={30}
+            placeholder="30-მდე სიმბოლო"
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
-            className={inputClass}
+            className={`${inputClass} placeholder:text-ink-soft/40`}
           />
         </div>
         <div>
