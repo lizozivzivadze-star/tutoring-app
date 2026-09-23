@@ -183,7 +183,7 @@ export default function UserMenu({ showCancelPending = false }: { showCancelPend
                 }}
                 className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line"
               >
-                ყველა გაგზავნილი ტესტის გაუქმება
+                წითელი ღილაკი
               </button>
             )}
           </div>
