@@ -113,10 +113,11 @@ async function handleSend(e: FormEvent) {
   required
   options={groups.flatMap((g) => [
     { value: `group:${g.id}`, label: g.name },
-    ...g.students.map((s) => ({
-      value: `student:${s.id}`,
-      label: s.label,
-    })),
+  ...g.students.map((s) => ({
+    value: `student:${s.id}`,
+    label: s.label,
+    indent: true,
+  })),
   ])}
 />
         </div>

@@ -6,6 +6,7 @@ export type DropdownOption = {
   value: string;
   label: string;
   disabled?: boolean; // dimmed, non-selectable row
+  indent?: boolean;   // shifted right, e.g. a student under its group
 };
 
 export default function DropdownSelect({
@@ -89,7 +90,7 @@ export default function DropdownSelect({
           onChange(o.value);
           setOpen(false);
         }}
-        className={`w-full text-left px-3 py-2.5 font-body text-sm hover:bg-paper ${
+        className={`w-full text-left ${o.indent ? "pl-[22px] pr-3" : "px-3"} py-2.5 font-body text-sm hover:bg-paper ${
           o.value === value ? "bg-paper text-marker" : "text-ink"
         }`}
       >
