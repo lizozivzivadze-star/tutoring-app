@@ -90,7 +90,7 @@ const style = {
                        focus:outline-none"
           />
         ) : (
-          <HScrollText className="flex-1 font-display font-medium text-ink">
+          <HScrollText className="flex-1 min-w-0 font-display font-medium text-ink">
             {themeIndex + 1}. {theme.name}
           </HScrollText>
         )}
