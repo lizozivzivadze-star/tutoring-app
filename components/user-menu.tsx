@@ -101,12 +101,19 @@ const INSTALLED_GUIDE: Guide = {
   ],
 };
 
-export default function UserMenu({ showCancelPending = false, cancelEndpoint = "/api/teacher/cancel-pending-tests" }: { showCancelPending?: boolean; cancelEndpoint?: string }) {
+export default function UserMenu({
+  showCancelPending = false,
+  cancelEndpoint = "/api/teacher/cancel-pending-tests",
+}: {
+  showCancelPending?: boolean;
+  cancelEndpoint?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [cancelResult, setCancelResult] = useState<{ testTitle: string; groupName: string | null; studentName: string | null }[] | null>(null);
   const { canPrompt, installed, promptInstall } = useInstall();
 
   async function handleAddToHome() {
@@ -141,10 +148,12 @@ export default function UserMenu({ showCancelPending = false, cancelEndpoint = "
 
   async function handleCancelPending() {
     setCancelling(true);
-    await fetch(cancelEndpoint, { method: "POST" });
+    const res = await fetch(cancelEndpoint, { method: "POST" });
+    const data = await res.json();
     setCancelling(false);
     setConfirmCancel(false);
     setOpen(false);
+    setCancelResult(Array.isArray(data.cancelled) ? data.cancelled : []);
   }
 
   return (
@@ -266,6 +275,38 @@ export default function UserMenu({ showCancelPending = false, cancelEndpoint = "
                 {cancelling ? "..." : "დიახ"}
               </button>
             </div>
+          </div>
+        </>
+      )}
+
+      {cancelResult && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setCancelResult(null)} />
+          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[70dvh] overflow-y-auto">
+            <p className="text-sm text-ink mb-3 font-medium">
+              {cancelResult.length === 0
+                ? "გასაუქმებელი ტესტი არ მოიძებნა"
+                : `გაუქმდა ${cancelResult.length} ტესტი:`}
+            </p>
+            {cancelResult.length > 0 && (
+              <ul className="text-sm text-ink-soft flex flex-col gap-2 mb-3">
+                {cancelResult.map((r, i) => (
+                  <li key={i} className="border-b border-paper-line pb-2">
+                    <span className="text-ink font-medium">{r.testTitle}</span>
+                    {" — "}
+                    {r.studentName
+                      ? `${r.studentName} (${r.groupName ?? "—"})`
+                      : `ჯგუფი: ${r.groupName ?? "—"}`}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              onClick={() => setCancelResult(null)}
+              className="w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
+            >
+              დახურვა
+            </button>
           </div>
         </>
       )}

@@ -8,7 +8,7 @@ export async function POST() {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const { count } = await prisma.sentTest.deleteMany({
+  const toCancel = await prisma.sentTest.findMany({
     where: {
       attempts: { none: {} },
       OR: [
@@ -16,7 +16,27 @@ export async function POST() {
         { student: { group: { testerId } } },
       ],
     },
+    select: {
+      id: true,
+      test: { select: { title: true } },
+      group: { select: { name: true } },
+      student: {
+        select: { name: true, surname: true, group: { select: { name: true } } },
+      },
+    },
   });
 
-  return NextResponse.json({ cancelled: count });
+  await prisma.sentTest.deleteMany({
+    where: { id: { in: toCancel.map((t) => t.id) } },
+  });
+
+  return NextResponse.json({
+    cancelled: toCancel.map((t) => ({
+      testTitle: t.test.title,
+      groupName: t.group?.name ?? t.student?.group?.name ?? null,
+      studentName: t.student
+        ? [t.student.name, t.student.surname].filter(Boolean).join(" ")
+        : null,
+    })),
+  });
 }
