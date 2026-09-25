@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentTeacherId } from "@/lib/current-teacher";
+import { getCurrentTesterId } from "@/lib/current-teacher";
 
 export async function POST() {
-  const teacherId = await getCurrentTeacherId();
-  if (!teacherId) {
+  const testerId = await getCurrentTesterId();
+  if (!testerId) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
@@ -12,8 +12,8 @@ export async function POST() {
     where: {
       attempts: { none: {} },
       OR: [
-        { group: { teacherId } },
-        { student: { group: { teacherId } } },
+        { group: { testerId } },
+        { student: { group: { testerId } } },
       ],
     },
   });

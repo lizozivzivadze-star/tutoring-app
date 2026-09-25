@@ -101,7 +101,7 @@ const INSTALLED_GUIDE: Guide = {
   ],
 };
 
-export default function UserMenu({ showCancelPending = false }: { showCancelPending?: boolean }) {
+export default function UserMenu({ showCancelPending = false, cancelEndpoint = "/api/teacher/cancel-pending-tests" }: { showCancelPending?: boolean; cancelEndpoint?: string }) {
   const [open, setOpen] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
@@ -141,7 +141,7 @@ export default function UserMenu({ showCancelPending = false }: { showCancelPend
 
   async function handleCancelPending() {
     setCancelling(true);
-    await fetch("/api/teacher/cancel-pending-tests", { method: "POST" });
+    await fetch(cancelEndpoint, { method: "POST" });
     setCancelling(false);
     setConfirmCancel(false);
     setOpen(false);
