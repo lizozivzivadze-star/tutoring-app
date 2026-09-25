@@ -20,6 +20,7 @@ import {
 
 export default function ThemesAndTestsTab() {
   const [themes, setThemes] = useState<ThemeRecord[] | null>(null);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [deleteConfirmTemplate, setDeleteConfirmTemplate] = useState<
     string | undefined
   >(undefined);
@@ -43,6 +44,15 @@ export default function ThemesAndTestsTab() {
       .then((data) => setDeleteConfirmTemplate(data.themeDeleteConfirmText))
       .catch(() => {});
   }, [load]);
+
+  function toggleExpand(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   async function renameTheme(themeId: string, name: string) {
     const res = await fetch(`/api/themes/${themeId}`, {
@@ -94,6 +104,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
   }
 
   return (
+    <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
     <div className="flex flex-col gap-2.5">
       <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2">
         თემები & ტესტები
@@ -119,6 +130,8 @@ function handleThemeDragEnd(event: DragEndEvent) {
               key={theme.id}
               theme={theme}
               themeIndex={i}
+              expanded={expandedIds.has(theme.id)}
+              onToggleExpand={() => toggleExpand(theme.id)}
               onRename={(name) => renameTheme(theme.id, name)}
               onDelete={() => deleteTheme(theme.id)}
               deleteConfirmTemplate={deleteConfirmTemplate}
@@ -143,6 +156,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
           }}
         />
       )}
+    </div>
     </div>
   );
 }

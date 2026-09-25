@@ -14,12 +14,16 @@ const DEFAULT_DELETE_CONFIRM =
 export default function ThemeCard({
   theme,
   themeIndex,
+  expanded,
+  onToggleExpand,
   onRename,
   onDelete,
   deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
+  expanded: boolean;
+  onToggleExpand: () => void;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => Promise<string | void>;
   // Admin-edited text (Settings.themeDeleteConfirmText), passed down
@@ -69,6 +73,13 @@ const style = {
   className="border border-paper-line rounded-md bg-white px-4 py-3"
 >
       <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={expanded}
+          onChange={onToggleExpand}
+          className="w-4 h-4 accent-marker shrink-0"
+          aria-label="გახსნა/დახურვა"
+        />
         <span
   {...attributes}
   {...listeners}
@@ -89,9 +100,12 @@ const style = {
                        focus:outline-none"
           />
         ) : (
-          <span className="flex-1 font-display font-medium text-ink">
+          <button
+            onClick={onToggleExpand}
+            className="flex-1 text-left font-display font-medium text-ink"
+          >
             {themeIndex + 1}. {theme.name}
-          </span>
+          </button>
         )}
 
         <button
@@ -115,6 +129,7 @@ const style = {
         <p className="mt-1 pl-6 text-xs text-marker-dark">{deleteError}</p>
       )}
 
+      {expanded && (
       <div className="mt-2 pl-6 flex flex-col gap-1.5">
         {TYPES.map((type, typeIndex) => {
           const tests = theme.tests
@@ -174,6 +189,7 @@ const style = {
           );
         })}
       </div>
+      )}
 
       {confirmingDelete && (
         <ConfirmDialog
