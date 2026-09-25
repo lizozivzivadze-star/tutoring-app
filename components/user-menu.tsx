@@ -178,12 +178,6 @@ export default function UserMenu({
             >
               Add to HOME
             </button>
-            <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
-            >
-              Log out
-            </button>
             {showCancelPending && (
               <button
                 onClick={() => {
@@ -195,6 +189,12 @@ export default function UserMenu({
                 წითელი ღილაკი
               </button>
             )}
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
+            >
+              Log out
+            </button>
           </div>
         </>
       )}
