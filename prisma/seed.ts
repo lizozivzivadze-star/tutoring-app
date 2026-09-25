@@ -49,6 +49,16 @@ async function main() {
   });
   console.log(`[seed] tester ready: ${tester.identityEmail} -> mail to ${tester.notificationEmail}`);
 
+  const tester2 = await prisma.tester.upsert({
+    where: { identityEmail: "azivzivadze11.tester@gmail.com" },
+    update: { notificationEmail: "azivzivadze11@gmail.com" },
+    create: {
+      identityEmail: "azivzivadze11.tester@gmail.com",
+      notificationEmail: "azivzivadze11@gmail.com",
+    },
+  });
+  console.log(`[seed] tester ready: ${tester2.identityEmail} -> mail to ${tester2.notificationEmail}`);
+
   for (const teacher of [teacher1, teacher2]) {
     await prisma.testerTeacherAccess.upsert({
       where: {
