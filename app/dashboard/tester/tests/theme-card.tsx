@@ -7,6 +7,7 @@ import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import HScrollText from "@/components/h-scroll-text";
 
 const DEFAULT_DELETE_CONFIRM =
   "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
@@ -102,9 +103,11 @@ const style = {
         ) : (
           <button
             onClick={onToggleExpand}
-            className="flex-1 text-left font-display font-medium text-ink"
+            className="flex-1 text-left"
           >
-            {themeIndex + 1}. {theme.name}
+            <HScrollText className="font-display font-medium text-ink">
+              {themeIndex + 1}. {theme.name}
+            </HScrollText>
           </button>
         )}
 
@@ -165,7 +168,9 @@ const style = {
                           : ""
                       }
                     >
-                      {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                      <HScrollText className="inline-block max-w-full align-bottom">
+                        {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                      </HScrollText>
                     </Link>
                   );
                 })}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import HScrollText from "@/components/h-scroll-text";
 
 export type DropdownOption = {
   value: string;
@@ -65,8 +66,12 @@ export default function DropdownSelect({
           `disabled:opacity-50 disabled:cursor-not-allowed ${className}`
         }
       >
-        <span className={selected ? "text-ink" : "text-ink-soft"}>
-          {selected ? selected.label : placeholder}
+        <span className={`min-w-0 flex-1 ${selected ? "text-ink" : "text-ink-soft"}`}>
+          {selected ? (
+            <HScrollText>{selected.label}</HScrollText>
+          ) : (
+            placeholder
+          )}
         </span>
         <span className="text-ink-soft shrink-0">▾</span>
       </button>
@@ -80,7 +85,7 @@ export default function DropdownSelect({
       aria-disabled="true"
       className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm text-ink cursor-default select-none`}
     >
-      {o.label}
+      <HScrollText>{o.label}</HScrollText>
     </li>
   ) : (
     <li key={o.value}>
@@ -94,7 +99,7 @@ export default function DropdownSelect({
           o.value === value ? "bg-paper text-marker" : "text-ink"
         }`}
       >
-        {o.label}
+        <HScrollText>{o.label}</HScrollText>
       </button>
     </li>
   )
