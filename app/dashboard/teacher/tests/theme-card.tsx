@@ -70,15 +70,6 @@ const style = {
   className="border border-paper-line rounded-md bg-white px-4 py-3"
 >
       <div className="flex items-center gap-2">
-        <span
-  {...attributes}
-  {...listeners}
-  style={{ touchAction: "none" }}
-  className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1 text-[18px]"
-  title="გადაადგილება"
->
-  ⠿
-</span>
         {editing ? (
           <input
             autoFocus
@@ -107,6 +98,15 @@ const style = {
         >
           ×
         </button>
+        <span
+  {...attributes}
+  {...listeners}
+  style={{ touchAction: "none" }}
+  className="cursor-grab text-ink-soft/60 select-none px-1 text-[18px]"
+  title="გადაადგილება"
+>
+  ⠿
+</span>
       </div>
 
       {renameError && (

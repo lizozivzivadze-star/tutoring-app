@@ -81,15 +81,6 @@ const style = {
           className="w-4 h-4 accent-marker shrink-0"
           aria-label="გახსნა/დახურვა"
         />
-        <span
-  {...attributes}
-  {...listeners}
-  style={{ touchAction: "none" }}
-  className="cursor-grab text-ink-soft/60 select-none px-1 -ml-1 text-[18px]"
-  title="გადაადგილება"
->
-  ⠿
-</span>
         {editing ? (
           <input
             autoFocus
@@ -123,6 +114,15 @@ const style = {
         >
           ×
         </button>
+                <span
+  {...attributes}
+  {...listeners}
+  style={{ touchAction: "none" }}
+  className="cursor-grab text-ink-soft/60 select-none px-1 text-[18px]"
+  title="გადაადგილება"
+>
+  ⠿
+</span>
       </div>
 
       {renameError && (
