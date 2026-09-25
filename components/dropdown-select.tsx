@@ -66,7 +66,7 @@ export default function DropdownSelect({
           `disabled:opacity-50 disabled:cursor-not-allowed ${className}`
         }
       >
-        <span className={`min-w-0 flex-1 ${selected ? "text-ink" : "text-ink-soft"}`}>
+        <span className={`min-w-0 flex-1 text-left ${selected ? "text-ink" : "text-ink-soft"}`}>
           {selected ? (
             <HScrollText>{selected.label}</HScrollText>
           ) : (
