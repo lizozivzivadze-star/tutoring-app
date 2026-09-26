@@ -184,7 +184,7 @@ export default function UserMenu({
                   setOpen(false);
                   setConfirmCancel(true);
                 }}
-                className="w-full text-right px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line"
+                className="w-full text-right pl-12 pr-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line"
               >
                 წითელი ღილაკი
               </button>
