@@ -9,7 +9,7 @@ const AUTO_RETURN_SECONDS = 30;
 function getTimeColor(secondsLeft: number, totalSeconds: number) {
   const ratio = Math.max(0, Math.min(1, secondsLeft / totalSeconds));
   const from = { r: 0xb3, g: 0x3f, b: 0x2e };
-  const to = { r: 0x2e, g: 0x6b, b: 0x5e };
+  const to = { r: 0x16, g: 0xa3, b: 0x4a };
   const r = Math.round(from.r + (to.r - from.r) * ratio);
   const g = Math.round(from.g + (to.g - from.g) * ratio);
   const b = Math.round(from.b + (to.b - from.b) * ratio);
