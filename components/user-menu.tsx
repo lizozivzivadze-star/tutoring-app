@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
 import IosInstallAnimation from "@/components/ios-install-animation";
+import ProfileModal from "@/components/profile-modal";
 import {
   chromeIntentUrl,
   copyText,
@@ -109,6 +110,7 @@ export default function UserMenu({
   cancelEndpoint?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
@@ -177,6 +179,15 @@ export default function UserMenu({
               className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap"
             >
               ხატულის დამატება
+            </button>
+            <button
+              onClick={() => {
+                setOpen(false);
+                setShowProfile(true);
+              }}
+              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
+            >
+              Profile
             </button>
             {showCancelPending && (
               <button
@@ -278,6 +289,8 @@ export default function UserMenu({
           </div>
         </>
       )}
+
+            {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
 
       {cancelResult && (
         <>

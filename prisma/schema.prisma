@@ -15,6 +15,7 @@ model Teacher {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  surname   String?
   phone     String?
   createdAt DateTime @default(now())
   groups    Group[]
@@ -85,6 +86,8 @@ model Admin {
   identityEmail      String   @unique
   notificationEmail  String
   name               String?
+  surname            String?
+  phone              String?
   createdAt          DateTime @default(now())
 }
 
@@ -93,6 +96,8 @@ model Tester {
   identityEmail     String   @unique
   notificationEmail String
   name              String?
+  surname           String?
+  phone             String?
   createdAt         DateTime @default(now())
   groups            Group[]
   themes            Theme[]
