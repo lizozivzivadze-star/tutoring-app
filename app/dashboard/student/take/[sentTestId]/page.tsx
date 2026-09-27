@@ -17,8 +17,8 @@ type Stage = "loading" | "instructions" | "question" | "submitting" | "error" | 
 
 function getTimeColor(secondsLeft: number, totalSeconds: number) {
   const ratio = Math.max(0, Math.min(1, secondsLeft / totalSeconds));
-  // წითელი (--color-marker: #b33f2e) → მწვანე (--color-ledger: #2e6b5e)
-  const from = { r: 0xb3, g: 0x3f, b: 0x2e };
+    // წითელი (#dc2626) → მწვანე (--color-ledger: #16a34a)
+  const from = { r: 0xdc, g: 0x26, b: 0x26 };
   const to = { r: 0x16, g: 0xa3, b: 0x4a };
   const r = Math.round(from.r + (to.r - from.r) * ratio);
   const g = Math.round(from.g + (to.g - from.g) * ratio);
