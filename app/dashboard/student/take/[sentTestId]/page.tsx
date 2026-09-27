@@ -194,7 +194,7 @@ export default function TakeTestPage() {
             ვადასტურებ
           </button>
           <p className="text-sm text-ink-soft">
-            countdown {secondsLeft} წ ↓
+            {secondsLeft}
           </p>
         </div>
       </div>
