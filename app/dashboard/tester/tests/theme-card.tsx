@@ -155,11 +155,11 @@ const style = {
                     <Link
                       key={test.id}
                       href={`/dashboard/tester/tests/${test.id}`}
-                      className={
-                        dimmed
-                          ? "text-ink-soft/50 hover:text-ink-soft"
-                          : "text-ink hover:text-marker"
-                      }
+                       className={`block w-full min-w-0 ${
+    dimmed
+      ? "text-ink-soft/50 hover:text-ink-soft"
+      : "text-ink hover:text-marker"
+  }`}
                       title={
                         !test.published
                           ? "გამოუქვეყნებელი"
@@ -168,9 +168,9 @@ const style = {
                           : ""
                       }
                     >
-                      <HScrollText className="inline-block max-w-full align-bottom">
-                        {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
-                      </HScrollText>
+                      <HScrollText>
+    {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+  </HScrollText>
                     </Link>
                   );
                 })}
