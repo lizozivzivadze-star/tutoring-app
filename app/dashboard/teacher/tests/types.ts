@@ -65,3 +65,10 @@ export const TYPE_LABELS: Record<TestTemplate, string> = {
   type3: "Type 3 (open)",
   national: "National",
 };
+
+export const SHORT_TYPE_LABELS: Record<TestTemplate, string> = {
+  type1: "mcq",
+  type2: "map",
+  type3: "open",
+  national: "national",
+};

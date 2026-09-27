@@ -63,10 +63,10 @@ export default function StudentDashboard() {
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
                   <span>
-                    {t.title}{" "}
-                    <span className="text-ink-soft text-sm">
-                      ({t.themeName} · {t.typeLabel})
-                    </span>
+{t.title}{" "}
+<span className="text-ink-soft text-sm">
+  [{t.typeLabel}]
+</span>
                   </span>
                 </Link>
               </li>

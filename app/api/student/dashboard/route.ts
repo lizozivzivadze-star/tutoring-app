@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentStudentId } from "@/lib/current-student";
-import { TYPE_LABELS, TestTemplate } from "@/app/dashboard/teacher/tests/types";
+import { SHORT_TYPE_LABELS, TestTemplate } from "@/app/dashboard/teacher/tests/types";
 
 export async function GET() {
   const studentId = await getCurrentStudentId();
@@ -42,7 +42,7 @@ export async function GET() {
       sentTestId: s.id,
       title: s.test.title,
       themeName: s.test.theme.name,
-      typeLabel: TYPE_LABELS[s.test.type as TestTemplate],
+      typeLabel: SHORT_TYPE_LABELS[s.test.type as TestTemplate],
     }));
 
   const completed = attempts.map((a) => ({
