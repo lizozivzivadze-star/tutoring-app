@@ -174,7 +174,7 @@ export default function UserMenu({
           <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-fit py-1 overflow-hidden">
             <button
               onClick={handleAddToHome}
-              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40"
+              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap"
             >
               ხატულის დამატება
             </button>
