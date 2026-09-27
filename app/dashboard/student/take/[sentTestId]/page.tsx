@@ -15,6 +15,17 @@ type TestData = {
 
 type Stage = "loading" | "instructions" | "question" | "submitting" | "error" | "already-done";
 
+function getTimeColor(secondsLeft: number, totalSeconds: number) {
+  const ratio = Math.max(0, Math.min(1, secondsLeft / totalSeconds));
+  // წითელი (--color-marker: #b33f2e) → მწვანე (--color-ledger: #2e6b5e)
+  const from = { r: 0xb3, g: 0x3f, b: 0x2e };
+  const to = { r: 0x2e, g: 0x6b, b: 0x5e };
+  const r = Math.round(from.r + (to.r - from.r) * ratio);
+  const g = Math.round(from.g + (to.g - from.g) * ratio);
+  const b = Math.round(from.b + (to.b - from.b) * ratio);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 export default function TakeTestPage() {
   const { sentTestId } = useParams<{ sentTestId: string }>();
   const router = useRouter();
@@ -193,9 +204,12 @@ export default function TakeTestPage() {
           >
             ვადასტურებ
           </button>
-          <p className="text-sm text-ink-soft">
-            {secondsLeft}
-          </p>
+<p
+  className="text-sm font-semibold"
+  style={{ color: getTimeColor(secondsLeft, QUESTION_TIME_SECONDS) }}
+>
+  {secondsLeft}
+</p>
         </div>
       </div>
     </main>
