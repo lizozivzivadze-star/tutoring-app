@@ -120,12 +120,12 @@ export default function TakeTestPage() {
     return (
       <main className="min-h-screen flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
-          <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4">
-            ინსტრუქცია
-          </h1>
+<h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4 text-center">
+  ინსტრუქცია
+</h1>
           {test.instruction && (
-            <p className="text-sm text-ink-soft mb-6">{test.instruction}</p>
-          )}
+  <p className="text-sm text-ink-soft mb-6 text-center">{test.instruction}</p>
+)}
           <button
             onClick={() => setStage("question")}
             className="w-full rounded-full bg-marker text-white font-medium py-3
