@@ -3,6 +3,7 @@ import UserMenu from "@/components/user-menu";
 import Greeting from "@/components/greeting";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTeacherId } from "@/lib/current-teacher";
+import DashboardMain from "./dashboard-main";
 
 export default async function TeacherDashboardLayout({
   children,
@@ -25,11 +26,7 @@ export default async function TeacherDashboardLayout({
         <TeacherTabs />
       </div>
 
-      <main className="px-6 py-8 max-w-sm mx-auto">
-        <div className="p-5">
-          {children}
-        </div>
-      </main>
+<DashboardMain>{children}</DashboardMain>
     </div>
   );
 }

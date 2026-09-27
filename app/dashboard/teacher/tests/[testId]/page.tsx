@@ -141,9 +141,14 @@ export default function TestDetailPage() {
     !!test.publishedAt &&
     new Date(test.updatedAt) > new Date(test.publishedAt);
 
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
+return (
+  <div>
+    {editing && (
+      <p className="text-sm text-marker font-medium bg-paper border border-marker rounded-md px-3 py-2 mb-3">
+        თქვენ იმყოფებით რედაქტირების რეჟიმში
+      </p>
+    )}
+    <div className="flex items-center justify-between mb-3">
         {editing ? (
           <button
             onClick={() => setEditing(false)}
