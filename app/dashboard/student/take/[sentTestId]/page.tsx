@@ -151,7 +151,7 @@ export default function TakeTestPage() {
   return (
     <main className="min-h-screen px-6 py-8">
       <div className="max-w-sm mx-auto">
-<div className="border-2 border-ink rounded-md bg-white px-4 py-3 mb-6">
+<div className="border-4 border-ink rounded-md bg-paper-line px-4 py-3 mb-6">
   <p className="text-sm text-ink-soft mb-1">ტესტი: {test.title}</p>
   <p className="text-sm text-ink-soft">
     შეკითხვა #{questionIndex + 1} - {test.questions.length}
