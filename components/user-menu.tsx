@@ -176,7 +176,7 @@ export default function UserMenu({
               onClick={handleAddToHome}
               className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40"
             >
-              Add to HOME
+              ხატულის დამატება
             </button>
             {showCancelPending && (
               <button
