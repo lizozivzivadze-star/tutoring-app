@@ -169,7 +169,7 @@ export default function TakeTestPage() {
               className={`flex items-center gap-3 border rounded-sm px-4 py-3 cursor-pointer transition-colors ${
                 selected === option.id
                   ? "border-marker bg-white"
-                  : "border-paper-line bg-paper hover:border-ink-soft"
+                  : "border-paper-line bg-white hover:border-ink-soft"
               }`}
             >
               <span className="text-ink-soft text-sm w-4">{i + 1}</span>
