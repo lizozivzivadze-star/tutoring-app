@@ -63,14 +63,14 @@ export default function ReviewPage() {
           შედეგის განხილვა
         </h1>
 
-        <ul className="text-sm text-ink-soft flex flex-col gap-1 mb-6">
-          <li>• ტესტი: {data.testTitle}</li>
-          <li>
-            • ჩაბარების დრო:{" "}
-            {new Date(data.completedAt).toLocaleString("ka-GE")}
-          </li>
-          <li>• მოსწავლის email: {data.studentEmail}</li>
-        </ul>
+<ul className="text-sm text-ink-soft flex flex-col gap-1 mb-6">
+  <li>ტესტი: {data.testTitle}</li>
+  <li>
+    დრო:{" "}
+    {new Date(data.completedAt).toLocaleString("ka-GE")}
+  </li>
+  <li>{data.studentName}</li>
+</ul>
 
         <div className="flex flex-col gap-4 border-t border-paper-line pt-4">
           {data.questions.map((q, i) => (
