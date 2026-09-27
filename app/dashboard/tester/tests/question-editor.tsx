@@ -73,7 +73,7 @@ export default function QuestionEditor({
           value={question.prompt}
           onChange={(e) => onChange({ ...question, prompt: e.target.value })}
           placeholder="კითხვის ტექსტი"
-          className="flex-1 border border-paper-line rounded-sm px-3 py-2
+          className="flex-1 min-w-0 border border-paper-line rounded-sm px-3 py-2
                      bg-white text-ink focus:outline-none focus:ring-2
                      focus:ring-marker/40 focus:border-marker"
         />
@@ -107,7 +107,7 @@ export default function QuestionEditor({
                 updateOption(option.clientId, { text: e.target.value })
               }
               placeholder={`პასუხი ${oIndex + 1}`}
-              className="flex-1 border border-paper-line rounded-sm px-3 py-1.5
+              className="flex-1 min-w-0 border border-paper-line rounded-sm px-3 py-1.5
                          bg-white text-ink text-sm focus:outline-none focus:ring-2
                          focus:ring-marker/40 focus:border-marker"
             />
