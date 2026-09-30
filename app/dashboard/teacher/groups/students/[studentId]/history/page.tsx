@@ -67,31 +67,31 @@ export default function StudentHistoryPage() {
               </p>
             )}
             {completed && completed.length > 0 && (
-              <table className="w-full text-sm">
+                            <table className="w-full text-sm border-collapse border border-[#d3cbb8]">
                 <thead>
-                  <tr className="text-left text-ink-soft border-b border-paper-line">
-                    <th className="py-2 font-medium">ტესტი</th>
-                    <th className="py-2 font-medium">თარიღი</th>
-                    <th className="py-2 font-medium">შედეგი</th>
-                    <th className="py-2 font-medium">review</th>
+                  <tr className="text-left text-ink-soft border-b border-[#d3cbb8]">
+                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">ტესტი</th>
+                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">თარიღი</th>
+                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">შედეგი</th>
+                    <th className="py-2 px-2 font-medium">review</th>
                   </tr>
                 </thead>
                 <tbody>
                   {completed.map((c) => (
-                    <tr key={c.attemptId} className="border-b border-paper-line">
-                      <td className="py-2 text-ink">
+                    <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
+                      <td className="py-2 px-2 text-ink border-r border-[#d3cbb8]">
                         {c.testTitle}{" "}
                         <span className="text-ink-soft text-xs">
                           ({c.themeName})
                         </span>
                       </td>
-                      <td className="py-2 text-ink-soft">
+                      <td className="py-2 px-2 text-ink-soft border-r border-[#d3cbb8]">
                         {new Date(c.completedAt).toLocaleDateString("ka-GE")}
                       </td>
-                      <td className="py-2 text-ink">
+                      <td className="py-2 px-2 text-ink border-r border-[#d3cbb8]">
                         {c.score}/{c.totalQuestions}
                       </td>
-                      <td className="py-2">
+                      <td className="py-2 px-2">
                         <Link
                           href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
                           className="text-marker font-medium"
