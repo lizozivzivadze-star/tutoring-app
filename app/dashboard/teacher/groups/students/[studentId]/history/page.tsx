@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
+import HScrollText from "@/components/h-scroll-text";
 
 type CompletedTest = {
   attemptId: string;
@@ -69,35 +70,37 @@ export default function StudentHistoryPage() {
             {completed && completed.length > 0 && (
               <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
                 <colgroup>
-                  <col className="w-[34%]" />
+                  <col className="w-[26%]" />
                   <col className="w-[28%]" />
-                  <col className="w-[16%]" />
+                  <col className="w-[24%]" />
                   <col className="w-[22%]" />
                 </colgroup>
                 <thead>
-                  <tr className="text-left text-ink-soft border-b border-[#d3cbb8]">
-                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">ტესტი</th>
-                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">თარიღი</th>
-                    <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">შედეგი</th>
-                    <th className="py-2 px-2 font-medium">review</th>
+                  <tr className="text-ink-soft border-b border-[#d3cbb8]">
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">თარიღი</th>
+                    <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">შედეგი</th>
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden">review</th>
                   </tr>
                 </thead>
                 <tbody>
                   {completed.map((c) => (
                     <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
-                     <td className="py-2 px-2 text-ink border-r border-[#d3cbb8] break-words">
-                        {c.testTitle}{" "}
-                        <span className="text-ink-soft text-xs">
-                          ({c.themeName})
-                        </span>
+                      <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden">
+                        <HScrollText>
+                          {c.testTitle}{" "}
+                          <span className="text-ink-soft text-xs">
+                            ({c.themeName})
+                          </span>
+                        </HScrollText>
                       </td>
-                      <td className="py-2 px-2 text-ink-soft border-r border-[#d3cbb8]">
+                      <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">
                         {new Date(c.completedAt).toLocaleDateString("ka-GE")}
                       </td>
-                      <td className="py-2 px-2 text-ink border-r border-[#d3cbb8]">
+                      <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8]">
                         {c.score}/{c.totalQuestions}
                       </td>
-                      <td className="py-2 px-2">
+                      <td className="py-2 px-1.5 overflow-hidden">
                         <Link
                           href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
                           className="text-marker font-medium"
