@@ -6,11 +6,13 @@ import Link from "next/link";
 import UserMenu from "@/components/user-menu";
 import Greeting from "@/components/greeting";
 import LoadingBar from "@/components/loading-bar";
+import { formatDateTime, formatDuration } from "@/lib/format-time";
 
 type ReviewData = {
   attemptId: string;
   testTitle: string;
   completedAt: string;
+  durationSeconds: number | null;
   studentEmail: string;
   studentName: string | null;
   questions: {
@@ -66,11 +68,9 @@ export default function ReviewPage() {
 
 <ul className="text-sm text-ink-soft flex flex-col gap-1 mb-6">
   <li>ტესტი: {data.testTitle}</li>
-  <li>
-    დრო:{" "}
-    {new Date(data.completedAt).toLocaleString("ka-GE")}
-  </li>
-  <li>{data.studentName}</li>
+<li>ჩატარების დრო: {formatDateTime(data.completedAt)}</li>
+<li>{data.studentName}</li>
+<li>ხანგრძლივობა: {formatDuration(data.durationSeconds)}</li>
 </ul>
 
         <div className="flex flex-col gap-4 border-t border-paper-line pt-4">

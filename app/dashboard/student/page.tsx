@@ -5,6 +5,7 @@ import Link from "next/link";
 import UserMenu from "@/components/user-menu";
 import Greeting from "@/components/greeting";
 import LoadingBar from "@/components/loading-bar";
+import { formatDate } from "@/lib/format-time";
 
 type PendingTest = {
   sentTestId: string;
@@ -109,7 +110,7 @@ export default function StudentDashboard() {
             <span className="block truncate">{c.testTitle}</span>
           </td>
           <td className="py-2 px-2 text-ink-soft border-r border-paper-line text-left">
-            {new Date(c.completedAt).toLocaleDateString("ka-GE")}
+            {formatDate(c.completedAt)}
           </td>
           <td className="py-2 px-2 text-ink border-r border-paper-line text-left whitespace-nowrap">
   {c.score}/{c.totalQuestions}

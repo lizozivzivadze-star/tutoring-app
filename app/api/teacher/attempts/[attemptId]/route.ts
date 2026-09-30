@@ -46,6 +46,7 @@ export async function GET(
     attemptId: attempt.id,
     testTitle: attempt.sentTest.test.title,
     completedAt: attempt.completedAt,
+    durationSeconds: attempt.durationSeconds,
     score: attempt.score,
     totalQuestions: attempt.totalQuestions,
     studentName: [attempt.student.name, attempt.student.surname]

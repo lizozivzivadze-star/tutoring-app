@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
 import VScrollBox from "@/components/v-scroll-box";
+import { formatDate, formatDuration } from "@/lib/format-time";
 
 type CompletedTest = {
   attemptId: string;
@@ -17,16 +18,6 @@ type CompletedTest = {
 };
 
 type StudentInfo = { name: string | null; surname: string | null };
-
-function formatDuration(s: number | null) {
-  if (s === null || s === undefined) return "—";
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = s % 60;
-  if (h > 0) return `${h}სთ ${m}წთ ${sec}წმ`;
-  if (m > 0) return `${m}წთ ${sec}წმ`;
-  return `${sec}წმ`;
-}
 
 export default function TesterStudentHistoryPage() {
   const { studentId } = useParams<{ studentId: string }>();
@@ -105,7 +96,7 @@ export default function TesterStudentHistoryPage() {
                         </VScrollBox>
                       </td>
                       <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
-                        {new Date(c.completedAt).toLocaleDateString("ka-GE")}
+                        {formatDate(c.completedAt)}
                       </td>
                       <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {c.score}/{c.totalQuestions}
