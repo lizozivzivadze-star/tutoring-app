@@ -78,44 +78,37 @@ export default function TesterStudentHistoryPage() {
               </p>
             )}
             {completed && completed.length > 0 && (
-              <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
-                <colgroup>
-                  <col className="w-[20%]" />
-                  <col className="w-[20%]" />
-                  <col className="w-[20%]" />
-                  <col className="w-[20%]" />
-                  <col className="w-[20%]" />
-                </colgroup>
+              <table className="w-full text-sm border-collapse border border-[#d3cbb8]">
                 <thead>
                   <tr className="text-ink-soft border-b border-[#d3cbb8]">
                     <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
-                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">თარიღი</th>
-                    <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">შედეგი</th>
-                    <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">დრო</th>
-                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden">review</th>
+                    <th className="w-[1%] py-2 px-3 font-medium text-left whitespace-nowrap border-r border-[#d3cbb8]">თარიღი</th>
+                    <th className="w-[1%] py-2 px-3 font-medium text-center whitespace-nowrap border-r border-[#d3cbb8]">შედეგი</th>
+                    <th className="w-[1%] py-2 px-3 font-medium text-center whitespace-nowrap border-r border-[#d3cbb8]">დრო</th>
+                    <th className="w-[1%] py-2 px-3 font-medium text-left whitespace-nowrap">review</th>
                   </tr>
                 </thead>
                 <tbody>
                   {completed.map((c) => (
                     <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
                       <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden align-middle">
-                        <div className="max-h-[3.75rem] overflow-y-auto leading-5 break-words [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <div className="max-h-[3.75rem] overflow-y-auto leading-5 [overflow-wrap:anywhere] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                           {c.testTitle}{" "}
                           <span className="text-ink-soft text-xs">
                             ({c.themeName})
                           </span>
                         </div>
                       </td>
-                      <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-3 text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {new Date(c.completedAt).toLocaleDateString("ka-GE")}
                       </td>
-                      <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-3 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {c.score}/{c.totalQuestions}
                       </td>
-                      <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-3 text-center text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {formatDuration(c.durationSeconds)}
                       </td>
-                      <td className="py-2 px-1.5 overflow-hidden align-middle">
+                      <td className="py-2 px-3 whitespace-nowrap align-middle">
                         <Link
                           href={`/dashboard/tester/groups/students/${studentId}/history/${c.attemptId}`}
                           className="text-marker font-medium"
