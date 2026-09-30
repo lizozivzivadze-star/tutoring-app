@@ -48,6 +48,9 @@ export default function GroupCard({
   const [draftName, setDraftName] = useState(group.name);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [renameError, setRenameError] = useState("");
+  const [confirmingInvite, setConfirmingInvite] = useState(false);
+  const [sendingInvite, setSendingInvite] = useState(false);
+  const [inviteMsg, setInviteMsg] = useState("");
   const {
   attributes,
   listeners,
@@ -80,6 +83,27 @@ const studentSensors = useSensors(
     }
     setEditing(false);
   }
+
+async function sendLoginPage() {
+  setSendingInvite(true);
+  setInviteMsg("");
+  try {
+    const res = await fetch(`/api/groups/${group.id}/send-login`, {
+      method: "POST",
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      setInviteMsg(data?.error ?? "ვერ გაიგზავნა");
+    } else if (data.failed) {
+      setInviteMsg(`გაიგზავნა ${data.sent}, ვერ გაიგზავნა ${data.failed}`);
+    } else {
+      setInviteMsg(`გაიგზავნა ${data.sent} მოსწავლეზე ✓`);
+    }
+  } catch {
+    setInviteMsg("ვერ გაიგზავნა");
+  }
+  setSendingInvite(false);
+}
 
 function handleStudentDragEnd(event: DragEndEvent) {
   const { active, over } = event;
@@ -174,25 +198,37 @@ function handleStudentDragEnd(event: DragEndEvent) {
       </SortableContext>
     </DndContext>
 
+<div className="mt-1 flex items-center justify-between gap-x-3 gap-y-1 flex-wrap">
+  <button
+    onClick={onAddStudent}
+    className="text-sm text-marker font-medium text-left hover:text-marker-dark"
+  >
+    + მოსწავლის დამატება
+  </button>
+  {group.students.length > 0 && (
     <button
-      onClick={onAddStudent}
-      className="mt-1 text-sm text-marker font-medium text-left hover:text-marker-dark"
+      onClick={() => setConfirmingInvite(true)}
+      disabled={sendingInvite}
+      className="text-sm text-marker font-medium hover:text-marker-dark disabled:opacity-50"
     >
-      + მოსწავლის დამატება
+      {sendingInvite ? "იგზავნება..." : "✉ Log in გვერდის გაგზავნა"}
     </button>
+  )}
+</div>
+{inviteMsg && <p className="text-xs text-ink-soft">{inviteMsg}</p>}
   </div>
 )}
 
-      {confirmingDelete && (
-        <ConfirmDialog
-          message={fillTemplate(deleteConfirmTemplate, { name: group.name })}
-          onConfirm={() => {
-            setConfirmingDelete(false);
-            onDelete();
-          }}
-          onCancel={() => setConfirmingDelete(false)}
-        />
-      )}
+{confirmingInvite && (
+  <ConfirmDialog
+    message={`Log in გვერდის ბმული გაეგზავნება ${group.students.length} მოსწავლეს. გავაგზავნო?`}
+    onConfirm={() => {
+      setConfirmingInvite(false);
+      sendLoginPage();
+    }}
+    onCancel={() => setConfirmingInvite(false)}
+  />
+)}
     </div>
   );
 }

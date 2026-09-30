@@ -75,3 +75,39 @@ export async function sendMagicLinkEmail({
 
   await t.sendMail({ from, to, subject, text, html });
 }
+
+function escapeHtml(s: string) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+export async function sendLoginInviteEmail({
+  to,
+  name,
+  url,
+}: {
+  to: string;
+  name: string | null;
+  url: string;
+}) {
+  const t = getTransporter();
+
+  const greeting = name ? `გამარჯობა ${name},` : "გამარჯობა,";
+  const subject = "შესვლა პლატფორმაზე";
+  const text =
+    `${greeting}\n\n` +
+    `პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (${to}). ` +
+    `თქვენ მიიღებთ შესვლის ბმულს, პაროლი არ გჭირდებათ.\n\n${url}`;
+  const html =
+    `<p>${escapeHtml(greeting)}</p>` +
+    `<p>პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (<b>${escapeHtml(to)}</b>). ` +
+    `თქვენ მიიღებთ შესვლის ბმულს, პაროლი არ გჭირდებათ.</p>` +
+    `<p><a href="${url}">${url}</a></p>`;
+
+  if (!t) {
+    console.log(`[login-invite] SMTP not configured, would send to ${to}: ${url}`);
+    return;
+  }
+
+  const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
+  await t.sendMail({ from, to, subject, text, html });
+}
