@@ -3,6 +3,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
+import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 
 type GroupOption = {
   id: string;
@@ -21,10 +22,13 @@ type Status = "idle" | "sending" | "sent" | "error";
 export default function StartTab() {
   const [groups, setGroups] = useState<GroupOption[]>([]);
   const [tests, setTests] = useState<TestOption[]>([]);
+  const [questionCounts, setQuestionCounts] = useState<Record<string, number>>({});
+  const [selection, setSelection] = useState(""); // "group:<id>" ან "student:<id>"
   const [testId, setTestId] = useState("");
+  const [timerOn, setTimerOn] = useState(true);
+  const [backOn, setBackOn] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
-  const [selection, setSelection] = useState(""); // "group:<id>" ან "student:<id>"
 
   useEffect(() => {
     fetch("/api/groups")
@@ -32,23 +36,23 @@ export default function StartTab() {
       .then((data) =>
         setGroups(
           (data.groups ?? []).map(
-  (g: {
-    id: string;
-    name: string;
-    students?: {
-      id: string;
-      name: string | null;
-      surname: string | null;
-    }[];
-  }) => ({
-    id: g.id,
-    name: g.name,
-    students: (g.students ?? []).map((s) => ({
-      id: s.id,
-      label: [s.name, s.surname].filter(Boolean).join(" ") || "—",
-    })),
-  })
-)
+            (g: {
+              id: string;
+              name: string;
+              students?: {
+                id: string;
+                name: string | null;
+                surname: string | null;
+              }[];
+            }) => ({
+              id: g.id,
+              name: g.name,
+              students: (g.students ?? []).map((s) => ({
+                id: s.id,
+                label: [s.name, s.surname].filter(Boolean).join(" ") || "—",
+              })),
+            })
+          )
         )
       );
 
@@ -63,11 +67,17 @@ export default function StartTab() {
             type: TestTemplate;
             title: string;
             published: boolean;
+            _count: { questions: number };
           }[];
         };
 
         const flattened: TestOption[] = [];
+        const counts: Record<string, number> = {};
         (data.themes ?? []).forEach((theme: ThemeWithTests) => {
+          theme.tests.forEach((t) => {
+            counts[t.id] = t._count?.questions ?? 0;
+          });
+
           const published = theme.tests.filter((t) => t.published);
           const types = Array.from(new Set(published.map((t) => t.type)));
 
@@ -86,33 +96,48 @@ export default function StartTab() {
         });
 
         setTests(flattened);
+        setQuestionCounts(counts);
       });
   }, []);
 
-async function handleSend(e: FormEvent) {
-  e.preventDefault();
-  if (!selection || !testId) return;
-  setStatus("sending");
-  setError("");
+  async function handleSend(e: FormEvent) {
+    e.preventDefault();
+    if (!selection || !testId) return;
+    setStatus("sending");
+    setError("");
 
-  const [kind, id] = selection.split(":");
-  const body = kind === "student" ? { studentId: id, testId } : { selection: id, testId };
+    const [kind, id] = selection.split(":");
+    const extra = { timerEnabled: timerOn, allowBack: backOn };
+    const body =
+      kind === "student"
+        ? { studentId: id, testId, ...extra }
+        : { groupId: id, testId, ...extra };
 
-  const res = await fetch("/api/send-test", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+    const res = await fetch("/api/send-test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => null);
-    setError(data?.error ?? "გაგზავნა ვერ მოხერხდა.");
-    setStatus("error");
-    return;
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setError(data?.error ?? "გაგზავნა ვერ მოხერხდა.");
+      setStatus("error");
+      return;
+    }
+
+    setStatus("sent");
   }
 
-  setStatus("sent");
-}
+  const active = !!testId;
+  const totalSeconds = (questionCounts[testId] ?? 0) * QUESTION_TIME_SECONDS;
+  const timeLabel = `${Math.floor(totalSeconds / 60)}:${String(
+    totalSeconds % 60
+  ).padStart(2, "0")}`;
+  const pillBase =
+    "w-[40%] rounded-full border-2 py-1.5 text-sm font-medium transition-colors";
+  const pillOn = "border-marker text-marker";
+  const pillOff = "border-paper-line text-ink-soft bg-paper";
 
   return (
     <form onSubmit={handleSend} className="flex flex-col gap-5">
@@ -122,18 +147,18 @@ async function handleSend(e: FormEvent) {
             აირჩიე ჯგუფი
           </label>
           <DropdownSelect
-  value={selection}
-  onChange={setSelection}
-  required
-  options={groups.flatMap((g) => [
-    { value: `group:${g.id}`, label: g.name },
-  ...g.students.map((s) => ({
-    value: `student:${s.id}`,
-    label: s.label,
-    indent: true,
-  })),
-  ])}
-/>
+            value={selection}
+            onChange={setSelection}
+            required
+            options={groups.flatMap((g) => [
+              { value: `group:${g.id}`, label: g.name },
+              ...g.students.map((s) => ({
+                value: `student:${s.id}`,
+                label: s.label,
+                indent: true,
+              })),
+            ])}
+          />
         </div>
 
         <div className="w-[80vw]">
@@ -142,17 +167,46 @@ async function handleSend(e: FormEvent) {
           </label>
           <DropdownSelect
             value={testId}
-            onChange={setTestId}
+            onChange={(v) => {
+              setTestId(v);
+              setTimerOn(true);
+              setBackOn(false);
+            }}
             required
             options={tests}
           />
         </div>
       </div>
 
+      <div className="flex justify-center gap-[6%] mt-2">
+        <button
+          type="button"
+          disabled={!active}
+          onClick={() => {
+            setTimerOn((v) => !v);
+            setBackOn(false);
+          }}
+          className={`${pillBase} ${active && timerOn ? pillOn : pillOff}`}
+        >
+          {active && timerOn ? `დრო ${timeLabel}` : "დრო"}
+        </button>
+        <button
+          type="button"
+          disabled={!active}
+          onClick={() => {
+            if (timerOn) return; // უკან დაბრუნება მხოლოდ გამორთულ დროსთან
+            setBackOn((v) => !v);
+          }}
+          className={`${pillBase} ${active && !backOn ? pillOn : pillOff}`}
+        >
+          {active && !backOn ? "swipe back off" : "swipe back"}
+        </button>
+      </div>
+
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 rounded-full bg-marker text-white font-body font-medium
+        className="rounded-full bg-marker text-white font-body font-medium
                    py-2.5 transition-colors hover:bg-marker-dark
                    disabled:opacity-50 disabled:cursor-not-allowed"
       >

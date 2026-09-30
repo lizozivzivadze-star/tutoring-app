@@ -51,6 +51,8 @@ if (!authorized) {
     sentTestId: sentTest.id,
     title: sentTest.test.title,
     instruction: sentTest.test.instruction,
+    timerEnabled: sentTest.timerEnabled,
+    allowBack: sentTest.allowBack,
     questions: sentTest.test.questions.map((q) => ({
       id: q.id,
       prompt: q.prompt,

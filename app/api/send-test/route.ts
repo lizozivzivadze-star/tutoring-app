@@ -8,7 +8,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const { groupId, studentId, testId } = await req.json();
+  const { groupId, studentId, testId, timerEnabled, allowBack } = await req.json();
+  const settings = {
+  timerEnabled: timerEnabled !== false,
+  allowBack: timerEnabled === false ? Boolean(allowBack) : false,
+};
   if (!testId || (!groupId && !studentId) || (groupId && studentId)) {
     return NextResponse.json({ error: "invalid request" }, { status: 400 });
   }
@@ -43,7 +47,7 @@ export async function POST(req: NextRequest) {
     if (!student || student.group?.teacherId !== teacherId) {
       return NextResponse.json({ error: "მოსწავლე ვერ მოიძებნა" }, { status: 404 });
     }
-    const sentTest = await prisma.sentTest.create({ data: { studentId, testId } });
+    const sentTest = await prisma.sentTest.create({ data: { studentId, testId, ...settings } })
     return NextResponse.json({ sentTest });
   }
 
@@ -59,6 +63,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const sentTest = await prisma.sentTest.create({ data: { groupId, testId } });
+  const sentTest = await prisma.sentTest.create({ data: { groupId, testId, ...settings } })
   return NextResponse.json({ sentTest });
 }

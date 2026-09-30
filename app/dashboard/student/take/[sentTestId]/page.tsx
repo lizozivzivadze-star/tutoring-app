@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 import LoadingBar from "@/components/loading-bar";
+import { formatDuration } from "@/lib/format-time";
 
 type Option = { id: string; text: string };
 type Question = { id: string; prompt: string; options: Option[] };
@@ -11,8 +12,12 @@ type TestData = {
   sentTestId: string;
   title: string;
   instruction: string | null;
+  timerEnabled: boolean;
+  allowBack: boolean;
   questions: Question[];
 };
+
+type Answer = { questionId: string; selectedOptionId: string | null };
 
 type Stage = "loading" | "instructions" | "question" | "submitting" | "error" | "already-done";
 
@@ -37,7 +42,8 @@ export default function TakeTestPage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(QUESTION_TIME_SECONDS);
-  const answersRef = useRef<{ questionId: string; selectedOptionId: string | null }[]>([]);
+  const [elapsed, setElapsed] = useState(0);
+  const answersRef = useRef<Answer[]>([]);
   const startedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -63,7 +69,7 @@ export default function TakeTestPage() {
   }, [sentTestId, router]);
 
   const submit = useCallback(
-    async (finalAnswers: { questionId: string; selectedOptionId: string | null }[]) => {
+    async (finalAnswers: Answer[]) => {
       setStage("submitting");
       const durationSeconds = startedAtRef.current
         ? Math.round((Date.now() - startedAtRef.current) / 1000)
@@ -87,10 +93,9 @@ export default function TakeTestPage() {
   const confirmAndAdvance = useCallback(() => {
     if (!test) return;
     const question = test.questions[questionIndex];
-    answersRef.current = [
-      ...answersRef.current,
-      { questionId: question.id, selectedOptionId: selected },
-    ];
+    const updated = [...answersRef.current];
+    updated[questionIndex] = { questionId: question.id, selectedOptionId: selected };
+    answersRef.current = updated;
 
     const nextIndex = questionIndex + 1;
     if (nextIndex >= test.questions.length) {
@@ -98,13 +103,27 @@ export default function TakeTestPage() {
       return;
     }
     setQuestionIndex(nextIndex);
-    setSelected(null);
+    setSelected(answersRef.current[nextIndex]?.selectedOptionId ?? null);
     setSecondsLeft(QUESTION_TIME_SECONDS);
   }, [test, questionIndex, selected, submit]);
 
+  const goBack = useCallback(() => {
+    if (!test || questionIndex === 0) return;
+    const updated = [...answersRef.current];
+    updated[questionIndex] = {
+      questionId: test.questions[questionIndex].id,
+      selectedOptionId: selected,
+    };
+    answersRef.current = updated;
+    const prev = questionIndex - 1;
+    setQuestionIndex(prev);
+    setSelected(updated[prev]?.selectedOptionId ?? null);
+  }, [test, questionIndex, selected]);
+
   // Countdown for the active question — auto-advances at 0.
+  // მხოლოდ მაშინ, როცა წამზომი ჩართულია.
   useEffect(() => {
-    if (stage !== "question") return;
+    if (stage !== "question" || !test?.timerEnabled) return;
     if (secondsLeft <= 0) {
       confirmAndAdvance();
       return;
@@ -112,7 +131,18 @@ export default function TakeTestPage() {
     const id = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage, secondsLeft]);
+  }, [stage, secondsLeft, test]);
+
+  // წამზომი გამორთვისას: ტესტის გავლის საერთო დროის ათვლა.
+  useEffect(() => {
+    if (stage !== "question" || !test || test.timerEnabled) return;
+    const id = setInterval(() => {
+      if (startedAtRef.current) {
+        setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000));
+      }
+    }, 1000);
+    return () => clearInterval(id);
+  }, [stage, test]);
 
   if (stage === "loading" || stage === "already-done") {
     return (
@@ -205,19 +235,31 @@ export default function TakeTestPage() {
         </div>
 
         <div className="flex items-center justify-between">
-<button
-  onClick={confirmAndAdvance}
-  className="rounded-full bg-marker text-white font-medium px-8 py-2.5
-             hover:bg-marker-dark transition-colors"
->
-  {questionIndex + 1 >= test.questions.length ? "დასრულება" : "შემდეგი"}
-</button>
-<p
-  className="text-sm font-normal"
-  style={{ color: getTimeColor(secondsLeft, QUESTION_TIME_SECONDS) }}
->
-  {secondsLeft}
-</p>
+<div className="flex items-center gap-2">
+  {test.allowBack && !test.timerEnabled && questionIndex > 0 && (
+    <button
+      onClick={goBack}
+      className="rounded-full border-2 border-paper-line text-ink-soft
+                 px-5 py-2.5 hover:border-ink-soft transition-colors"
+    >
+      უკან
+    </button>
+  )}
+  <button
+    onClick={confirmAndAdvance}
+    className="rounded-full bg-marker text-white font-medium px-8 py-2.5
+               hover:bg-marker-dark transition-colors"
+  >
+    {questionIndex + 1 >= test.questions.length ? "დასრულება" : "შემდეგი"}
+  </button>
+</div>
+{test.timerEnabled ? (
+  <p className="text-sm font-normal" style={{ color: getTimeColor(secondsLeft, QUESTION_TIME_SECONDS) }}>
+    {secondsLeft}
+  </p>
+) : (
+  <p className="text-sm text-ink-soft">{formatDuration(elapsed)}</p>
+)}
         </div>
       </div>
     </main>

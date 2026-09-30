@@ -216,6 +216,8 @@ model SentTest {
   studentId String?
   student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
   sentAt    DateTime @default(now())
+  timerEnabled Boolean  @default(true)
+  allowBack    Boolean  @default(false)
   attempts  TestAttempt[]
 
   @@index([groupId])
