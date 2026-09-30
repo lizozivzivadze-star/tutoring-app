@@ -6,6 +6,7 @@ import Link from "next/link";
 import TestForm from "../test-form";
 import { QuestionDraft, TestDetail, TYPE_LABELS } from "../types";
 import ConfirmDialog from "@/components/confirm-dialog";
+import LoadingBar from "@/components/loading-bar";
 
 function toDrafts(test: TestDetail): QuestionDraft[] {
   return test.questions.map((q) => ({
@@ -118,7 +119,7 @@ export default function TestDetailPage() {
 
   if (!test) {
     return (
-      <p className="text-ink-soft text-sm text-center py-12">იტვირთება...</p>
+      <LoadingBar />
     );
   }
 

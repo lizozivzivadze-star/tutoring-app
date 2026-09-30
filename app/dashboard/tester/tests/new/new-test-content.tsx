@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import TestForm from "../test-form";
 import { QuestionDraft, TestTemplate } from "../types";
+import LoadingBar from "@/components/loading-bar";
 
 function toApiQuestions(questions: QuestionDraft[]) {
   return questions.map((q) => ({
@@ -128,9 +129,7 @@ async function persist(
       </h1>
 
       {defaultInstruction === null ? (
-        <p className="text-ink-soft text-sm text-center py-12">
-          იტვირთება...
-        </p>
+        <LoadingBar />
       ) : (
         <TestForm
           initialThemeId={themeId}

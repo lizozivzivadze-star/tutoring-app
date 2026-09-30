@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SettingsField from "../settings-field";
+import LoadingBar from "@/components/loading-bar"
 
 type Settings = { siteTitle: string; siteDescription: string };
 
@@ -16,7 +17,7 @@ export default function AdminSiteTab() {
 
   if (!settings) {
     return (
-      <p className="text-ink-soft text-sm text-center py-12">იტვირთება...</p>
+      <LoadingBar />
     );
   }
 

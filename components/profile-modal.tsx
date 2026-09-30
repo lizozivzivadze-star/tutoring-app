@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import Modal from "@/components/modal";
+import LoadingBar from "@/components/loading-bar";
 
 const inputClass =
   "w-full border border-paper-line rounded-sm px-3 py-2.5 font-body text-ink " +
@@ -52,7 +53,7 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
   return (
     <Modal title="პროფილი" onClose={onClose} topAligned>
       {loading ? (
-        <p className="text-sm text-ink-soft">იტვირთება...</p>
+        <LoadingBar className="py-4" />
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>

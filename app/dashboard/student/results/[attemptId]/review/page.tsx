@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
 import Greeting from "@/components/greeting";
+import LoadingBar from "@/components/loading-bar";
 
 type ReviewData = {
   attemptId: string;
@@ -38,7 +39,7 @@ export default function ReviewPage() {
   <UserMenu />
 </header>
         <main className="min-h-screen flex items-center justify-center">
-          <p className="text-ink-soft text-sm">იტვირთება...</p>
+          <LoadingBar />
         </main>
       </div>
     );

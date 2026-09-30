@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
 import Greeting from "@/components/greeting";
+import LoadingBar from "@/components/loading-bar";
 
 type PendingTest = {
   sentTestId: string;
@@ -49,7 +50,7 @@ export default function StudentDashboard() {
           </h2>
 
           {pending === null && (
-            <p className="text-ink-soft text-sm">იტვირთება...</p>
+           <LoadingBar className="py-3" />
           )}
           {pending?.length === 0 && (
             <p className="text-ink-soft text-sm">ახალი ტესტი არ არის.</p>
@@ -80,7 +81,7 @@ export default function StudentDashboard() {
           </h2>
 
           {completed === null && (
-            <p className="text-ink-soft text-sm">იტვირთება...</p>
+            <LoadingBar className="py-3" />
           )}
           {completed?.length === 0 && (
             <p className="text-ink-soft text-sm">ჯერ არაფერი გაქვთ გაკეთებული.</p>

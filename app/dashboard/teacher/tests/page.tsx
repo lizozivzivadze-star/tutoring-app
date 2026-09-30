@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
+import LoadingBar from "@/components/loading-bar";
 import {
   DndContext,
   closestCenter,
@@ -89,7 +90,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
 
   if (!themes) {
     return (
-      <p className="text-ink-soft text-sm text-center py-12">იტვირთება...</p>
+      <LoadingBar />
     );
   }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import LoadingBar from "@/components/loading-bar";
 
 type CompletedTest = {
   attemptId: string;
@@ -58,7 +59,7 @@ export default function TesterStudentHistoryPage() {
             <p className="text-sm text-ink-soft mb-8">დასრულებული ტესტები</p>
 
             {completed === null && (
-              <p className="text-ink-soft text-sm">იტვირთება...</p>
+              <LoadingBar className="py-3" />
             )}
             {completed?.length === 0 && (
               <p className="text-ink-soft text-sm text-center py-12">

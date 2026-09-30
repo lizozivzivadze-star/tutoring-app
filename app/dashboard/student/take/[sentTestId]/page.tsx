@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
+import LoadingBar from "@/components/loading-bar";
 
 type Option = { id: string; text: string };
 type Question = { id: string; prompt: string; options: Option[] };
@@ -112,7 +113,7 @@ export default function TakeTestPage() {
   if (stage === "loading" || stage === "already-done") {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-ink-soft text-sm">იტვირთება...</p>
+        <LoadingBar />
       </main>
     );
   }

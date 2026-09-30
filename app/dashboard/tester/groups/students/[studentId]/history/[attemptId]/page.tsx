@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import LoadingBar from "@/components/loading-bar";
 
 type ReviewData = {
   attemptId: string;
@@ -43,7 +44,7 @@ export default function TesterAttemptReviewPage() {
   if (!data) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-ink-soft text-sm">იტვირთება...</p>
+        <LoadingBar />
       </main>
     );
   }

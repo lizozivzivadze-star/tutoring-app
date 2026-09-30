@@ -6,6 +6,7 @@ import GroupCard from "./group-card";
 import AddGroupModal from "./add-group-modal";
 import StudentFormModal from "./student-form-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
+import LoadingBar from "@/components/loading-bar";
 import {
   DndContext,
   closestCenter,
@@ -147,7 +148,7 @@ export default function GroupsTab() {
   }
 
   if (!groups) {
-    return <p className="text-ink-soft text-sm text-center py-12">იტვირთება...</p>;
+    return <LoadingBar />;
   }
 
   return (
