@@ -82,10 +82,10 @@ export default function StudentHistoryPage() {
                 <thead>
                   <tr className="text-ink-soft border-b border-[#d3cbb8]">
                     <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
-                    <th className="w-[1%] py-2 px-3 font-medium text-left whitespace-nowrap border-r border-[#d3cbb8]">თარიღი</th>
-                    <th className="w-[1%] py-2 px-3 font-medium text-center whitespace-nowrap border-r border-[#d3cbb8]">შედეგი</th>
-                    <th className="w-[1%] py-2 px-3 font-medium text-center whitespace-nowrap border-r border-[#d3cbb8]">დრო</th>
-                    <th className="w-[1%] py-2 px-3 font-medium text-left whitespace-nowrap">review</th>
+                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-left whitespace-nowrap border-r border-[#d3cbb8]">თარიღი</th>
+                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-[#d3cbb8]">შედეგი</th>
+                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-[#d3cbb8]">დრო</th>
+                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-left whitespace-nowrap">review</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,16 +99,16 @@ export default function StudentHistoryPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="py-2 px-3 text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {new Date(c.completedAt).toLocaleDateString("ka-GE")}
                       </td>
-                      <td className="py-2 px-3 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {c.score}/{c.totalQuestions}
                       </td>
-                      <td className="py-2 px-3 text-center text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
+                      <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
                         {formatDuration(c.durationSeconds)}
                       </td>
-                      <td className="py-2 px-3 whitespace-nowrap align-middle">
+                      <td className="py-2 px-1.5 whitespace-nowrap align-middle">
                         <Link
                           href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
                           className="text-marker font-medium"
