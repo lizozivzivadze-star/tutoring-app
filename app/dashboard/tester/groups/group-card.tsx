@@ -208,7 +208,7 @@ async function sendLoginPage() {
       disabled={sendingInvite}
       className="text-sm text-marker font-medium hover:text-marker-dark disabled:opacity-50"
     >
-      {sendingInvite ? "იგზავნება..." : "✉ Log in URL გაგზავნა"}
+      {sendingInvite ? "იგზავნება..." : "✉ Log in URL"}
     </button>
   )}
 </div>
