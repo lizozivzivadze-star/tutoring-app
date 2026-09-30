@@ -111,3 +111,43 @@ export async function sendLoginInviteEmail({
   const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
   await t.sendMail({ from, to, subject, text, html });
 }
+
+export async function sendFeedbackEmail({
+  to,
+  message,
+  page,
+  senderEmail,
+  senderRole,
+}: {
+  to: string[];
+  message: string;
+  page: string;
+  senderEmail: string | null;
+  senderRole: string | null;
+}) {
+  const t = getTransporter();
+
+  const who = senderEmail
+    ? `${senderEmail} (${senderRole ?? "?"})`
+    : "არაავტორიზებული მომხმარებელი";
+  const subject = "Feedback პლატფორმიდან";
+  const text = `ვისგან: ${who}\nგვერდი: ${page || "—"}\n\n${message}`;
+  const html =
+    `<p><b>ვისგან:</b> ${escapeHtml(who)}<br/><b>გვერდი:</b> ${escapeHtml(page || "—")}</p>` +
+    `<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`;
+
+  if (!t) {
+    console.log(`[feedback] SMTP not configured, would send to ${to.join(", ")}:\n${text}`);
+    return;
+  }
+
+  const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
+  await t.sendMail({
+    from,
+    to,
+    subject,
+    text,
+    html,
+    ...(senderEmail ? { replyTo: senderEmail } : {}),
+  });
+}

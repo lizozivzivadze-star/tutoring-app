@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getSettings } from "@/lib/settings";
 import InstallProvider from "@/components/install-provider";
+import FeedbackButton from "@/components/feedback-button";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -45,6 +46,7 @@ export default function RootLayout({
       </head>
             <body>
         <InstallProvider>{children}</InstallProvider>
+<FeedbackButton />
       </body>
     </html>
   );
