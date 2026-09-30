@@ -79,15 +79,14 @@ export default function TesterStudentHistoryPage() {
               </p>
             )}
             {completed && completed.length > 0 && (
-              <div className="overflow-x-auto">
-                <table className="w-[157%] table-fixed text-sm border-collapse border border-[#d3cbb8]">
-                  <colgroup>
-                    <col className="w-[41%]" />
-                    <col className="w-[18%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[12%]" />
-                    <col className="w-[14%]" />
-                  </colgroup>
+                <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
+                <colgroup>
+                  <col className="w-[65%]" />
+                  <col className="w-[12%]" />
+                  <col className="w-[8%]" />
+                  <col className="w-[9%]" />
+                  <col className="w-[6%]" />
+                </colgroup>
                   <thead>
                     <tr className="text-ink-soft border-b border-[#d3cbb8]">
                       <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
@@ -129,7 +128,6 @@ export default function TesterStudentHistoryPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
             )}
           </>
         )}
