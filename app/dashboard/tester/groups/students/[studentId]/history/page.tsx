@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
-import HScrollText from "@/components/h-scroll-text";
 
 type CompletedTest = {
   attemptId: string;
@@ -79,7 +78,7 @@ export default function TesterStudentHistoryPage() {
               </p>
             )}
             {completed && completed.length > 0 && (
-                <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
+              <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
                 <colgroup>
                   <col className="w-[20%]" />
                   <col className="w-[20%]" />
@@ -87,35 +86,18 @@ export default function TesterStudentHistoryPage() {
                   <col className="w-[20%]" />
                   <col className="w-[20%]" />
                 </colgroup>
-                  <thead>
-                    <tr className="text-ink-soft border-b border-[#d3cbb8]">
-                      <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
-                      <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">თარიღი</th>
-                      <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">შედეგი</th>
-                      <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">დრო</th>
-                      <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden">review</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {completed.map((c) => (
-                      <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
-                        <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden">
-                          <HScrollText>
-                            {c.testTitle}{" "}
-                            <span className="text-ink-soft text-xs">
-                              ({c.themeName})
-                            </span>
-                          </HScrollText>
-                        </td>
-                        <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">
-                          {new Date(c.completedAt).toLocaleDateString("ka-GE")}
-                        </td>
-                        <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8]">
-                          {c.score}/{c.totalQuestions}
-                        </td>
-                        <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">
-                          {formatDuration(c.durationSeconds)}
-                        </td>
+                <thead>
+                  <tr className="text-ink-soft border-b border-[#d3cbb8]">
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">ტესტი</th>
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">თარიღი</th>
+                    <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">შედეგი</th>
+                    <th className="py-2 px-1.5 font-medium text-center whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">დრო</th>
+                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden">review</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {completed.map((c) => (
+                    <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
                       <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden align-middle">
                         <div className="max-h-[3.75rem] overflow-y-auto leading-5 break-words [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                           {c.testTitle}{" "}
@@ -124,10 +106,27 @@ export default function TesterStudentHistoryPage() {
                           </span>
                         </div>
                       </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8] align-middle">
+                        {new Date(c.completedAt).toLocaleDateString("ka-GE")}
+                      </td>
+                      <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-[#d3cbb8] align-middle">
+                        {c.score}/{c.totalQuestions}
+                      </td>
+                      <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8] align-middle">
+                        {formatDuration(c.durationSeconds)}
+                      </td>
+                      <td className="py-2 px-1.5 overflow-hidden align-middle">
+                        <Link
+                          href={`/dashboard/tester/groups/students/${studentId}/history/${c.attemptId}`}
+                          className="text-marker font-medium"
+                        >
+                          review
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </>
         )}
