@@ -9,8 +9,12 @@ export default function DashboardMain({ children }: { children: React.ReactNode 
     !pathname.endsWith("/tests/new");
 
   return (
-    <main className={`px-6 py-8 mx-auto ${isTestDetail ? "max-w-[80%]" : "max-w-sm"}`}>
-      <div className="p-5">{children}</div>
+    <main
+      className={`py-8 mx-auto ${
+        isTestDetail ? "w-[80vw]" : "px-6 max-w-sm"
+      }`}
+    >
+      <div className={isTestDetail ? "" : "p-5"}>{children}</div>
     </main>
   );
 }
