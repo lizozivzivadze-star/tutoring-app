@@ -48,7 +48,7 @@ export default function StudentHistoryPage() {
 
   return (
     <main className="min-h-screen px-6 py-8">
-      <div className="w-[80vw] relative left-1/2 -ml-[40vw]">
+      <div className="w-[90vw] relative left-1/2 -ml-[45vw]">
         <Link
           href="/dashboard/teacher/groups"
           className="text-sm text-marker font-medium"
@@ -80,12 +80,12 @@ export default function StudentHistoryPage() {
             )}
             {completed && completed.length > 0 && (
                 <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
-                 <colgroup>
-                  <col className="w-[65%]" />
-                  <col className="w-[12%]" />
-                  <col className="w-[8%]" />
-                  <col className="w-[9%]" />
-                  <col className="w-[6%]" />
+                <colgroup>
+                  <col className="w-[20%]" />
+                  <col className="w-[20%]" />
+                  <col className="w-[20%]" />
+                  <col className="w-[20%]" />
+                  <col className="w-[20%]" />
                 </colgroup>
                   <thead>
                     <tr className="text-ink-soft border-b border-[#d3cbb8]">
@@ -116,14 +116,14 @@ export default function StudentHistoryPage() {
                         <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap overflow-hidden border-r border-[#d3cbb8]">
                           {formatDuration(c.durationSeconds)}
                         </td>
-                        <td className="py-2 px-1.5 overflow-hidden">
-                          <Link
-                            href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
-                            className="text-marker font-medium"
-                          >
-                            review
-                          </Link>
-                        </td>
+                      <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden align-middle">
+                        <div className="max-h-[3.75rem] overflow-y-auto leading-5 break-words [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                          {c.testTitle}{" "}
+                          <span className="text-ink-soft text-xs">
+                            ({c.themeName})
+                          </span>
+                        </div>
+                      </td>
                       </tr>
                     ))}
                   </tbody>
