@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
 import IosInstallAnimation from "@/components/ios-install-animation";
 import ProfileModal from "@/components/profile-modal";
+import VScrollBox from "@/components/v-scroll-box";
 import {
   chromeIntentUrl,
   copyText,
@@ -219,7 +220,8 @@ export default function UserMenu({
           <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
             <div className={guide.animation ? "h-4 shrink-0" : "flex-1"} />
 
-            <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm p-4 max-h-[80dvh] overflow-y-auto">
+            <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm max-h-[80dvh] flex flex-col overflow-hidden">
+  <VScrollBox drag={false} className="p-4 min-h-0">
               <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
               {guide.animation === "ios" && <IosInstallAnimation />}
 
@@ -257,8 +259,10 @@ export default function UserMenu({
                 className="mt-3 w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
               >
                 გასაგებია
-              </button>
-            </div>
+      გასაგებია
+    </button>
+  </VScrollBox>
+</div>
 
             <div className={guide.animation ? "flex-1" : "flex-[2]"} />
           </div>
@@ -296,7 +300,8 @@ export default function UserMenu({
       {cancelResult && (
         <>
           <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setCancelResult(null)} />
-          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[70dvh] overflow-y-auto">
+          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm max-w-sm mx-auto max-h-[70dvh] flex flex-col overflow-hidden">
+  <VScrollBox drag={false} className="p-4 min-h-0">
             <p className="text-sm text-ink mb-3 font-medium">
               {cancelResult.length === 0
                 ? "გასაუქმებელი ტესტი არ მოიძებნა"
@@ -319,9 +324,10 @@ export default function UserMenu({
               onClick={() => setCancelResult(null)}
               className="w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
             >
-              დახურვა
-            </button>
-          </div>
+      დახურვა
+    </button>
+  </VScrollBox>
+</div>
         </>
       )}
     </div>

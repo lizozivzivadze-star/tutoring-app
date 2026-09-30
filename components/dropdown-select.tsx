@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import HScrollText from "@/components/h-scroll-text";
+import VScrollBox from "@/components/v-scroll-box";
 
 export type DropdownOption = {
   value: string;
@@ -77,7 +78,9 @@ export default function DropdownSelect({
       </button>
 
       {open && (
-        <ul className="absolute z-40 mt-1 w-full max-h-64 overflow-auto bg-white border border-paper-line rounded-sm shadow-lg">
+<div className="absolute z-40 mt-1 w-full bg-white border border-paper-line rounded-sm shadow-lg overflow-hidden">
+  <VScrollBox drag={false} className="max-h-64">
+    <ul>
 {options.map((o) =>
   o.disabled ? (
     <li
@@ -104,7 +107,9 @@ export default function DropdownSelect({
     </li>
   )
 )}
-        </ul>
+            </ul>
+  </VScrollBox>
+</div>
       )}
     </div>
   );
