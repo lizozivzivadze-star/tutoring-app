@@ -37,6 +37,7 @@ export async function GET(
     completedAt: a.completedAt,
     score: a.score,
     totalQuestions: a.totalQuestions,
+    durationSeconds: a.durationSeconds,
   }));
 
   return NextResponse.json({ completed });

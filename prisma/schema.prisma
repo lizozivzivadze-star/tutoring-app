@@ -232,6 +232,7 @@ model TestAttempt {
   score          Int
   totalQuestions Int
   completedAt    DateTime @default(now())
+  durationSeconds Int?
   answers        AttemptAnswer[]
 
   @@index([sentTestId])

@@ -38,6 +38,7 @@ export default function TakeTestPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(QUESTION_TIME_SECONDS);
   const answersRef = useRef<{ questionId: string; selectedOptionId: string | null }[]>([]);
+  const startedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     fetch(`/api/student/sent-tests/${sentTestId}`)
@@ -64,10 +65,13 @@ export default function TakeTestPage() {
   const submit = useCallback(
     async (finalAnswers: { questionId: string; selectedOptionId: string | null }[]) => {
       setStage("submitting");
+      const durationSeconds = startedAtRef.current
+        ? Math.round((Date.now() - startedAtRef.current) / 1000)
+        : null;
       const res = await fetch("/api/student/attempts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sentTestId, answers: finalAnswers }),
+        body: JSON.stringify({ sentTestId, answers: finalAnswers, durationSeconds }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
@@ -139,7 +143,10 @@ export default function TakeTestPage() {
   <p className="text-sm text-ink-soft mb-6 text-center">{test.instruction}</p>
 )}
           <button
-            onClick={() => setStage("question")}
+            onClick={() => {
+              startedAtRef.current = Date.now();
+              setStage("question");
+            }}
             className="w-full rounded-full bg-marker text-white font-medium py-3
                        hover:bg-marker-dark transition-colors"
           >

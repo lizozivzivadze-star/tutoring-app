@@ -11,9 +11,11 @@ export async function POST(req: NextRequest) {
   const {
     sentTestId,
     answers,
+    durationSeconds,
   }: {
     sentTestId: string;
     answers: { questionId: string; selectedOptionId: string | null }[];
+    durationSeconds?: number | null;
   } = await req.json();
 
   if (!sentTestId || !Array.isArray(answers)) {
@@ -71,6 +73,12 @@ if (!authorized) {
       studentId,
       score,
       totalQuestions: sentTest.test.questions.length,
+      durationSeconds:
+        typeof durationSeconds === "number" &&
+        Number.isFinite(durationSeconds) &&
+        durationSeconds >= 0
+          ? Math.round(durationSeconds)
+          : null,
       answers: {
         create: sentTest.test.questions.map((q) => ({
           questionId: q.id,
