@@ -211,7 +211,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
       disabled={sendingInvite}
       className="text-sm text-marker font-medium hover:text-marker-dark disabled:opacity-50"
     >
-      {sendingInvite ? "იგზავნება..." : "✉ Log in გვერდის გაგზავნა"}
+      {sendingInvite ? "იგზავნება..." : "✉ Log in URL გაგზავნა"}
     </button>
   )}
 </div>
@@ -221,7 +221,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
 
 {confirmingInvite && (
   <ConfirmDialog
-    message={`Log in გვერდის ბმული გაეგზავნება ${group.students.length} მოსწავლეს. გავაგზავნო?`}
+    message={`Log in URL გაეგზავნება ${group.students.length} მოსწავლეს. გავაგზავნო?`}
     onConfirm={() => {
       setConfirmingInvite(false);
       sendLoginPage();
