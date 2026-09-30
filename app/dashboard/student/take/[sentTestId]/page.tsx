@@ -206,7 +206,7 @@ export default function TakeTestPage() {
   {questionIndex + 1 >= test.questions.length ? "დასრულება" : "შემდეგი"}
 </button>
 <p
-  className="text-sm font-semibold"
+  className="text-sm font-normal"
   style={{ color: getTimeColor(secondsLeft, QUESTION_TIME_SECONDS) }}
 >
   {secondsLeft}
