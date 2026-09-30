@@ -95,7 +95,7 @@ const GUIDES: Record<InstallEnv, Guide> = {
 // ღილაკი ახლა ყოველთვის ჩანს. თუ საიტი უკვე ხატულადანაა გახსნილი
 // (standalone), დაჭერისას ამას ვეუბნებით და ვუხსნით, როგორ დაამატოს ხელახლა.
 const INSTALLED_GUIDE: Guide = {
-  title: "აპლიკაცია უკვე დამატებულია",
+  title: "ხატულა უკვე თქვენს ეკრანზეა",
   steps: [
     "ამჟამად საიტი მთავარი ეკრანის ხატულადან გაქვთ გახსნილი",
     "ხატულის ხელახლა დასამატებლად გახსენით საიტი ბრაუზერში (Safari / Chrome) და იქიდან დააჭირეთ „Add to HOME“-ს",
@@ -216,50 +216,51 @@ export default function UserMenu({
             className="fixed inset-0 z-50 bg-black/40"
             onClick={() => setGuide(null)}
           />
-          <div
-            className={`fixed left-4 right-4 ${
-              guide.animation ? "top-4" : "bottom-6"
-            } z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto max-h-[80dvh] overflow-y-auto`}
-          >
+          <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
+            <div className={guide.animation ? "h-4 shrink-0" : "flex-1"} />
 
-          <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
-            {guide.animation === "ios" && <IosInstallAnimation />}
+            <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm p-4 max-h-[80dvh] overflow-y-auto">
+              <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
+              {guide.animation === "ios" && <IosInstallAnimation />}
 
-            {!guide.animation && (
-              <ol className="text-sm text-ink-soft flex flex-col gap-2 list-decimal pl-5">
-                {guide.steps.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
-              </ol>
-            )}
+              {!guide.animation && (
+                <ol className="text-sm text-ink-soft flex flex-col gap-2 list-decimal pl-5">
+                  {guide.steps.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ol>
+              )}
 
-            {guide.note && (
-              <p className="text-xs text-ink-soft/80 mt-3">{guide.note}</p>
-            )}
+              {guide.note && (
+                <p className="text-xs text-ink-soft/80 mt-3">{guide.note}</p>
+              )}
 
-            {guide.actions?.includes("chrome") && (
+              {guide.actions?.includes("chrome") && (
+                <button
+                  onClick={handleOpenChrome}
+                  className="mt-4 w-full rounded-full bg-marker text-white text-sm font-medium py-2"
+                >
+                  Chrome-ში გახსნა
+                </button>
+              )}
+              {guide.actions?.includes("copy") && (
+                <button
+                  onClick={handleCopy}
+                  className="mt-3 w-full rounded-full border-2 border-marker text-marker text-sm font-medium py-2"
+                >
+                  {copied ? "დაკოპირდა ✓" : "ბმულის დაკოპირება"}
+                </button>
+              )}
+
               <button
-                onClick={handleOpenChrome}
-                className="mt-4 w-full rounded-full bg-marker text-white text-sm font-medium py-2"
+                onClick={() => setGuide(null)}
+                className="mt-3 w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
               >
-                Chrome-ში გახსნა
+                გასაგებია
               </button>
-            )}
-            {guide.actions?.includes("copy") && (
-              <button
-                onClick={handleCopy}
-                className="mt-3 w-full rounded-full border-2 border-marker text-marker text-sm font-medium py-2"
-              >
-                {copied ? "დაკოპირდა ✓" : "ბმულის დაკოპირება"}
-              </button>
-            )}
+            </div>
 
-            <button
-              onClick={() => setGuide(null)}
-              className="mt-3 w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
-            >
-              გასაგებია
-            </button>
+            <div className={guide.animation ? "flex-1" : "flex-[2]"} />
           </div>
         </>
       )}
