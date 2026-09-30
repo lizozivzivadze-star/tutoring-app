@@ -93,7 +93,7 @@ export default function TesterStudentHistoryPage() {
                       </td>
                       <td className="py-2 px-2">
                         <Link
-                          href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
+                          href={`/dashboard/tester/groups/students/${studentId}/history/${c.attemptId}`}
                           className="text-marker font-medium"
                         >
                           review
