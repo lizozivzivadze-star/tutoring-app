@@ -92,11 +92,15 @@ export default function TesterStudentHistoryPage() {
                   {completed.map((c) => (
                     <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
                       <td className="py-2 px-1.5 text-ink border-r border-[#d3cbb8] overflow-hidden align-middle">
-                        <div className="max-h-[3.75rem] overflow-y-auto leading-5 [overflow-wrap:anywhere] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                          {c.testTitle}{" "}
-                          <span className="text-ink-soft text-xs">
-                            ({c.themeName})
-                          </span>
+                        <div className="h-[3.75rem] overflow-y-auto leading-5 [overflow-wrap:anywhere] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                          <div className="min-h-full flex items-center">
+                            <div>
+                              {c.testTitle}{" "}
+                              <span className="text-ink-soft text-xs">
+                                ({c.themeName})
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </td>
                       <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap border-r border-[#d3cbb8] align-middle">
