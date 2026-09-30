@@ -67,7 +67,13 @@ export default function StudentHistoryPage() {
               </p>
             )}
             {completed && completed.length > 0 && (
-                            <table className="w-full text-sm border-collapse border border-[#d3cbb8]">
+              <table className="w-full table-fixed text-sm border-collapse border border-[#d3cbb8]">
+                <colgroup>
+                  <col className="w-[34%]" />
+                  <col className="w-[28%]" />
+                  <col className="w-[16%]" />
+                  <col className="w-[22%]" />
+                </colgroup>
                 <thead>
                   <tr className="text-left text-ink-soft border-b border-[#d3cbb8]">
                     <th className="py-2 px-2 font-medium border-r border-[#d3cbb8]">ტესტი</th>
@@ -79,7 +85,7 @@ export default function StudentHistoryPage() {
                 <tbody>
                   {completed.map((c) => (
                     <tr key={c.attemptId} className="border-b border-[#d3cbb8] last:border-b-0">
-                      <td className="py-2 px-2 text-ink border-r border-[#d3cbb8]">
+                     <td className="py-2 px-2 text-ink border-r border-[#d3cbb8] break-words">
                         {c.testTitle}{" "}
                         <span className="text-ink-soft text-xs">
                           ({c.themeName})
