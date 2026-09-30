@@ -92,7 +92,7 @@ export async function sendLoginInviteEmail({
   const t = getTransporter();
 
   const greeting = name ? `გამარჯობა ${name},` : "გამარჯობა,";
-  const subject = "შესვლა პლატფორმაზე";
+  const subject = "🧠💡შესვლა პლატფორმაზე";
   const text =
     `${greeting}\n\n` +
     `პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (${to}). ` +
