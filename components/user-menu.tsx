@@ -177,7 +177,7 @@ export default function UserMenu({
           <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-fit py-1 overflow-hidden">
             <button
               onClick={handleAddToHome}
-              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap"
             >
               ეკრანზე დამატება
             </button>
@@ -186,7 +186,7 @@ export default function UserMenu({
                 setOpen(false);
                 setShowProfile(true);
               }}
-              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
             >
               Profile
             </button>
@@ -196,14 +196,14 @@ export default function UserMenu({
                   setOpen(false);
                   setConfirmCancel(true);
                 }}
-                className="w-full text-right pl-[35px] pr-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
+                className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
               >
                 წითელი ღილაკი
               </button>
             )}
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full text-right px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
               Log out
             </button>
