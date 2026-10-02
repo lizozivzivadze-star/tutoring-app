@@ -142,7 +142,7 @@ const style = {
 
           return (
             <div key={type} className="text-sm">
-              <div className="flex items-center justify-between bg-paper -ml-0.5 pl-0.5 mr-6">
+              <div className="flex items-center justify-between bg-paper/50 -ml-0.5 pl-0.5 mr-6">
                 <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
                 {templateReady ? (
                   <Link
