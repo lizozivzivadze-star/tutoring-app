@@ -258,7 +258,6 @@ export default function UserMenu({
                 onClick={() => setGuide(null)}
                 className="mt-3 w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
               >
-                გასაგებია
       გასაგებია
     </button>
   </VScrollBox>
