@@ -161,15 +161,15 @@ export default function UserMenu({
 
   return (
     <div className="relative">
-      <button
-        aria-label="მენიუ"
-        onClick={() => setOpen((v) => !v)}
-        className="flex flex-col gap-1 w-6 shrink-0"
-      >
-        <span className="h-0.5 bg-ink rounded-full" />
-        <span className="h-0.5 bg-ink rounded-full" />
-        <span className="h-0.5 bg-ink rounded-full" />
-      </button>
+<button
+  aria-label="მენიუ"
+  onClick={() => setOpen((v) => !v)}
+  className="flex flex-col items-center gap-[3px] w-6 shrink-0"
+>
+  <span className="w-[3px] h-[3px] bg-ink rounded-full" />
+  <span className="w-[3px] h-[3px] bg-ink rounded-full" />
+  <span className="w-[3px] h-[3px] bg-ink rounded-full" />
+</button>
 
       {open && (
         <>
