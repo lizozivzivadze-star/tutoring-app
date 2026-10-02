@@ -142,7 +142,25 @@ const style = {
 
           return (
             <div key={type} className="text-sm">
-              <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
+              <div className="flex items-center justify-between bg-paper -ml-0.5 pl-0.5 mr-6">
+                <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
+                {templateReady ? (
+                  <Link
+                    href={`/dashboard/tester/tests/new?themeId=${theme.id}&type=${type}`}
+                    className="text-marker font-medium text-[22px] leading-none px-2"
+                  >
+                    +
+                  </Link>
+                ) : (
+                  <span
+                    className="text-ink-soft/40 cursor-not-allowed text-[22px] leading-none px-2"
+                    title="ეს შაბლონი ჯერ არ არის მზად"
+                  >
+                    +
+                  </span>
+                )}
+              </div>
+              {tests.length > 0 && (
               <div className="flex flex-col items-start gap-1 mt-1 pl-3">
                 {tests.map((test, testIndex) => {
                   const hasUnpublishedEdits =
@@ -174,22 +192,8 @@ const style = {
                     </Link>
                   );
                 })}
-                {templateReady ? (
-                  <Link
-                    href={`/dashboard/tester/tests/new?themeId=${theme.id}&type=${type}`}
-                    className="text-marker font-medium text-[22px] leading-none px-2 py-0.5 -ml-2"
-                  >
-                    +
-                  </Link>
-                ) : (
-                  <span
-                    className="text-ink-soft/40 cursor-not-allowed text-[22px] leading-none px-2 py-0.5 -ml-2"
-                    title="ეს შაბლონი ჯერ არ არის მზად"
-                  >
-                    +
-                  </span>
-                )}
               </div>
+              )}
             </div>
           );
         })}
