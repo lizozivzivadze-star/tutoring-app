@@ -55,14 +55,19 @@ export async function POST(req: NextRequest) {
   if (!group || group.teacherId !== teacherId) {
     return NextResponse.json({ error: "ჯგუფი ვერ მოიძებნა" }, { status: 404 });
   }
-  const studentCount = await prisma.student.count({ where: { groupId } });
-  if (studentCount === 0) {
+  const students = await prisma.student.findMany({
+    where: { groupId },
+    select: { id: true },
+  });
+  if (students.length === 0) {
     return NextResponse.json(
       { error: "ჯგუფში მოსწავლე არ არის დამატებული, ტესტი ვერ გაიგზავნება" },
       { status: 400 }
     );
   }
 
-  const sentTest = await prisma.sentTest.create({ data: { groupId, testId, ...settings } })
-  return NextResponse.json({ sentTest });
+  const result = await prisma.sentTest.createMany({
+    data: students.map((s) => ({ studentId: s.id, testId, ...settings })),
+  });
+  return NextResponse.json({ count: result.count });
 }

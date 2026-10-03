@@ -4,6 +4,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
+import NewSentTests from "@/components/new-sent-tests";
 
 type GroupOption = {
   id: string;
@@ -29,6 +30,7 @@ export default function StartTab() {
   const [backOn, setBackOn] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [sentCount, setSentCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/groups")
@@ -127,6 +129,7 @@ export default function StartTab() {
     }
 
     setStatus("sent");
+    setSentCount((c) => c + 1);
   }
 
   const active = !!testId;
@@ -221,6 +224,8 @@ export default function StartTab() {
       {status === "error" && (
         <p className="text-sm text-marker-dark text-center">{error}</p>
       )}
+
+      <NewSentTests endpoint="/api/teacher/sent-tests" refreshKey={sentCount} />
     </form>
   );
 }
