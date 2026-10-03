@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import HScrollText from "@/components/h-scroll-text";
 import ConfirmDialog from "@/components/confirm-dialog";
+import VScrollBox from "@/components/v-scroll-box";
 
 type Item = { id: string; sentAt: string; title: string; target: string };
 
@@ -72,37 +73,43 @@ export default function NewSentTests({
       </button>
 
       {open && (
-        <div className="-mx-4 flex flex-col gap-2">
-          {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+        <div className="-mx-4 bg-white border border-paper-line rounded-md overflow-hidden">
+          {error && (
+            <p className="px-3 py-3 text-sm text-marker-dark text-center">{error}</p>
+          )}
 
           {items && items.length === 0 && !error && (
-            <p className="text-sm text-ink-soft text-center">
+            <p className="px-3 py-3 text-sm text-ink-soft text-center">
               ახლად გაგზავნილი ტესტები არ არის
             </p>
           )}
 
-          {items?.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center gap-2 border border-paper-line
-                         rounded-md bg-white px-2 py-2 text-xs text-ink"
-            >
-              <span className="shrink-0 text-ink-soft">{ymd(item.sentAt)}</span>
-              <span className="text-paper-line">|</span>
-              <HScrollText className="flex-1 min-w-0">{item.title}</HScrollText>
-              <span className="text-paper-line">|</span>
-              <HScrollText className="flex-1 min-w-0">{item.target}</HScrollText>
-              <span className="text-paper-line">|</span>
-              <button
-                type="button"
-                onClick={() => setToDelete(item)}
-                className="shrink-0 px-1 text-ink-soft hover:text-marker-dark"
-                aria-label="წაშლა"
-              >
-                ×
-              </button>
-            </div>
-          ))}
+          {items && items.length > 0 && (
+            <VScrollBox drag={false} className="max-h-72">
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 px-2 py-2.5 text-xs text-ink
+                             border-b border-paper-line last:border-b-0"
+                >
+                  <span className="shrink-0 text-ink-soft">{ymd(item.sentAt)}</span>
+                  <span className="text-paper-line">|</span>
+                  <HScrollText className="flex-1 min-w-0">{item.title}</HScrollText>
+                  <span className="text-paper-line">|</span>
+                  <HScrollText className="flex-1 min-w-0">{item.target}</HScrollText>
+                  <span className="text-paper-line">|</span>
+                  <button
+                    type="button"
+                    onClick={() => setToDelete(item)}
+                    className="shrink-0 px-1 text-ink-soft hover:text-marker-dark"
+                    aria-label="წაშლა"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </VScrollBox>
+          )}
         </div>
       )}
 
