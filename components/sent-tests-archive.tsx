@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import DropdownSelect from "@/components/dropdown-select";
 import HScrollText from "@/components/h-scroll-text";
 
 type Row = {
   eventKey: string;
   sentAt: string;
+  testId: string;
   testTitle: string;
   groupId: string | null;
   groupName: string;
@@ -31,6 +32,10 @@ const VIEWS = [
   { value: "by-student", label: "მოსწავლეების მიხედვით" },
   { value: "by-result", label: "შედეგების მიხედვით" },
 ];
+
+const SHOW_BTN =
+  "rounded-full border-2 border-marker text-marker font-body font-medium py-2 " +
+  "transition-colors hover:bg-paper disabled:opacity-50 disabled:cursor-not-allowed";
 
 function ymd(iso: string) {
   const d = new Date(iso);
@@ -113,28 +118,168 @@ function TestFrame({ block }: { block: TestBlock }) {
   );
 }
 
+// ჩარჩო: ზევით ფიქსირებული „მონიშნეთ ტესტი", ქვემოთ 3 ხაზი შიდა სქროლით,
+// მარჯვნივ კი ბლოკი, რომელიც აჩვენებს სქროლის პოზიციას.
+function TestPicker({
+  tests,
+  value,
+  onChange,
+}: {
+  tests: { id: string; title: string }[];
+  value: string;
+  onChange: (id: string) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [bar, setBar] = useState({ top: 0, height: 100 });
+
+  function update() {
+    const el = ref.current;
+    if (!el) return;
+    const { scrollTop, clientHeight, scrollHeight } = el;
+    if (scrollHeight <= clientHeight + 1) {
+      setBar({ top: 0, height: 100 });
+    } else {
+      setBar({
+        top: (scrollTop / scrollHeight) * 100,
+        height: (clientHeight / scrollHeight) * 100,
+      });
+    }
+  }
+
+  useEffect(() => {
+    update();
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [tests]);
+
+  return (
+    <div className="border border-paper-line rounded-md bg-white overflow-hidden">
+      <div className="px-3 py-2 text-sm font-medium text-ink bg-paper border-b border-paper-line">
+        მონიშნეთ ტესტი
+      </div>
+      <div className="flex">
+        <div
+          ref={ref}
+          onScroll={update}
+          className="h-[7.5rem] flex-1 min-w-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {tests.length === 0 ? (
+            <p className="px-3 py-3 text-sm text-ink-soft">
+              ჩატარებული ტესტები ჯერ არ არის
+            </p>
+          ) : (
+            tests.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => onChange(t.id)}
+                className={`w-full h-10 px-3 flex items-center text-left text-sm
+                            border-b border-paper-line last:border-b-0 ${
+                              t.id === value
+                                ? "bg-paper text-marker font-medium"
+                                : "text-ink hover:bg-paper"
+                            }`}
+              >
+                <HScrollText className="w-full">{t.title}</HScrollText>
+              </button>
+            ))
+          )}
+        </div>
+        <div className="relative w-2.5 shrink-0 border-l border-paper-line bg-paper">
+          <div
+            className="absolute left-0.5 right-0.5 rounded-full bg-marker/60"
+            style={{ top: `${bar.top}%`, height: `${bar.height}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("");
-  const [blocks, setBlocks] = useState<TestBlock[] | null>(null);
+  const [rows, setRows] = useState<Row[] | null>(null);
+  const [shown, setShown] = useState(false);
+  const [selectedTest, setSelectedTest] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(PAGE);
 
-  async function show() {
+  async function loadRows(): Promise<boolean> {
     setLoading(true);
     setError("");
     try {
       const res = await fetch(endpoint, { cache: "no-store" });
       if (!res.ok) throw new Error();
       const data = await res.json();
-      setBlocks(buildBlocks(data.rows ?? []));
-      setVisible(PAGE);
+      setRows(data.rows ?? []);
+      setLoading(false);
+      return true;
     } catch {
       setError("სიის ჩატვირთვა ვერ მოხერხდა.");
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   }
+
+  async function show() {
+    if (await loadRows()) {
+      setShown(true);
+      setVisible(PAGE);
+    }
+  }
+
+  function changeView(v: string) {
+    setView(v);
+    setShown(false);
+    setSelectedTest("");
+    setError("");
+    setVisible(PAGE);
+    if (v === "by-test") loadRows();
+  }
+
+  const tests = useMemo(() => {
+    const seen = new Map<string, string>();
+    (rows ?? []).forEach((r) => {
+      if (!seen.has(r.testId)) seen.set(r.testId, r.testTitle);
+    });
+    return Array.from(seen, ([id, title]) => ({ id, title }));
+  }, [rows]);
+
+  const blocks = useMemo(() => {
+    if (!rows || !shown) return [];
+    return buildBlocks(
+      view === "by-test" ? rows.filter((r) => r.testId === selectedTest) : rows
+    );
+  }, [rows, shown, view, selectedTest]);
+
+  const results = shown && (
+    <>
+      {blocks.length === 0 && !error && (
+        <p className="text-sm text-ink-soft text-center">
+          ჩატარებული ტესტები ჯერ არ არის
+        </p>
+      )}
+
+      {blocks.slice(0, visible).map((b) => (
+        <TestFrame key={b.key} block={b} />
+      ))}
+
+      {blocks.length > visible && (
+        <button
+          type="button"
+          onClick={() => setVisible((v) => v + PAGE)}
+          className="text-sm text-marker font-medium hover:text-marker-dark py-1"
+        >
+          - ნახეთ მეტი (+{Math.min(PAGE, blocks.length - visible)}) -
+        </button>
+      )}
+    </>
+  );
 
   return (
     <div className="flex flex-col gap-2">
@@ -152,11 +297,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
         <div className="-mx-4 flex flex-col gap-3">
           <DropdownSelect
             value={view}
-            onChange={(v) => {
-              setView(v);
-              setBlocks(null);
-              setError("");
-            }}
+            onChange={changeView}
             options={VIEWS}
             placeholder="აირჩიე გამოჩენის პრინციპი"
             flipArrow
@@ -168,41 +309,39 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
                 ქრონოლოგიურად გამოჩნდება აქამდე ჩატარებული ყველა ტესტი, ჯგუფი &
                 მოსწავლე რომელსაც იგი ჩაუტარდა და შედეგები.
               </p>
+              <button type="button" onClick={show} disabled={loading} className={SHOW_BTN}>
+                {loading ? "იტვირთება..." : "გამოაჩინე"}
+              </button>
+              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+              {results}
+            </>
+          )}
 
+          {view === "by-test" && (
+            <>
+              <TestPicker
+                tests={tests}
+                value={selectedTest}
+                onChange={(id) => {
+                  setSelectedTest(id);
+                  setShown(false);
+                  setVisible(PAGE);
+                }}
+              />
+              <p className="text-sm text-ink-soft text-center px-2">
+                მონიშნეთ რომელი ტესტის ჩატარების ისტორია გაინტერესებთ და დააჭირეთ
+                ღილაკს „გამოაჩინე“
+              </p>
               <button
                 type="button"
                 onClick={show}
-                disabled={loading}
-                className="rounded-full border-2 border-marker text-marker font-body
-                           font-medium py-2 transition-colors hover:bg-paper
-                           disabled:opacity-50"
+                disabled={loading || !selectedTest}
+                className={SHOW_BTN}
               >
                 {loading ? "იტვირთება..." : "გამოაჩინე"}
               </button>
-
-              {error && (
-                <p className="text-sm text-marker-dark text-center">{error}</p>
-              )}
-
-              {blocks && blocks.length === 0 && !error && (
-                <p className="text-sm text-ink-soft text-center">
-                  ჩატარებული ტესტები ჯერ არ არის
-                </p>
-              )}
-
-              {blocks?.slice(0, visible).map((b) => (
-                <TestFrame key={b.key} block={b} />
-              ))}
-
-              {blocks && blocks.length > visible && (
-                <button
-                  type="button"
-                  onClick={() => setVisible((v) => v + PAGE)}
-                  className="text-sm text-marker font-medium hover:text-marker-dark py-1"
-                >
-                  - ნახეთ მეტი (+{Math.min(PAGE, blocks.length - visible)}) -
-                </button>
-              )}
+              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+              {results}
             </>
           )}
         </div>

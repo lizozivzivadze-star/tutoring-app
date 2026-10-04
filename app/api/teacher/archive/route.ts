@@ -50,6 +50,7 @@ export async function GET() {
     rows.push({
       eventKey: st.groupId ? st.id : `${st.testId}|${st.sentAt.toISOString()}`,
       sentAt: st.sentAt.toISOString(),
+      testId: st.testId,
       testTitle: st.test.title,
       groupId: a.student.group?.id ?? null,
       groupName: a.student.group?.name ?? "ჯგუფის გარეშე",
