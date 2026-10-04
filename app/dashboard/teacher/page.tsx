@@ -5,6 +5,7 @@ import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 import NewSentTests from "@/components/new-sent-tests";
+import SentTestsArchive from "@/components/sent-tests-archive";
 
 type GroupOption = {
   id: string;
@@ -226,6 +227,7 @@ export default function StartTab() {
       )}
 
       <NewSentTests endpoint="/api/teacher/sent-tests" refreshKey={sentCount} />
+          <SentTestsArchive endpoint="/api/teacher/archive" />
     </form>
   );
 }

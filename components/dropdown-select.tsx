@@ -19,6 +19,7 @@ export default function DropdownSelect({
   required,
   disabled,
   className = "",
+  flipArrow = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -27,6 +28,7 @@ export default function DropdownSelect({
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  flipArrow?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,13 @@ export default function DropdownSelect({
             placeholder
           )}
         </span>
-        <span className="text-ink-soft shrink-0">▾</span>
+        <span
+          className={`text-ink-soft shrink-0 transition-transform ${
+            flipArrow && open ? "rotate-180" : ""
+          }`}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (

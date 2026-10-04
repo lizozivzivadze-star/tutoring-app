@@ -58,8 +58,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const sentAt = new Date();
   const result = await prisma.sentTest.createMany({
-    data: students.map((s) => ({ studentId: s.id, testId, ...settings })),
+    data: students.map((s) => ({ studentId: s.id, testId, sentAt, ...settings })),
   });
   return NextResponse.json({ count: result.count });
 }

@@ -5,6 +5,7 @@ import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 import NewSentTests from "@/components/new-sent-tests";
+import SentTestsArchive from "@/components/sent-tests-archive";
 
 type GroupOption = {
   id: string;
@@ -225,6 +226,7 @@ export default function TesterStartTab() {
         <p className="text-sm text-marker-dark text-center">{error}</p>
       )}
             <NewSentTests endpoint="/api/tester/sent-tests" refreshKey={sentCount} />
+          <SentTestsArchive endpoint="/api/tester/archive" />
     </form>
   );
 }
