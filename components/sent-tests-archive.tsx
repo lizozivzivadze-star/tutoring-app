@@ -22,6 +22,7 @@ type Row = {
 type StudentLine = { id: string; name: string; order: number; score: number; total: number };
 type GroupLine = { id: string; name: string; order: number; students: StudentLine[] };
 type TestBlock = { key: string; sentAt: string; title: string; groups: GroupLine[] };
+type EventBlock = { key: string; sentAt: string; title: string; students: StudentLine[] };
 
 const PAGE = 10;
 
@@ -45,6 +46,22 @@ function ymd(iso: string) {
 
 const fmt = (n: number) => String(Number(n.toFixed(1)));
 
+const byOrderThenName = (
+  a: { order: number; name: string },
+  c: { order: number; name: string }
+) => a.order - c.order || a.name.localeCompare(c.name);
+
+function toStudent(r: Row): StudentLine {
+  return {
+    id: r.studentId,
+    name: r.studentName,
+    order: r.studentOrder,
+    score: r.score,
+    total: r.total,
+  };
+}
+
+// ტესტი -> ჯგუფები -> მოსწავლეები (ქრონოლოგიური და „ტესტების მიხედვით")
 function buildBlocks(rows: Row[]): TestBlock[] {
   const blocks = new Map<string, TestBlock>();
   for (const r of rows) {
@@ -59,22 +76,49 @@ function buildBlocks(rows: Row[]): TestBlock[] {
       g = { id: gKey, name: r.groupName, order: r.groupOrder, students: [] };
       b.groups.push(g);
     }
-    g.students.push({
-      id: r.studentId,
-      name: r.studentName,
-      order: r.studentOrder,
-      score: r.score,
-      total: r.total,
-    });
+    g.students.push(toStudent(r));
   }
   const list = Array.from(blocks.values());
   list.forEach((b) => {
-    b.groups.sort((a, c) => a.order - c.order || a.name.localeCompare(c.name));
-    b.groups.forEach((g) =>
-      g.students.sort((a, c) => a.order - c.order || a.name.localeCompare(c.name))
-    );
+    b.groups.sort(byOrderThenName);
+    b.groups.forEach((g) => g.students.sort(byOrderThenName));
   });
   return list;
+}
+
+// ტესტი -> მოსწავლეები (ერთი ჯგუფისთვის, „ჯგუფების მიხედვით")
+function buildEventBlocks(rows: Row[]): EventBlock[] {
+  const blocks = new Map<string, EventBlock>();
+  for (const r of rows) {
+    let b = blocks.get(r.eventKey);
+    if (!b) {
+      b = { key: r.eventKey, sentAt: r.sentAt, title: r.testTitle, students: [] };
+      blocks.set(r.eventKey, b);
+    }
+    b.students.push(toStudent(r));
+  }
+  const list = Array.from(blocks.values());
+  list.forEach((b) => b.students.sort(byOrderThenName));
+  return list;
+}
+
+function StudentRows({ students }: { students: StudentLine[] }) {
+  return (
+    <>
+      {students.map((s) => (
+        <div
+          key={s.id}
+          className="ml-6 flex items-center gap-2 px-2 py-0.5 text-xs text-ink-soft"
+        >
+          <HScrollText className="flex-1 min-w-0">{s.name}</HScrollText>
+          <span className="text-paper-line">|</span>
+          <span className="shrink-0">
+            {s.score}/{s.total}
+          </span>
+        </div>
+      ))}
+    </>
+  );
 }
 
 function TestFrame({ block }: { block: TestBlock }) {
@@ -98,19 +142,7 @@ function TestFrame({ block }: { block: TestBlock }) {
                 {fmt(avg)}/{total}
               </span>
             </div>
-
-            {g.students.map((s) => (
-              <div
-                key={s.id}
-                className="ml-6 flex items-center gap-2 px-2 py-0.5 text-xs text-ink-soft"
-              >
-                <HScrollText className="flex-1 min-w-0">{s.name}</HScrollText>
-                <span className="text-paper-line">|</span>
-                <span className="shrink-0">
-                  {s.score}/{s.total}
-                </span>
-              </div>
-            ))}
+            <StudentRows students={g.students} />
           </div>
         );
       })}
@@ -118,32 +150,54 @@ function TestFrame({ block }: { block: TestBlock }) {
   );
 }
 
-// ჩარჩო: ზევით ფიქსირებული „მონიშნეთ ტესტი", ქვემოთ 3 ხაზი შიდა სქროლით,
-// მარჯვნივ კი ბლოკი, რომელიც აჩვენებს სქროლის პოზიციას.
-function TestPicker({
-  tests,
+// „ჯგუფების მიხედვით": თარიღი | ტესტი | საშუალო, ქვემოთ მოსწავლეები
+function EventFrame({ block }: { block: EventBlock }) {
+  const total = block.students[0]?.total ?? 0;
+  const avg = block.students.reduce((sum, s) => sum + s.score, 0) / block.students.length;
+  return (
+    <div className="border border-paper-line rounded-md bg-white p-2 flex flex-col gap-1.5 shadow-sm">
+      <div className="flex items-center gap-2 border border-ink-soft/40 rounded-sm bg-paper px-2 py-1.5 text-xs font-medium text-ink">
+        <span className="shrink-0 text-ink-soft">{ymd(block.sentAt)}</span>
+        <span className="text-paper-line">|</span>
+        <HScrollText className="flex-1 min-w-0">{block.title}</HScrollText>
+        <span className="text-paper-line">|</span>
+        <span className="shrink-0">
+          {fmt(avg)}/{total}
+        </span>
+      </div>
+      <StudentRows students={block.students} />
+    </div>
+  );
+}
+
+const THUMB = 20; // სქროლის კუბიკის ზომა, px
+
+// ჩარჩო: ზევით ფიქსირებული სათაური, ქვემოთ 3 ხაზი შიდა სქროლით,
+// მარჯვნივ ზოლი კუბიკით, რომელიც აჩვენებს სქროლის პოზიციას
+// და რომლის გადაადგილებითაც სიის დასქროლვა შეიძლება.
+function ScrollPicker({
+  title,
+  items,
   value,
   onChange,
+  emptyText,
 }: {
-  tests: { id: string; title: string }[];
+  title: string;
+  items: { id: string; title: string }[];
   value: string;
   onChange: (id: string) => void;
+  emptyText: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [bar, setBar] = useState({ top: 0, height: 100 });
+  const trackRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ startY: number; startScroll: number } | null>(null);
+  const [pos, setPos] = useState(0); // 0..1
 
   function update() {
     const el = ref.current;
     if (!el) return;
-    const { scrollTop, clientHeight, scrollHeight } = el;
-    if (scrollHeight <= clientHeight + 1) {
-      setBar({ top: 0, height: 100 });
-    } else {
-      setBar({
-        top: (scrollTop / scrollHeight) * 100,
-        height: (clientHeight / scrollHeight) * 100,
-      });
-    }
+    const max = el.scrollHeight - el.clientHeight;
+    setPos(max > 1 ? el.scrollTop / max : 0);
   }
 
   useEffect(() => {
@@ -153,12 +207,34 @@ function TestPicker({
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [tests]);
+  }, [items]);
+
+  function onThumbDown(e: React.PointerEvent<HTMLDivElement>) {
+    const el = ref.current;
+    if (!el) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    drag.current = { startY: e.clientY, startScroll: el.scrollTop };
+  }
+
+  function onThumbMove(e: React.PointerEvent<HTMLDivElement>) {
+    const el = ref.current;
+    const track = trackRef.current;
+    if (!el || !track || !drag.current) return;
+    const travel = track.clientHeight - THUMB;
+    const max = el.scrollHeight - el.clientHeight;
+    if (travel <= 0 || max <= 0) return;
+    el.scrollTop =
+      drag.current.startScroll + ((e.clientY - drag.current.startY) / travel) * max;
+  }
+
+  function onThumbUp() {
+    drag.current = null;
+  }
 
   return (
     <div className="border border-paper-line rounded-md bg-white overflow-hidden">
       <div className="px-3 py-2 text-sm font-medium text-ink bg-paper border-b border-paper-line">
-        მონიშნეთ ტესტი
+        {title}
       </div>
       <div className="flex">
         <div
@@ -166,12 +242,10 @@ function TestPicker({
           onScroll={update}
           className="h-[7.5rem] flex-1 min-w-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {tests.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-ink-soft">
-              ჩატარებული ტესტები ჯერ არ არის
-            </p>
+          {items.length === 0 ? (
+            <p className="px-3 py-3 text-sm text-ink-soft">{emptyText}</p>
           ) : (
-            tests.map((t) => (
+            items.map((t) => (
               <button
                 key={t.id}
                 type="button"
@@ -188,10 +262,23 @@ function TestPicker({
             ))
           )}
         </div>
-        <div className="relative w-2.5 shrink-0 border-l border-paper-line bg-paper">
+
+        <div
+          ref={trackRef}
+          className="relative w-6 shrink-0 border-l border-paper-line bg-paper"
+        >
           <div
-            className="absolute left-0.5 right-0.5 rounded-full bg-marker/60"
-            style={{ top: `${bar.top}%`, height: `${bar.height}%` }}
+            onPointerDown={onThumbDown}
+            onPointerMove={onThumbMove}
+            onPointerUp={onThumbUp}
+            onPointerCancel={onThumbUp}
+            style={{
+              top: `calc((100% - ${THUMB}px) * ${pos})`,
+              width: THUMB,
+              height: THUMB,
+            }}
+            className="absolute left-0.5 rounded-sm bg-marker shadow cursor-grab
+                       active:cursor-grabbing touch-none"
           />
         </div>
       </div>
@@ -204,7 +291,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   const [view, setView] = useState("");
   const [rows, setRows] = useState<Row[] | null>(null);
   const [shown, setShown] = useState(false);
-  const [selectedTest, setSelectedTest] = useState("");
+  const [selectedId, setSelectedId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(PAGE);
@@ -236,10 +323,16 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   function changeView(v: string) {
     setView(v);
     setShown(false);
-    setSelectedTest("");
+    setSelectedId("");
     setError("");
     setVisible(PAGE);
-    if (v === "by-test") loadRows();
+    if (v === "by-test" || v === "by-group") loadRows();
+  }
+
+  function pick(id: string) {
+    setSelectedId(id);
+    setShown(false);
+    setVisible(PAGE);
   }
 
   const tests = useMemo(() => {
@@ -250,32 +343,48 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     return Array.from(seen, ([id, title]) => ({ id, title }));
   }, [rows]);
 
-  const blocks = useMemo(() => {
+  const groups = useMemo(() => {
+    const seen = new Map<string, { name: string; order: number }>();
+    (rows ?? []).forEach((r) => {
+      const id = r.groupId ?? "none";
+      if (!seen.has(id)) seen.set(id, { name: r.groupName, order: r.groupOrder });
+    });
+    return Array.from(seen, ([id, g]) => ({ id, title: g.name, order: g.order }))
+      .sort((a, c) => a.order - c.order || a.title.localeCompare(c.title))
+      .map(({ id, title }) => ({ id, title }));
+  }, [rows]);
+
+  const list = useMemo(() => {
     if (!rows || !shown) return [];
+    if (view === "by-group") {
+      return buildEventBlocks(
+        rows.filter((r) => (r.groupId ?? "none") === selectedId)
+      ).map((b) => ({ key: b.key, node: <EventFrame block={b} /> }));
+    }
     return buildBlocks(
-      view === "by-test" ? rows.filter((r) => r.testId === selectedTest) : rows
-    );
-  }, [rows, shown, view, selectedTest]);
+      view === "by-test" ? rows.filter((r) => r.testId === selectedId) : rows
+    ).map((b) => ({ key: b.key, node: <TestFrame block={b} /> }));
+  }, [rows, shown, view, selectedId]);
 
   const results = shown && (
     <>
-      {blocks.length === 0 && !error && (
+      {list.length === 0 && !error && (
         <p className="text-sm text-ink-soft text-center">
           ჩატარებული ტესტები ჯერ არ არის
         </p>
       )}
 
-      {blocks.slice(0, visible).map((b) => (
-        <TestFrame key={b.key} block={b} />
+      {list.slice(0, visible).map((item) => (
+        <div key={item.key}>{item.node}</div>
       ))}
 
-      {blocks.length > visible && (
+      {list.length > visible && (
         <button
           type="button"
           onClick={() => setVisible((v) => v + PAGE)}
           className="text-sm text-marker font-medium hover:text-marker-dark py-1"
         >
-          - ნახეთ მეტი (+{Math.min(PAGE, blocks.length - visible)}) -
+          - ნახეთ მეტი (+{Math.min(PAGE, list.length - visible)}) -
         </button>
       )}
     </>
@@ -319,23 +428,47 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
 
           {view === "by-test" && (
             <>
-              <TestPicker
-                tests={tests}
-                value={selectedTest}
-                onChange={(id) => {
-                  setSelectedTest(id);
-                  setShown(false);
-                  setVisible(PAGE);
-                }}
+              <ScrollPicker
+                title="მონიშნეთ ტესტი"
+                items={tests}
+                value={selectedId}
+                onChange={pick}
+                emptyText="ჩატარებული ტესტები ჯერ არ არის"
               />
               <p className="text-sm text-ink-soft text-center px-2">
                 მონიშნეთ რომელი ტესტის ჩატარების ისტორია გაინტერესებთ და დააჭირეთ
-                ღილაკს „გამოაჩინე“
+                ღილაკს 
               </p>
               <button
                 type="button"
                 onClick={show}
-                disabled={loading || !selectedTest}
+                disabled={loading || !selectedId}
+                className={SHOW_BTN}
+              >
+                {loading ? "იტვირთება..." : "გამოაჩინე"}
+              </button>
+              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+              {results}
+            </>
+          )}
+
+          {view === "by-group" && (
+            <>
+              <ScrollPicker
+                title="მონიშნეთ ჯგუფი"
+                items={groups}
+                value={selectedId}
+                onChange={pick}
+                emptyText="ჩატარებული ტესტები ჯერ არ არის"
+              />
+              <p className="text-sm text-ink-soft text-center px-2">
+                მონიშნეთ რომელი ჯგუფის ტესტირების ისტორია გაინტერესებთ და დააჭირეთ
+                ღილაკს
+              </p>
+              <button
+                type="button"
+                onClick={show}
+                disabled={loading || !selectedId}
                 className={SHOW_BTN}
               >
                 {loading ? "იტვირთება..." : "გამოაჩინე"}
