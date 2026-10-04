@@ -169,6 +169,18 @@ function EventFrame({ block }: { block: EventBlock }) {
     </div>
   );
 }
+// „მოსწავლეების მიხედვით": თითო ტესტი ცალკე ჩარჩოში, 3 ხაზად
+function StudentFrame({ row }: { row: Row }) {
+  return (
+    <div className="border border-paper-line rounded-md bg-white px-3 py-2 flex flex-col gap-1 shadow-sm text-xs text-ink">
+      <span className="text-ink-soft">{ymd(row.sentAt)}</span>
+      <HScrollText className="min-w-0 font-medium">{row.testTitle}</HScrollText>
+      <span>
+        {row.score}/{row.total}
+      </span>
+    </div>
+  );
+}
 
 const THUMB = 20; // სქროლის კუბიკის ზომა, px
 
@@ -326,7 +338,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     setSelectedId("");
     setError("");
     setVisible(PAGE);
-    if (v === "by-test" || v === "by-group") loadRows();
+    if (v === "by-test" || v === "by-group" || v === "by-student") loadRows();
   }
 
   function pick(id: string) {
@@ -354,8 +366,35 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
       .map(({ id, title }) => ({ id, title }));
   }, [rows]);
 
+    const students = useMemo(() => {
+    const seen = new Map<string, { name: string; gOrder: number; sOrder: number }>();
+    (rows ?? []).forEach((r) => {
+      if (!seen.has(r.studentId)) {
+        seen.set(r.studentId, {
+          name: r.studentName,
+          gOrder: r.groupOrder,
+          sOrder: r.studentOrder,
+        });
+      }
+    });
+    return Array.from(seen, ([id, s]) => ({ id, title: s.name, ...s }))
+      .sort(
+        (a, c) =>
+          a.gOrder - c.gOrder || a.sOrder - c.sOrder || a.title.localeCompare(c.title)
+      )
+      .map(({ id, title }) => ({ id, title }));
+  }, [rows]);
+
   const list = useMemo(() => {
     if (!rows || !shown) return [];
+    if (view === "by-student") {
+      return rows
+        .filter((r) => r.studentId === selectedId)
+        .map((r) => ({
+          key: `${r.eventKey}:${r.studentId}`,
+          node: <StudentFrame row={r} />,
+        }));
+    }
     if (view === "by-group") {
       return buildEventBlocks(
         rows.filter((r) => (r.groupId ?? "none") === selectedId)
@@ -464,6 +503,31 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
               <p className="text-sm text-ink-soft text-center px-2">
                 მონიშნეთ რომელი ჯგუფის ტესტირების ისტორია გაინტერესებთ და დააჭირეთ
                 ღილაკს
+              </p>
+              <button
+                type="button"
+                onClick={show}
+                disabled={loading || !selectedId}
+                className={SHOW_BTN}
+              >
+                {loading ? "იტვირთება..." : "გამოაჩინე"}
+              </button>
+              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+              {results}
+            </>
+          )}
+                    {view === "by-student" && (
+            <>
+              <ScrollPicker
+                title="მონიშნეთ მოსწავლე"
+                items={students}
+                value={selectedId}
+                onChange={pick}
+                emptyText="ჩატარებული ტესტები ჯერ არ არის"
+              />
+              <p className="text-sm text-ink-soft text-center px-2">
+                მონიშნეთ რომელი მოსწავლის ტესტირების ისტორია გაინტერესებთ და
+                დააჭირეთ ღილაკს
               </p>
               <button
                 type="button"
