@@ -34,6 +34,12 @@ const VIEWS = [
   { value: "by-result", label: "შედეგების მიხედვით" },
 ];
 
+// 100% -> 1% (სქროლის ცხრილისთვის)
+const PERCENTS = Array.from({ length: 100 }, (_, i) => ({
+  id: String(100 - i),
+  title: `${100 - i}%`,
+}));
+
 const SHOW_BTN =
   "rounded-full border-2 border-marker text-marker font-body font-medium py-2 " +
   "transition-colors hover:bg-paper disabled:opacity-50 disabled:cursor-not-allowed";
@@ -177,6 +183,22 @@ function StudentFrame({ row }: { row: Row }) {
       <HScrollText className="min-w-0 font-medium">{row.testTitle}</HScrollText>
       <span>
         {row.score}/{row.total}
+      </span>
+    </div>
+  );
+}
+
+const pctOf = (r: Row) => (r.total > 0 ? Math.round((r.score / r.total) * 100) : 0);
+
+// „შედეგების მიხედვით": მოსწავლე / ტესტი / თარიღი / შედეგი, 4 ხაზად
+function ResultFrame({ row }: { row: Row }) {
+  return (
+    <div className="border border-paper-line rounded-md bg-white px-3 py-2 flex flex-col gap-1 shadow-sm text-xs text-ink">
+      <HScrollText className="min-w-0 font-medium">{row.studentName}</HScrollText>
+      <HScrollText className="min-w-0">{row.testTitle}</HScrollText>
+      <span className="text-ink-soft">{ymd(row.sentAt)}</span>
+      <span>
+        {row.score}/{row.total} ({pctOf(row)}%)
       </span>
     </div>
   );
@@ -338,7 +360,8 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     setSelectedId("");
     setError("");
     setVisible(PAGE);
-    if (v === "by-test" || v === "by-group" || v === "by-student") loadRows();
+    if (v === "by-test" || v === "by-group" || v === "by-student" || v === "by-result")
+      loadRows();
   }
 
   function pick(id: string) {
@@ -387,6 +410,14 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
 
   const list = useMemo(() => {
     if (!rows || !shown) return [];
+    if (view === "by-result") {
+      return rows
+        .filter((r) => pctOf(r) === Number(selectedId))
+        .map((r) => ({
+          key: `${r.eventKey}:${r.studentId}`,
+          node: <ResultFrame row={r} />,
+        }));
+    }
     if (view === "by-student") {
       return rows
         .filter((r) => r.studentId === selectedId)
@@ -409,7 +440,9 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     <>
       {list.length === 0 && !error && (
         <p className="text-sm text-ink-soft text-center">
-          ჩატარებული ტესტები ჯერ არ არის
+          {view === "by-result"
+            ? "ამ შედეგით ტესტი არავის აქვს ჩატარებული"
+            : "ჩატარებული ტესტები ჯერ არ არის"}
         </p>
       )}
 
@@ -516,7 +549,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
               {results}
             </>
           )}
-                    {view === "by-student" && (
+      {view === "by-student" && (
             <>
               <ScrollPicker
                 title="მონიშნეთ მოსწავლე"
@@ -528,6 +561,31 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
               <p className="text-sm text-ink-soft text-center px-2">
                 მონიშნეთ რომელი მოსწავლის ტესტირების ისტორია გაინტერესებთ და
                 დააჭირეთ ღილაკს
+              </p>
+              <button
+                type="button"
+                onClick={show}
+                disabled={loading || !selectedId}
+                className={SHOW_BTN}
+              >
+                {loading ? "იტვირთება..." : "გამოაჩინე"}
+              </button>
+              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+              {results}
+            </>
+          )}
+                    {view === "by-result" && (
+            <>
+              <ScrollPicker
+                title="მონიშნეთ შედეგი"
+                items={PERCENTS}
+                value={selectedId}
+                onChange={pick}
+                emptyText=""
+              />
+              <p className="text-sm text-ink-soft text-center px-2">
+                მონიშნეთ შედეგი და გამოჩნდება რომელ მოსწავლეებს რომელ ტესტში აქვთ ეს
+                შეფასება მიღებული
               </p>
               <button
                 type="button"
