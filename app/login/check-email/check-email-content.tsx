@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type MouseEvent } from "react";
 import { useSearchParams } from "next/navigation";
+import LoadingBar from "@/components/loading-bar";
 
 const MAIL_APPS = [
   { name: "Gmail", color: "#d93025", web: "https://mail.google.com/mail/u/0/#inbox", ios: "googlegmail://" },
@@ -23,12 +24,11 @@ export default function CheckEmailContent({ template }: { template: string }) {
   const pollId = params.get("poll");
   const [before, after] = template.split("{email}");
   const [finished, setFinished] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
 
-  // ეს გვერდი (ორიგინალი tab) აღარასდროს გადადის თავად დაფაზე — session
-  // cookie საერთოა tab-ებს შორის, ამიტომ session-ის დანახვა არ ნიშნავს, რომ
-  // სწორედ ეს tab-ი დალოგინდა (შესაძლოა სხვა tab-ში მოხდა). დაფაზე მხოლოდ
-  // ის tab გადადის, სადაც მეილის ლინკი რეალურად გაიხსნა. ეს tab მხოლოდ
-  // poll-ის სტატუსს უსმენს: თუ ლინკი გამოყენებულია → "შესვლა დასრულდა".
+  // ეს გვერდი (ორიგინალი ფანჯარა) უსმენს poll-ის სტატუსს. როცა მეილის
+  // ბმული სხვა ბრაუზერში დადასტურდა, აქ pollSecret-ით ვიღებთ სესიას
+  // (/api/auth/claim) და პირდაპირ დაფაზე გადავდივართ.
   useEffect(() => {
     let done = false;
     let checking = false;
@@ -50,6 +50,8 @@ export default function CheckEmailContent({ template }: { template: string }) {
               secret = sessionStorage.getItem(`pollSecret:${pollId}`) ?? "";
             } catch {}
 
+            if (secret) setSigningIn(true);
+
             try {
               const cRes = secret
                 ? await fetch("/api/auth/claim", {
@@ -66,11 +68,13 @@ export default function CheckEmailContent({ template }: { template: string }) {
                 } catch {}
                 window.location.replace(claim.destination);
               } else {
+                setSigningIn(false);
                 setFinished(true);
               }
             } catch {
               // ქსელის შეცდომა — შემდეგ ციკლზე ისევ ვცდით
               done = false;
+              setSigningIn(false);
             }
           }
         }
@@ -102,6 +106,16 @@ export default function CheckEmailContent({ template }: { template: string }) {
       window.removeEventListener("pageshow", onVisible);
     };
   }, [pollId]);
+
+    if (signingIn && !finished) {
+    return (
+      <main className="min-h-dvh flex items-center justify-center px-6">
+        <div className="w-full max-w-sm">
+          <LoadingBar />
+        </div>
+      </main>
+    );
+  }
 
   if (finished) {
     return (
