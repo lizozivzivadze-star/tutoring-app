@@ -11,22 +11,17 @@ const MAIL_APPS = [
 
 function openMail(e: MouseEvent<HTMLAnchorElement>, app: (typeof MAIL_APPS)[number]) {
   // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე ჯერ app-ს
-  // ვცდით; თუ გვერდი არ დაიმალა (ანუ app არ გაიხსნა) — ვებ-ვერსიაზე.
+  // ვცდით. თუ ტაიმერი დროულად (~1.5წმ) ამოქმედდა, app არ გაიხსნა და
+  // ვებზე გადავდივართ. თუ app გაიხსნა, iOS ტაიმერს ყინავს და ის
+  // გაცილებით გვიან ირთვება, ამ შემთხვევაში არაფერს ვაკეთებთ.
   if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
   e.preventDefault();
 
-  let leftPage = false;
-  const onHide = () => {
-    if (document.visibilityState === "hidden") leftPage = true;
-  };
-  document.addEventListener("visibilitychange", onHide);
-  window.addEventListener("pagehide", () => { leftPage = true; }, { once: true });
-
+  const start = Date.now();
   window.location.href = app.ios;
 
   setTimeout(() => {
-    document.removeEventListener("visibilitychange", onHide);
-    if (!leftPage) window.location.href = app.web;
+    if (Date.now() - start < 2500) window.location.href = app.web;
   }, 1500);
 }
 
