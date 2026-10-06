@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect, FormEvent } from "react";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -10,6 +10,13 @@ export default function LoginPage() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("lastEmail");
+      if (saved) setEmail(saved);
+    } catch {}
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -34,6 +41,10 @@ export default function LoginPage() {
       // One shared form for both roles — the server decided the role
       // from the email, we never send or know it here.
       setStatus("sent");
+      try {
+        localStorage.setItem("lastEmail", email.trim());
+      } catch {}
+
       const poll = data?.pollId
         ? `&poll=${encodeURIComponent(data.pollId)}`
         : "";
