@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 90 },
   pages: { signIn: "/login" },
   providers: [
     Credentials({

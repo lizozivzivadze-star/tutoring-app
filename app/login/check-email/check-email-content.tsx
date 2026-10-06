@@ -1,7 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { useSearchParams } from "next/navigation";
+
+const MAIL_APPS = [
+  { name: "Gmail", color: "#d93025", web: "https://mail.google.com/mail/u/0/#inbox", ios: "googlegmail://" },
+  { name: "Outlook", color: "#0a64c8", web: "https://outlook.live.com/mail/", ios: "ms-outlook://" },
+  { name: "Yahoo", color: "#6001d2", web: "https://mail.yahoo.com/", ios: "ymail://" },
+];
+
+function openMail(e: MouseEvent<HTMLAnchorElement>, app: (typeof MAIL_APPS)[number]) {
+  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე app-ს
+  // უნდა პირდაპირ scheme-ით მივმართოთ, თუ არ გაიხსნა — ვებ-ვერსიაზე.
+  if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
+  e.preventDefault();
+  window.location.href = app.ios;
+  setTimeout(() => {
+    if (document.visibilityState === "visible") window.location.href = app.web;
+  }, 1200);
+}
 
 export default function CheckEmailContent({ template }: { template: string }) {
   const params = useSearchParams();
@@ -96,6 +113,27 @@ export default function CheckEmailContent({ template }: { template: string }) {
             <span className="text-ink font-medium">{email}</span>
             {after}
           </p>
+                   <div className="flex justify-center gap-4 mt-6">
+            {MAIL_APPS.map((app) => (
+              <a
+                key={app.name}
+                href={app.web}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => openMail(e, app)}
+                aria-label={`${app.name}-ის გახსნა`}
+                className="flex flex-col items-center gap-1.5 w-16 text-xs text-ink-soft hover:text-ink transition-colors"
+              >
+                <span className="w-12 h-12 rounded-full border border-paper-line bg-white shadow-sm flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke={app.color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="M3.5 7l8.5 6 8.5-6" />
+                  </svg>
+                </span>
+                {app.name}
+              </a>
+            ))}
+          </div> 
         </div>
       </div>
     </main>
