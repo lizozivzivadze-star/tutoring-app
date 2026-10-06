@@ -10,14 +10,24 @@ const MAIL_APPS = [
 ];
 
 function openMail(e: MouseEvent<HTMLAnchorElement>, app: (typeof MAIL_APPS)[number]) {
-  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე app-ს
-  // უნდა პირდაპირ scheme-ით მივმართოთ, თუ არ გაიხსნა — ვებ-ვერსიაზე.
+  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე ჯერ app-ს
+  // ვცდით; თუ გვერდი არ დაიმალა (ანუ app არ გაიხსნა) — ვებ-ვერსიაზე.
   if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
   e.preventDefault();
+
+  let leftPage = false;
+  const onHide = () => {
+    if (document.visibilityState === "hidden") leftPage = true;
+  };
+  document.addEventListener("visibilitychange", onHide);
+  window.addEventListener("pagehide", () => { leftPage = true; }, { once: true });
+
   window.location.href = app.ios;
+
   setTimeout(() => {
-    if (document.visibilityState === "visible") window.location.href = app.web;
-  }, 1200);
+    document.removeEventListener("visibilitychange", onHide);
+    if (!leftPage) window.location.href = app.web;
+  }, 1500);
 }
 
 export default function CheckEmailContent({ template }: { template: string }) {
