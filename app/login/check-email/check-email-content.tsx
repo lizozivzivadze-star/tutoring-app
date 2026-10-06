@@ -10,19 +10,11 @@ const MAIL_APPS = [
 ];
 
 function openMail(e: MouseEvent<HTMLAnchorElement>, app: (typeof MAIL_APPS)[number]) {
-  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე ჯერ app-ს
-  // ვცდით. თუ ტაიმერი დროულად (~1.5წმ) ამოქმედდა, app არ გაიხსნა და
-  // ვებზე გადავდივართ. თუ app გაიხსნა, iOS ტაიმერს ყინავს და ის
-  // გაცილებით გვიან ირთვება, ამ შემთხვევაში არაფერს ვაკეთებთ.
+  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე app-ს
+  // პირდაპირ scheme-ით მივმართავთ.
   if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
   e.preventDefault();
-
-  const start = Date.now();
   window.location.href = app.ios;
-
-  setTimeout(() => {
-    if (Date.now() - start < 2500) window.location.href = app.web;
-  }, 1500);
 }
 
 export default function CheckEmailContent({ template }: { template: string }) {
