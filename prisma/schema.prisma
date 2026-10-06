@@ -57,14 +57,16 @@ model Student {
 
 // One-time login tokens for the magic-link flow (Images 2–6).
 model LoginToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  pollId    String?  @unique
-  email     String
-  role      Role
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime @default(now())
+  id         String    @id @default(cuid())
+  token      String    @unique
+  pollId     String?   @unique
+  pollSecret String?
+  claimedAt  DateTime?
+  email      String
+  role       Role
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
 }
 
 enum Role {

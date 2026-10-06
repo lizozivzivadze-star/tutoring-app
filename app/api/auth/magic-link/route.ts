@@ -54,13 +54,15 @@ export async function POST(req: NextRequest) {
 
   const token = randomBytes(24).toString("hex");
   const pollId = randomBytes(24).toString("hex");
+  const pollSecret = randomBytes(24).toString("hex");
   const expiresAt = new Date(Date.now() + 1000 * 60 * 15); // 15 min
 
   await prisma.loginToken.create({
-        data: { token, pollId, email, role, expiresAt },
+        data: { token, pollId, pollSecret, email, role, expiresAt },
   });
 
-  const url = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`;
+  const baseUrl = (process.env.NEXTAUTH_URL ?? "").replace(/\/+$/, "");
+  const url = `${baseUrl}/api/auth/verify?token=${token}`;
 
   // For every role the login form is filled in with the identity
   // email, but only admins and testers have a separate inbox the
@@ -79,5 +81,5 @@ export async function POST(req: NextRequest) {
     bodyTemplate: settings.magicLinkBodyText,
   });
 
-    return NextResponse.json({ ok: true, pollId });
+    return NextResponse.json({ ok: true, pollId, pollSecret });
 }
