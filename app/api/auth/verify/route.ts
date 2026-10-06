@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { AuthError } from "next-auth";
-import { signIn, auth } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 const DASHBOARD_BY_ROLE: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "/dashboard/teacher",
@@ -44,39 +43,22 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
-  const loginUrl = new URL("/login", req.url);
 
   if (!token) {
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.json({ ok: false }, { status: 400 });
   }
 
-  const record = await prisma.loginToken.findUnique({ where: { token } });
-
-  const isInvalid =
-    !record || record.usedAt || record.expiresAt < new Date();
-
-  if (isInvalid) {
-    return NextResponse.redirect(loginUrl);
-  }
-
-  await prisma.loginToken.update({
-    where: { token },
+  // ტოკენს მხოლოდ "ვადას გავლილი/გამოყენებულის" მონიშვნა ეხება.
+  // სესიას აქ აღარ ვქმნით — მას ის ფანჯარა მიიღებს, რომელმაც
+  // ბმული მოითხოვა (იხ. claim route, შემდეგი ნაბიჯი).
+  const updated = await prisma.loginToken.updateMany({
+    where: { token, usedAt: null, expiresAt: { gt: new Date() } },
     data: { usedAt: new Date() },
   });
 
-  const destination = DASHBOARD_BY_ROLE[record.role];
-
-  try {
-    await signIn("internal", {
-      email: record.email,
-      role: record.role,
-      internalSecret: process.env.INTERNAL_AUTH_SECRET,
-      redirectTo: destination,
-    });
-  } catch (err) {
-    if (err instanceof AuthError) {
-      return NextResponse.redirect(loginUrl);
-    }
-    throw err;
+  if (updated.count === 0) {
+    return NextResponse.json({ ok: false }, { status: 400 });
   }
+
+  return NextResponse.json({ ok: true });
 }

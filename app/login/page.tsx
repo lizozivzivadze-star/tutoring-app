@@ -44,6 +44,11 @@ export default function LoginPage() {
       try {
         localStorage.setItem("lastEmail", email.trim());
       } catch {}
+            if (data?.pollId && data?.pollSecret) {
+        try {
+          sessionStorage.setItem(`pollSecret:${data.pollId}`, data.pollSecret);
+        } catch {}
+      }
 
       const poll = data?.pollId
         ? `&poll=${encodeURIComponent(data.pollId)}`

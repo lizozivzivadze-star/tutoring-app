@@ -31,9 +31,11 @@ export default function CheckEmailContent({ template }: { template: string }) {
   // poll-ის სტატუსს უსმენს: თუ ლინკი გამოყენებულია → "შესვლა დასრულდა".
   useEffect(() => {
     let done = false;
+    let checking = false;
 
     async function check() {
-      if (done) return;
+      if (done || checking) return;
+      checking = true;
       try {
         if (pollId) {
           const pRes = await fetch(
@@ -43,18 +45,39 @@ export default function CheckEmailContent({ template }: { template: string }) {
           const poll = await pRes.json();
           if (poll?.used) {
             done = true;
-            setFinished(true);
-            // ჩაშენებული ბრაუზერების უმრავლესობა ამას იგნორირებს — ამიტომ
-            // ქვემოთ ტექსტიც გვაქვს. სად მუშაობს, იქ თავისით დაიხურება.
+            let secret = "";
             try {
-              window.close();
+              secret = sessionStorage.getItem(`pollSecret:${pollId}`) ?? "";
+            } catch {}
+
+            try {
+              const cRes = secret
+                ? await fetch("/api/auth/claim", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ pollId, pollSecret: secret }),
+                  })
+                : null;
+              const claim = cRes?.ok ? await cRes.json().catch(() => null) : null;
+
+              if (claim?.ok && claim.destination) {
+                try {
+                  sessionStorage.removeItem(`pollSecret:${pollId}`);
+                } catch {}
+                window.location.replace(claim.destination);
+              } else {
+                setFinished(true);
+              }
             } catch {
-              // ignore
+              // ქსელის შეცდომა — შემდეგ ციკლზე ისევ ვცდით
+              done = false;
             }
           }
         }
       } catch {
         // ქსელის შეცდომა — შემდეგ ციკლზე ისევ ვცდით
+      } finally {
+        checking = false;
       }
     }
 
@@ -86,12 +109,14 @@ export default function CheckEmailContent({ template }: { template: string }) {
         <div className="w-full max-w-sm text-center">
           <div className="index-card px-6 py-8">
             <h1 className="font-display text-lg text-ink mb-3">
-              შესვლა დასრულდა ✓
+              ბმული დადასტურდა
             </h1>
-            <p className="text-ink-soft text-sm leading-relaxed">
-              თქვენ უკვე შეხვედით სხვა ფანჯარაში. ეს ფანჯარა შეგიძლიათ
-              დახუროთ (✕ ზედა კუთხეში) და იქ გააგრძელოთ.
+            <p className="text-ink-soft text-sm leading-relaxed mb-4">
+              ამ ფანჯარაში ავტომატურად შესვლა ვერ მოხერხდა. სცადეთ თავიდან.
             </p>
+            <a href="/login" className="text-marker underline text-sm">
+              შესვლის გვერდზე დაბრუნება
+            </a>
           </div>
         </div>
       </main>
