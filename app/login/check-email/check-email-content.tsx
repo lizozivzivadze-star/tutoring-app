@@ -25,6 +25,7 @@ export default function CheckEmailContent({ template }: { template: string }) {
   const [before, after] = template.split("{email}");
   const [finished, setFinished] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
+  const [returning, setReturning] = useState(false);
 
   // ეს გვერდი (ორიგინალი ფანჯარა) უსმენს poll-ის სტატუსს. როცა მეილის
   // ბმული სხვა ბრაუზერში დადასტურდა, აქ pollSecret-ით ვიღებთ სესიას
@@ -82,11 +83,17 @@ export default function CheckEmailContent({ template }: { template: string }) {
         // ქსელის შეცდომა — შემდეგ ციკლზე ისევ ვცდით
       } finally {
         checking = false;
+        if (!done) setReturning(false);
       }
     }
 
     const onVisible = () => {
-      if (document.visibilityState === "visible") check();
+      if (document.visibilityState === "visible") {
+        // ფანჯარაში დაბრუნებისას ძველ გვერდს ნუ ვაჩვენებთ, სანამ
+        // შემოწმება არ დასრულდება
+        if (!done && !checking) setReturning(true);
+        check();
+      }
     };
 
     const interval = setInterval(check, 2500);
@@ -107,7 +114,7 @@ export default function CheckEmailContent({ template }: { template: string }) {
     };
   }, [pollId]);
 
-    if (signingIn && !finished) {
+  if ((signingIn || returning) && !finished) {
     return (
       <main className="min-h-dvh flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
