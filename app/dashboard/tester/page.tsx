@@ -6,6 +6,7 @@ import DropdownSelect from "@/components/dropdown-select";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 import NewSentTests from "@/components/new-sent-tests";
 import SentTestsArchive from "@/components/sent-tests-archive";
+import CollapsibleSection from "@/components/collapsible-section";
 
 type GroupOption = {
   id: string;
@@ -225,8 +226,10 @@ className="mb-5 rounded-full bg-marker text-white font-body font-medium
       {status === "error" && (
         <p className="text-sm text-marker-dark text-center">{error}</p>
       )}
-            <NewSentTests endpoint="/api/tester/sent-tests" refreshKey={sentCount} />
-          <SentTestsArchive endpoint="/api/tester/archive" />
+      <CollapsibleSection>
+        <NewSentTests endpoint="/api/tester/sent-tests" refreshKey={sentCount} />
+        <SentTestsArchive endpoint="/api/tester/archive" />
+      </CollapsibleSection>
     </form>
   );
 }
