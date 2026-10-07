@@ -142,7 +142,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
         ) : (
           <button
             onClick={onToggleExpand}
-            className="flex-1 text-left font-display text-ink"
+            className="flex-1 text-left font-display font-medium text-ink"
           >
             {group.name}
           </button>
