@@ -157,6 +157,7 @@ export default function UserMenu({
     setConfirmCancel(false);
     setOpen(false);
     setCancelResult(Array.isArray(data.cancelled) ? data.cancelled : []);
+    window.dispatchEvent(new Event("sent-tests-changed"));
   }
 
   return (

@@ -40,6 +40,15 @@ export default function NewSentTests({
   useEffect(() => {
     if (open) load();
   }, [open, refreshKey, load]);
+  
+    // მენიუდან "წითელი ღილაკის" დაჭერისას სია თავისით განახლდეს
+  useEffect(() => {
+    const onChanged = () => {
+      if (open) load();
+    };
+    window.addEventListener("sent-tests-changed", onChanged);
+    return () => window.removeEventListener("sent-tests-changed", onChanged);
+  }, [open, load]);
 
   async function confirmDelete() {
     if (!toDelete) return;
