@@ -150,13 +150,13 @@ function handleStudentDragEnd(event: DragEndEvent) {
 
         <button
           onClick={() => setEditing(true)}
-          className="text-[13px] text-ink-soft hover:text-marker px-1"
+          className="text-base text-ink-soft hover:text-marker px-1"
         >
           edit
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="text-xs text-ink-soft hover:text-marker-dark px-1"
+          className="glyph-btn text-ink-soft hover:text-marker-dark px-1"
         >
           ×
         </button>

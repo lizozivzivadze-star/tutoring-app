@@ -15,7 +15,18 @@
   --color-fresh: #fff7e6;
   --color-fresh-line: #f0dfb5;
 
-  --font-display: "Noto Serif Georgian", "Noto Serif", serif;
+  --font-display: "Noto Sans Georgian", "Noto Sans", sans-serif;
+
+  --text-xs: 1rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5;
+    --text-lg: 1rem;
+  --text-lg--line-height: 1.5;
+  --text-xl: 1rem;
+  --text-xl--line-height: 1.5;
+  --text-4xl: 1rem;
+  --text-4xl--line-height: 1.5;
   --font-body: "Noto Sans Georgian", "Noto Sans", sans-serif;
 }
 
@@ -36,4 +47,10 @@ body {
   background: #fff;
   border: 2px solid var(--color-marker);
   border-radius: 4px;
+}
+
+/* × და + სიმბოლოების საერთო ზომა. ერთი რიცხვი ორივესთვის. */
+.glyph-btn {
+  font-size: 2rem;
+  line-height: 1;
 }

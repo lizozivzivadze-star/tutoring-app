@@ -65,13 +65,13 @@ export default function StudentRow({
 
 <button
   onClick={onEdit}
-  className="text-[13px] text-ink-soft hover:text-marker px-1 shrink-0"
+  className="text-base text-ink-soft hover:text-marker px-1 shrink-0"
 >
   edit
 </button>
 <button
   onClick={onDelete}
-  className="text-xs text-ink-soft hover:text-marker-dark px-1 shrink-0"
+  className="glyph-btn text-ink-soft hover:text-marker-dark px-1 shrink-0"
 >
   ×
 </button>

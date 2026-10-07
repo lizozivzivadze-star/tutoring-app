@@ -189,9 +189,9 @@ export default function GroupsTab() {
 
       <button
         onClick={() => setAddGroupOpen(true)}
-        className="mt-2 text-[15px] text-marker font-medium text-left hover:text-marker-dark"
+        className="mt-2 text-base text-marker font-medium text-left hover:text-marker-dark"
       >
-        + ჯგუფის დამატება
+        <span className="glyph-btn inline-block align-middle">+</span> ჯგუფის დამატება
       </button>
 
       {addGroupOpen && (

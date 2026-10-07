@@ -110,7 +110,7 @@ export default function NewSentTests({
                   <button
                     type="button"
                     onClick={() => setToDelete(item)}
-                    className="shrink-0 px-1 text-ink-soft hover:text-marker-dark"
+                    className="glyph-btn shrink-0 px-1 text-ink-soft hover:text-marker-dark"
                     aria-label="წაშლა"
                   >
                     ×

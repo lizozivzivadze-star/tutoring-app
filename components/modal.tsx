@@ -35,7 +35,7 @@ export default function Modal({
           <button
             onClick={onClose}
             aria-label="დახურვა"
-            className="text-ink-soft hover:text-ink text-lg leading-none"
+            className="glyph-btn text-ink-soft hover:text-ink"
           >
             ×
           </button>

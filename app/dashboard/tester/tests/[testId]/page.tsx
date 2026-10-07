@@ -175,7 +175,7 @@ return (
             </button>
             <button
               onClick={() => setConfirmingDelete(true)}
-              className="text-sm text-ink-soft hover:text-marker-dark"
+              className="glyph-btn text-ink-soft hover:text-marker-dark"
             >
               ×
             </button>

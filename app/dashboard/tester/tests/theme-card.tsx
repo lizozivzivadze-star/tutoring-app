@@ -104,13 +104,13 @@ const style = {
 
         <button
           onClick={() => setEditing(true)}
-          className="text-[13px] text-ink-soft hover:text-marker px-1"
+          className="text-base text-ink-soft hover:text-marker px-1"
         >
           edit
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="text-xs text-ink-soft hover:text-marker-dark px-1"
+          className="glyph-btn text-ink-soft hover:text-marker-dark px-1"
         >
           ×
         </button>
@@ -147,13 +147,13 @@ const style = {
                 {templateReady ? (
                   <Link
                     href={`/dashboard/tester/tests/new?themeId=${theme.id}&type=${type}`}
-                    className="text-marker font-medium text-[22px] leading-none px-2"
+                    className="text-marker font-medium glyph-btn px-2"
                   >
                     +
                   </Link>
                 ) : (
                   <span
-                    className="text-ink-soft/40 cursor-not-allowed text-[22px] leading-none px-2"
+                    className="text-ink-soft/40 cursor-not-allowed glyph-btn px-2"
                     title="ეს შაბლონი ჯერ არ არის მზად"
                   >
                     +

@@ -218,7 +218,7 @@ export default function StartTab() {
       </button>
 
       {status === "sent" && (
-        <p className="text-[15px] font-display font-semibold text-ledger text-center">
+        <p className="text-base font-display font-semibold text-ledger text-center">
           ტესტი წარმატებით გაიგზავნა ✓
         </p>
       )}
