@@ -271,25 +271,29 @@ export default function UserMenu({
       {confirmCancel && (
         <>
           <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setConfirmCancel(false)} />
-          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm p-4 max-w-sm mx-auto">
-            <p className="text-sm text-ink mb-4">
-              გსურთ გააუქმოთ ყველა გაგზავნილი და ამ მომენტისთვის შეუსრულებელი ტესტი?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmCancel(false)}
-                className="flex-1 rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
-              >
-                არა
-              </button>
-              <button
-                onClick={handleCancelPending}
-                disabled={cancelling}
-                className="flex-1 rounded-full bg-marker text-white text-sm font-medium py-2 disabled:opacity-50"
-              >
-                {cancelling ? "..." : "დიახ"}
-              </button>
+          <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
+            <div className="flex-[2]" />
+            <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm p-4">
+              <p className="text-sm text-ink mb-4">
+                გსურთ გააუქმოთ ყველა გაგზავნილი და ამ მომენტისთვის შეუსრულებელი ტესტი?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmCancel(false)}
+                  className="flex-1 rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
+                >
+                  არა
+                </button>
+                <button
+                  onClick={handleCancelPending}
+                  disabled={cancelling}
+                  className="flex-1 rounded-full bg-marker text-white text-sm font-medium py-2 disabled:opacity-50"
+                >
+                  {cancelling ? "..." : "დიახ"}
+                </button>
+              </div>
             </div>
+            <div className="flex-[3]" />
           </div>
         </>
       )}
@@ -299,34 +303,38 @@ export default function UserMenu({
       {cancelResult && (
         <>
           <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setCancelResult(null)} />
-          <div className="fixed left-4 right-4 bottom-6 z-50 bg-white border border-paper-line rounded-md shadow-sm max-w-sm mx-auto max-h-[70dvh] flex flex-col overflow-hidden">
-  <VScrollBox drag={false} className="p-4 min-h-0">
-            <p className="text-sm text-ink mb-3 font-medium">
-              {cancelResult.length === 0
-                ? "გასაუქმებელი ტესტი არ მოიძებნა"
-                : `გაუქმდა ${cancelResult.length} ტესტი:`}
-            </p>
-            {cancelResult.length > 0 && (
-              <ul className="text-sm text-ink-soft flex flex-col gap-2 mb-3">
-                {cancelResult.map((r, i) => (
-                  <li key={i} className="border-b border-paper-line pb-2">
-                    <span className="text-ink font-medium">{r.testTitle}</span>
-                    {" — "}
-                    {r.studentName
-                      ? `${r.studentName} (${r.groupName ?? "—"})`
-                      : `ჯგუფი: ${r.groupName ?? "—"}`}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <button
-              onClick={() => setCancelResult(null)}
-              className="w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
-            >
-      დახურვა
-    </button>
-  </VScrollBox>
-</div>
+          <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
+            <div className="flex-[2]" />
+            <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm max-h-[70dvh] flex flex-col overflow-hidden">
+              <VScrollBox drag={false} className="p-4 min-h-0">
+                <p className="text-sm text-ink mb-3 font-medium">
+                  {cancelResult.length === 0
+                    ? "გასაუქმებელი ტესტი არ მოიძებნა"
+                    : `გაუქმდა ${cancelResult.length} ტესტი:`}
+                </p>
+                {cancelResult.length > 0 && (
+                  <ul className="text-sm text-ink-soft flex flex-col gap-2 mb-3">
+                    {cancelResult.map((r, i) => (
+                      <li key={i} className="border-b border-paper-line pb-2">
+                        <span className="text-ink font-medium">{r.testTitle}</span>
+                        {" — "}
+                        {r.studentName
+                          ? `${r.studentName} (${r.groupName ?? "—"})`
+                          : `ჯგუფი: ${r.groupName ?? "—"}`}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <button
+                  onClick={() => setCancelResult(null)}
+                  className="w-full rounded-full border-2 border-paper-line text-ink-soft text-sm font-medium py-2"
+                >
+                  დახურვა
+                </button>
+              </VScrollBox>
+            </div>
+            <div className="flex-[3]" />
+          </div>
         </>
       )}
     </div>
