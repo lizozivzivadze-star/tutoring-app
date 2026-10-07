@@ -463,7 +463,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   );
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="w-screen relative left-1/2 -ml-[50vw] flex flex-col gap-2">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
