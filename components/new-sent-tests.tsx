@@ -75,8 +75,8 @@ export default function NewSentTests({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="-mx-4 rounded-full border-2 border-marker text-marker font-body
-                   font-medium py-2.5 transition-colors hover:bg-paper"
+     className="w-full text-left border border-paper-line rounded-md bg-white px-4 py-3
+           font-body font-medium text-ink transition-colors hover:bg-paper"
       >
         ახლად გაგზავნილი ტესტები
       </button>
