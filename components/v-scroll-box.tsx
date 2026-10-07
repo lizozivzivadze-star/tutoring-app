@@ -15,11 +15,13 @@ export default function VScrollBox({
   children,
   className = "",
   drag = true,
+  showScrollbar = false,
 }: {
   children: React.ReactNode;
   className?: string;
   /** click-and-drag scrolling on desktop; turn off for boxes with buttons/selectable text */
   drag?: boolean;
+  showScrollbar?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [fade, setFade] = useState<{ top: boolean; bottom: boolean }>({
@@ -84,7 +86,11 @@ export default function VScrollBox({
       onMouseUp={drag ? endDrag : undefined}
       onMouseLeave={drag ? endDrag : undefined}
       style={maskStyle}
-      className={`overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+      className={`overflow-y-auto ${
+        showScrollbar
+          ? "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-paper [&::-webkit-scrollbar-thumb]:bg-marker/60 [&::-webkit-scrollbar-thumb]:rounded-full"
+          : "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      } ${
         drag ? "cursor-grab active:cursor-grabbing select-none" : ""
       } ${className}`}
     >

@@ -89,14 +89,14 @@ export default function DropdownSelect({
 
       {open && (
 <div className="absolute z-40 mt-1 w-full bg-white border border-paper-line rounded-sm shadow-lg overflow-hidden">
-  <VScrollBox drag={false} className="max-h-64">
+  <VScrollBox drag={false} showScrollbar className="max-h-64">
     <ul>
 {options.map((o) =>
   o.disabled ? (
     <li
       key={o.value}
       aria-disabled="true"
-      className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm text-ink cursor-default select-none`}
+      className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm text-ink-soft cursor-default select-none`}
     >
       <HScrollText>{o.label}</HScrollText>
     </li>

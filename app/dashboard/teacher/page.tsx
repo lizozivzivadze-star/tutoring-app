@@ -85,16 +85,23 @@ export default function StartTab() {
           const published = theme.tests.filter((t) => t.published);
           const types = Array.from(new Set(published.map((t) => t.type)));
 
-          types.forEach((type) => {
+          if (published.length > 0) {
             flattened.push({
-              value: `header:${theme.id}:${type}`,
-              label: `${theme.name} · ${TYPE_LABELS[type]}`,
+              value: `header:${theme.id}`,
+              label: `[თემა] ${theme.name}`,
               disabled: true,
             });
+          }
+
+          types.forEach((type) => {
             published
               .filter((t) => t.type === type)
               .forEach((t) => {
-                flattened.push({ value: t.id, label: t.title, indent: true });
+                flattened.push({
+                  value: t.id,
+                  label: `[ტესტი] ${t.title} · ${TYPE_LABELS[type]}`,
+                  indent: true,
+                });
               });
           });
         });
