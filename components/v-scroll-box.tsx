@@ -147,7 +147,7 @@ export default function VScrollBox({
     <div className="relative">
       {scroller}
       {bar.show && (
-        <div className="absolute top-0 bottom-0 right-0 w-2 bg-paper-line/60 pointer-events-none">
+        <div className="absolute top-0 bottom-0 right-0 w-1 bg-paper-line/60 pointer-events-none">
           <div
             onPointerDown={onThumbDown}
             onPointerMove={onThumbMove}
