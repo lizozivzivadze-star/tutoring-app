@@ -107,7 +107,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
   return (
     <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
     <div className="flex flex-col gap-2.5">
-      <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2">
+      <h2 className="font-body text-[17.5px] font-medium text-ink border-b border-paper-line pb-2">
         თემები & ტესტები
       </h2>
 
