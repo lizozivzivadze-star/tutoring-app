@@ -468,14 +468,14 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-className="w-full text-left border border-paper-line rounded-md bg-white px-4 py-3
-           font-body font-medium text-ink transition-colors hover:bg-paper"
+className="w-full rounded-md border-2 border-marker text-marker font-body
+           font-medium py-2.5 transition-colors hover:bg-paper"
       >
         ჩატარებული ტესტების არქივი
       </button>
 
       {open && (
-        <div className="-mx-4 flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <DropdownSelect
             value={view}
             onChange={changeView}

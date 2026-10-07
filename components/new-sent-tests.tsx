@@ -75,14 +75,14 @@ export default function NewSentTests({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-     className="w-full text-left border border-paper-line rounded-md bg-white px-4 py-3
-           font-body font-medium text-ink transition-colors hover:bg-paper"
+className="w-full rounded-md border-2 border-marker text-marker font-body
+           font-medium py-2.5 transition-colors hover:bg-paper"
       >
         ახლად გაგზავნილი ტესტები
       </button>
 
       {open && (
-        <div className="-mx-4 bg-white border border-paper-line rounded-md overflow-hidden">
+        <div className="bg-white border border-paper-line rounded-md overflow-hidden">
           {error && (
             <p className="px-3 py-3 text-sm text-marker-dark text-center">{error}</p>
           )}
