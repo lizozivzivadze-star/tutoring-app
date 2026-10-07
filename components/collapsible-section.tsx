@@ -34,10 +34,10 @@ export default function CollapsibleSection({
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="w-full flex justify-end border-t border-paper-line pt-2 pb-1 text-ink-soft/50 hover:text-ink-soft"
+        className="w-[87vw] relative left-1/2 -ml-[43.5vw] flex justify-end border-t border-paper-line pt-2 pb-1 text-ink-soft/80 hover:text-ink-soft"
       >
         <span
-          className={"transition-transform " + (open ? "rotate-180" : "")}
+          className={"text-[1.75rem] leading-none transition-transform " + (open ? "rotate-180" : "")}
         >
           ▾
         </span>
