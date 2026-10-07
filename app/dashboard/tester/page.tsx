@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, FormEvent } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
 import { TYPE_LABELS, TestTemplate } from "./tests/types";
 import DropdownSelect from "@/components/dropdown-select";
 import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
@@ -33,6 +33,12 @@ export default function TesterStartTab() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [sentCount, setSentCount] = useState(0);
+  const lastSentKey = useRef("");
+  const [duplicateNote, setDuplicateNote] = useState(false);
+
+  useEffect(() => {
+    setDuplicateNote(false);
+  }, [selection, testId]);
 
   useEffect(() => {
     fetch("/api/tester/groups")
@@ -114,6 +120,14 @@ export default function TesterStartTab() {
   async function handleSend(e: FormEvent) {
     e.preventDefault();
     if (!selection || !testId) return;
+
+    const key = selection + "|" + testId;
+    if (lastSentKey.current === key) {
+      setDuplicateNote(true);
+      return;
+    }
+    lastSentKey.current = key; // იბლოკება მაშინვე, პასუხის ლოდინის გარეშე
+    setDuplicateNote(false);
     setStatus("sending");
     setError("");
 
@@ -131,6 +145,7 @@ export default function TesterStartTab() {
     });
 
     if (!res.ok) {
+      lastSentKey.current = "";
       const data = await res.json().catch(() => null);
       setError(data?.error ?? "გაგზავნა ვერ მოხერხდა.");
       setStatus("error");
@@ -232,6 +247,11 @@ className="mb-5 rounded-full bg-marker text-white font-body font-medium
       )}
       {status === "error" && (
         <p className="text-sm text-marker-dark text-center">{error}</p>
+      )}
+      {duplicateNote && (
+        <p className="text-sm text-marker-dark text-center">
+          ერთხელ უკვე გაგზავნილია. მეორედ არ გაიგზავნება, რამდენჯერაც არ უნდა დააჭირო.
+        </p>
       )}
       <CollapsibleSection>
         <NewSentTests endpoint="/api/tester/sent-tests" refreshKey={sentCount} />
