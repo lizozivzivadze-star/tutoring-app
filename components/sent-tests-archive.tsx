@@ -267,7 +267,7 @@ function ScrollPicker({
 
   return (
     <div className="border border-paper-line rounded-md bg-white overflow-hidden">
-      <div className="px-3 py-2 text-sm font-medium text-ink bg-paper border-b border-paper-line">
+      <div className="px-3 py-2 text-sm font-medium text-center text-ink bg-paper border-b border-paper-line">
         {title}
       </div>
       <div className="flex">
@@ -277,7 +277,7 @@ function ScrollPicker({
           className="h-[7.5rem] flex-1 min-w-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {items.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-ink-soft">{emptyText}</p>
+            <p className="px-3 py-3 text-sm text-center text-ink-soft">{emptyText}</p>
           ) : (
             items.map((t) => (
               <button
@@ -291,7 +291,7 @@ function ScrollPicker({
                                 : "text-ink hover:bg-paper"
                             }`}
               >
-                <HScrollText className="w-full">{t.title}</HScrollText>
+                <HScrollText className="w-full text-center">{t.title}</HScrollText>
               </button>
             ))
           )}
