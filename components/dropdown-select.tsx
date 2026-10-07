@@ -20,6 +20,7 @@ export default function DropdownSelect({
   disabled,
   className = "",
   flipArrow = false,
+  centered = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -29,6 +30,7 @@ export default function DropdownSelect({
   disabled?: boolean;
   className?: string;
   flipArrow?: boolean;
+  centered?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -69,7 +71,7 @@ export default function DropdownSelect({
           `disabled:opacity-50 disabled:cursor-not-allowed ${className}`
         }
       >
-        <span className={`min-w-0 flex-1 text-left ${selected ? "text-ink" : "text-ink-soft"}`}>
+       <span className={`min-w-0 flex-1 ${centered ? "text-center" : "text-left"} ${selected ? "text-ink" : "text-ink-soft"}`}>
           {selected ? (
             <HScrollText>{selected.label}</HScrollText>
           ) : (
@@ -106,7 +108,7 @@ export default function DropdownSelect({
           onChange(o.value);
           setOpen(false);
         }}
-        className={`w-full text-left ${o.indent ? "pl-[22px] pr-3" : "px-3"} py-2.5 font-body text-sm hover:bg-paper ${
+className={`w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[22px] pr-3" : "px-3"} py-2.5 font-body text-sm hover:bg-paper ${
           o.value === value ? "bg-paper text-marker" : "text-ink"
         }`}
       >
