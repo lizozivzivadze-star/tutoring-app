@@ -121,6 +121,13 @@ className={`w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[2
   </VScrollBox>
 </div>
       )}
+
+      {open && (
+        <div
+          aria-hidden
+          className="absolute left-0 top-full mt-1 h-[calc(16rem+50px)] w-px pointer-events-none"
+        />
+      )}
     </div>
   );
 }
