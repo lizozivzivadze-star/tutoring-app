@@ -25,30 +25,45 @@ export default function NewSentTests({
   const [error, setError] = useState("");
   const [toDelete, setToDelete] = useState<Item | null>(null);
 
-  const load = useCallback(async () => {
-    try {
-      const res = await fetch(endpoint, { cache: "no-store" });
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setItems(data.items ?? []);
-      setError("");
-    } catch {
-      setError("სიის ჩატვირთვა ვერ მოხერხდა.");
-    }
-  }, [endpoint]);
+  const load = useCallback(
+    async (silent = false) => {
+      try {
+        const res = await fetch(endpoint, { cache: "no-store" });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setItems(data.items ?? []);
+        setError("");
+      } catch {
+        if (!silent) setError("სიის ჩატვირთვა ვერ მოხერხდა.");
+      }
+    },
+    [endpoint]
+  );
 
   useEffect(() => {
     if (open) load();
   }, [open, refreshKey, load]);
-  
-    // მენიუდან "წითელი ღილაკის" დაჭერისას სია თავისით განახლდეს
+
+  // ღია სია თავისით ახლდება: 10 წამში ერთხელ, აპში/ტაბში დაბრუნებისას
+  // და მენიუდან „წითელი ღილაკის" დაჭერისას
   useEffect(() => {
-    const onChanged = () => {
-      if (open) load();
+    if (!open) return;
+    const refresh = () => {
+      if (document.visibilityState === "visible") load(true);
     };
-    window.addEventListener("sent-tests-changed", onChanged);
-    return () => window.removeEventListener("sent-tests-changed", onChanged);
+    const timer = setInterval(refresh, 10000);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("focus", refresh);
+    window.addEventListener("sent-tests-changed", refresh);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("sent-tests-changed", refresh);
+    };
   }, [open, load]);
+  
+
 
   async function confirmDelete() {
     if (!toDelete) return;
