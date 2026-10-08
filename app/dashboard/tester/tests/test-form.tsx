@@ -194,7 +194,7 @@ export default function TestForm({
             onClick={() => setQuestions((prev) => [...prev, newQuestion()])}
             className="text-sm text-marker font-medium text-left"
           >
-            + კითხვის დამატება
+            <span className="glyph-btn inline-block align-middle">+</span> კითხვის დამატება
           </button>
         )}
       </div>

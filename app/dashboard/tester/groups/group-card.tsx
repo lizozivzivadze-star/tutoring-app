@@ -195,7 +195,7 @@ async function sendLoginPage() {
     onClick={onAddStudent}
     className="text-sm text-marker font-medium text-left hover:text-marker-dark"
   >
-    + მოსწავლის დამატება
+    <span className="glyph-btn inline-block align-middle">+</span> მოსწავლის დამატება
   </button>
   {group.students.length > 0 && (
     <button

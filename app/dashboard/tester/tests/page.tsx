@@ -83,7 +83,7 @@ export default function ThemesAndTestsTab() {
             className="shrink-0 rounded-full border-2 border-marker text-marker font-body
                        font-medium text-sm px-3 py-0.5 transition-colors hover:bg-paper"
           >
-            + ტესტი
+            <span className="glyph-btn inline-block align-middle">+</span> ტესტი
           </Link>
         </div>
         <p className="text-[8px] text-ink-soft mt-0.5">

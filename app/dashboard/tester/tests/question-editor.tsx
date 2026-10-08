@@ -127,7 +127,7 @@ export default function QuestionEditor({
             onClick={addOption}
             className="text-xs text-marker font-medium text-left mt-1"
           >
-            + პასუხის დამატება
+            <span className="glyph-btn inline-block align-middle">+</span> პასუხის დამატება
           </button>
         )}
       </div>
