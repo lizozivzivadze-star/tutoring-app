@@ -118,17 +118,11 @@ function handleStudentDragEnd(event: DragEndEvent) {
     <div
   ref={setNodeRef}
   style={style}
-  className="border border-paper-line rounded-md bg-white"
+  className={`border rounded-md bg-white ${
+  expanded ? "border-marker" : "border-paper-line"
+}`}
 >
       <div className="flex items-center gap-3 px-4 py-3">
-        <input
-          type="checkbox"
-          checked={expanded}
-          onChange={onToggleExpand}
-          className="w-4 h-4 accent-marker shrink-0"
-          aria-label="გახსნა/დახურვა"
-        />
-
         {editing ? (
           <input
             autoFocus
@@ -221,7 +215,16 @@ function handleStudentDragEnd(event: DragEndEvent) {
 )}
   </div>
 )}
-
+{confirmingDelete && (
+  <ConfirmDialog
+    message={fillTemplate(deleteConfirmTemplate, { name: group.name })}
+    onConfirm={() => {
+      setConfirmingDelete(false);
+      onDelete();
+    }}
+    onCancel={() => setConfirmingDelete(false)}
+  />
+)}
 {confirmingInvite && (
   <ConfirmDialog
     message={`Log in URL გაეგზავნება ${group.students.length} მოსწავლეს. გავაგზავნო?`}
