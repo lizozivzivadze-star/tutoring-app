@@ -75,7 +75,7 @@ export default function ThemesAndTestsTab() {
     <div className="flex flex-col gap-2.5">
       <div className="border-b border-paper-line pb-[2px] -mb-[6px]">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-body text-[18.5px] font-medium text-ink">
+          <h2 className="font-body text-[17.5px] font-medium text-ink">
             თემები & ტესტები
           </h2>
           <Link
