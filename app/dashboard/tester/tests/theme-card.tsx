@@ -53,15 +53,13 @@ export default function ThemeCard({
   }
 
   return (
-<div className="border border-paper-line rounded-md bg-white px-4 py-3">
+<div
+  className={`border rounded-md bg-white px-4 py-3 ${
+    expanded ? "border-marker" : "border-paper-line"
+  }`}
+>
+
       <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={expanded}
-          onChange={onToggleExpand}
-          className="w-4 h-4 accent-marker shrink-0"
-          aria-label="გახსნა/დახურვა"
-        />
         {editing ? (
           <input
             autoFocus
