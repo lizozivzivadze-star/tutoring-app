@@ -112,7 +112,7 @@ export default function TestForm({
       {locked && (
         <p className="text-xs text-ink-soft bg-paper border border-paper-line rounded-sm px-3 py-2">
           ეს ტესტი უკვე გაგზავნილია — კითხვები ჩაკეტილია და აღარ იცვლება.
-          სათაური, ინსტრუქცია და გამოქვეყნების სტატუსი კვლავ რედაქტირებადია.
+          სათაური და გამოქვეყნების სტატუსი კვლავ რედაქტირებადია.
         </p>
       )}
 
@@ -149,16 +149,6 @@ export default function TestForm({
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={inputClass}
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm text-ink-soft mb-2">ინსტრუქცია</label>
-        <textarea
-          value={instruction}
-          onChange={(e) => setInstruction(e.target.value)}
-          rows={2}
           className={inputClass}
         />
       </div>

@@ -139,15 +139,6 @@ export default function TestForm({
         />
       </div>
 
-      <div>
-        <label className="block text-sm text-ink-soft mb-2">ინსტრუქცია</label>
-        <textarea
-          value={instruction}
-          onChange={(e) => setInstruction(e.target.value)}
-          rows={2}
-          className={inputClass}
-        />
-      </div>
 
       <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
         {locked

@@ -134,7 +134,6 @@ async function persist(
         <TestForm
           initialThemeId={themeId}
           type={type}
-          initialInstruction={defaultInstruction}
           onSave={handleSave}
           onPublish={handlePublish}
         />

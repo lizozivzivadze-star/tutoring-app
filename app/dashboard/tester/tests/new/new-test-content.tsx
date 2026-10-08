@@ -129,7 +129,6 @@ async function persist(
           initialThemeId={themeId}
           type={type}
           onTypeChange={!typeParam && !savedTestId ? setType : undefined}
-          initialInstruction={defaultInstruction}
           onSave={handleSave}
           onPublish={handlePublish}
         />

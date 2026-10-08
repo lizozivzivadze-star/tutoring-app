@@ -169,9 +169,16 @@ export default function TakeTestPage() {
 <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4 text-center">
   ინსტრუქცია
 </h1>
-          {test.instruction && (
-  <p className="text-sm text-ink-soft mb-6 text-center">{test.instruction}</p>
-)}
+          <div className="text-sm text-ink-soft mb-6 text-center flex flex-col gap-4">
+  <p>ტესტში {test.questions.length} შეკითხვაა.</p>
+  <p>თითოეულს პასუხის 4 ვარიანტი აქვს, რომელთაგან 1 არის სწორი.</p>
+  {test.timerEnabled && (
+    <p>
+      თითო შეკითხვაზე გაქვთ {QUESTION_TIME_SECONDS} წამი სწორი პასუხის
+      მოსანიშნად.
+    </p>
+  )}
+</div>
           <button
             onClick={() => {
               startedAtRef.current = Date.now();

@@ -222,9 +222,6 @@ return (
               )}
             </div>
             <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
-            {test.instruction && (
-              <p className="text-sm text-ink-soft mt-2">{display.instruction}</p>
-            )}
           </div>
 
           <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
