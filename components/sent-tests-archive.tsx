@@ -367,27 +367,47 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     ? "/dashboard/tester/groups/students"
     : "/dashboard/teacher/groups/students";
 
-  async function loadRows(): Promise<boolean> {
-    setLoading(true);
-    setError("");
+  async function loadRows(silent = false): Promise<boolean> {
+    if (!silent) {
+      setLoading(true);
+      setError("");
+    }
     try {
       const res = await fetch(endpoint, { cache: "no-store" });
       if (!res.ok) throw new Error();
       const data = await res.json();
-            setRows(
+      setRows(
         (data.rows ?? []).map((r: Omit<Row, "href">) => ({
           ...r,
           href: `${base}/${r.studentId}/history/${r.attemptId}`,
         }))
       );
-      setLoading(false);
+      if (!silent) setLoading(false);
       return true;
     } catch {
-      setError("სიის ჩატვირთვა ვერ მოხერხდა.");
-      setLoading(false);
+      if (!silent) {
+        setError("სიის ჩატვირთვა ვერ მოხერხდა.");
+        setLoading(false);
+      }
       return false;
     }
   }
+
+  // არქივი ნაჩვენებია → ფონზე ახლდება, რომ ახალი შედეგი სწრაფად გამოჩნდეს
+  useEffect(() => {
+    if (!open || !shown) return;
+    const refresh = () => {
+      if (document.visibilityState === "visible") loadRows(true);
+    };
+    const timer = setInterval(refresh, 100);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, [open, shown, endpoint]);
 
   async function show() {
     if (await loadRows()) {
