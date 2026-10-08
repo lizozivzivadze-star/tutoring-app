@@ -107,9 +107,15 @@ function handleThemeDragEnd(event: DragEndEvent) {
   return (
     <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
     <div className="flex flex-col gap-2.5">
-      <h2 className="font-body text-[17.5px] font-medium text-ink border-b border-paper-line pb-2">
-        თემები & ტესტები
-      </h2>
+      <div className="border-b border-paper-line pb-[5px] -mb-[5px]">
+        <h2 className="font-body text-[17.5px] font-medium text-ink">
+          თემები & ტესტები
+        </h2>
+        <p className="text-xs text-ink-soft mt-0.5">
+          (თემებზე და ტესტებზე მუშაობა რეკომენდებულია ლეპტოპიდან და არა
+          ტელეფონიდან)
+        </p>
+      </div>
 
       {themes.length === 0 && (
         <p className="text-ink-soft text-sm text-center py-8">
