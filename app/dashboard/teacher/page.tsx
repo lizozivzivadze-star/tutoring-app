@@ -34,11 +34,26 @@ export default function StartTab() {
   const [error, setError] = useState("");
   const [sentCount, setSentCount] = useState(0);
   const lastSentKey = useRef("");
-  const [duplicateNote, setDuplicateNote] = useState(false);
+  const [notice, setNotice] = useState<{
+    type: "sent" | "duplicate";
+    id: number;
+  } | null>(null);
+  const [noticeShown, setNoticeShown] = useState(false);
 
   useEffect(() => {
-    setDuplicateNote(false);
-  }, [selection, testId]);
+    if (!notice) return;
+    setNoticeShown(true);
+    const fade = setTimeout(() => setNoticeShown(false), 4500);
+    const clear = setTimeout(() => setNotice(null), 5000);
+    return () => {
+      clearTimeout(fade);
+      clearTimeout(clear);
+    };
+  }, [notice]);
+
+  function showNotice(type: "sent" | "duplicate") {
+    setNotice({ type, id: Date.now() });
+  }
 
   useEffect(() => {
     fetch("/api/groups")
@@ -123,12 +138,11 @@ export default function StartTab() {
 
     const key = selection + "|" + testId;
     if (lastSentKey.current === key) {
-      setDuplicateNote(true);
-      setStatus("idle");
+      showNotice("duplicate");
       return;
     }
     lastSentKey.current = key; // იბლოკება მაშინვე, პასუხის ლოდინის გარეშე
-    setDuplicateNote(false);
+        setNotice(null);
     setStatus("sending");
     setError("");
 
@@ -146,8 +160,8 @@ export default function StartTab() {
     });
 
     if (res.status === 409) {
-      setDuplicateNote(true);
       setStatus("idle");
+      showNotice("duplicate");
       return;
     }
 
@@ -160,6 +174,7 @@ export default function StartTab() {
     }
 
     setStatus("sent");
+    showNotice("sent");
     setSentCount((c) => c + 1);
   }
 
@@ -247,17 +262,24 @@ className="mb-5 rounded-full bg-marker text-white font-body font-medium
         {status === "sending" ? "იგზავნება..." : "გააგზავნე"}
       </button>
 
-      {status === "sent" && (
-        <p className="text-base font-display font-semibold text-ledger text-center">
-          ტესტი წარმატებით გაიგზავნა ✓
-        </p>
-      )}
+
       {status === "error" && (
         <p className="text-sm text-marker-dark text-center">{error}</p>
       )}
-      {duplicateNote && (
-        <p className="text-sm text-marker-dark text-center">
-          ერთხელ უკვე გაგზავნილია. მეორედ არ გაიგზავნება, რამდენჯერაც არ უნდა დააჭირო.
+
+      {notice && (
+        <p
+          className={`text-center transition-opacity duration-500 ${
+            noticeShown ? "opacity-100" : "opacity-0"
+          } ${
+            notice.type === "sent"
+              ? "text-base font-display font-semibold text-ledger"
+              : "text-sm text-marker-dark"
+          }`}
+        >
+          {notice.type === "sent"
+            ? "ტესტი წარმატებით გაიგზავნა ✓"
+            : "ტესტი უკვე გაგზავნილია."}
         </p>
       )}
 
