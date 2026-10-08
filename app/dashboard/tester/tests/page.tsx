@@ -111,7 +111,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
         <h2 className="font-body text-[17.5px] font-medium text-ink">
           თემები & ტესტები
         </h2>
-        <p className="text-[6px] text-ink-soft mt-0.5">
+        <p className="text-[8px] text-ink-soft mt-0.5">
           (თემებზე და ტესტებზე მუშაობა რეკომენდებულია ლეპტოპიდან და არა
           ტელეფონიდან)
         </p>
