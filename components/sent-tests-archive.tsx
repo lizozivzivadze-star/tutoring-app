@@ -53,10 +53,6 @@ const PERCENTS = Array.from({ length: 100 }, (_, i) => ({
   title: `${100 - i}%`,
 }));
 
-const SHOW_BTN =
-  "rounded-full border-2 border-marker text-marker font-body font-medium py-2 " +
-  "transition-colors hover:bg-paper disabled:opacity-50 disabled:cursor-not-allowed";
-
 function ymd(iso: string) {
   const d = new Date(iso);
   const p = (n: number) => String(n).padStart(2, "0");
@@ -409,26 +405,26 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     };
   }, [open, shown, endpoint]);
 
-  async function show() {
-    if (await loadRows()) {
-      setShown(true);
-      setVisible(PAGE);
-    }
-  }
+  // ბოლო არჩეული რეჟიმი — რომ სწრაფი გადართვისას ძველი ჩატვირთვა არ ჩაერიოს
+  const viewRef = useRef("");
 
   function changeView(v: string) {
     setView(v);
+    viewRef.current = v;
     setShown(false);
     setSelectedId("");
     setError("");
     setVisible(PAGE);
-    if (v === "by-test" || v === "by-group" || v === "by-student" || v === "by-result")
-      loadRows();
+    // ყველა რეჟიმში მონაცემები ეგრევე იტვირთება; ქრონოლოგიურში ანგარიში ეგრევე ჩანს,
+    // დანარჩენში — მას მერე, რაც სიიდან რამეს მონიშნავენ
+    loadRows().then((ok) => {
+      if (ok && v === "chronological" && viewRef.current === v) setShown(true);
+    });
   }
 
   function pick(id: string) {
     setSelectedId(id);
-    setShown(false);
+    setShown(true);
     setVisible(PAGE);
   }
 
@@ -547,121 +543,52 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
             centered
           />
 
-          {view === "chronological" && (
-            <>
-              <p className="text-sm text-ink-soft text-center px-2">
-                ქრონოლოგიურად გამოჩნდება აქამდე ჩატარებული ყველა ტესტი, ჯგუფი &
-                მოსწავლე რომელსაც იგი ჩაუტარდა და შედეგები.
-              </p>
-              <button type="button" onClick={show} disabled={loading} className={SHOW_BTN}>
-                {loading ? "იტვირთება..." : "გამოაჩინე"}
-              </button>
-              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
-              {results}
-            </>
+          {loading && (
+            <p className="text-sm text-ink-soft text-center">იტვირთება...</p>
           )}
+          {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
 
           {view === "by-test" && (
-            <>
-              <ScrollPicker
-                title="მონიშნეთ ტესტი"
-                items={tests}
-                value={selectedId}
-                onChange={pick}
-                emptyText="ჩატარებული ტესტები ჯერ არ არის"
-              />
-              <p className="text-sm text-ink-soft text-center px-2">
-                მონიშნეთ რომელი ტესტის ჩატარების ისტორია გაინტერესებთ და დააჭირეთ
-                ღილაკს 
-              </p>
-              <button
-                type="button"
-                onClick={show}
-                disabled={loading || !selectedId}
-                className={SHOW_BTN}
-              >
-                {loading ? "იტვირთება..." : "გამოაჩინე"}
-              </button>
-              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
-              {results}
-            </>
+            <ScrollPicker
+              title="მონიშნეთ ტესტი"
+              items={tests}
+              value={selectedId}
+              onChange={pick}
+              emptyText="ჩატარებული ტესტები ჯერ არ არის"
+            />
           )}
 
           {view === "by-group" && (
-            <>
-              <ScrollPicker
-                title="მონიშნეთ ჯგუფი"
-                items={groups}
-                value={selectedId}
-                onChange={pick}
-                emptyText="ჩატარებული ტესტები ჯერ არ არის"
-              />
-              <p className="text-sm text-ink-soft text-center px-2">
-                მონიშნეთ რომელი ჯგუფის ტესტირების ისტორია გაინტერესებთ და დააჭირეთ
-                ღილაკს
-              </p>
-              <button
-                type="button"
-                onClick={show}
-                disabled={loading || !selectedId}
-                className={SHOW_BTN}
-              >
-                {loading ? "იტვირთება..." : "გამოაჩინე"}
-              </button>
-              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
-              {results}
-            </>
+            <ScrollPicker
+              title="მონიშნეთ ჯგუფი"
+              items={groups}
+              value={selectedId}
+              onChange={pick}
+              emptyText="ჩატარებული ტესტები ჯერ არ არის"
+            />
           )}
-      {view === "by-student" && (
-            <>
-              <ScrollPicker
-                title="მონიშნეთ მოსწავლე"
-                items={students}
-                value={selectedId}
-                onChange={pick}
-                emptyText="ჩატარებული ტესტები ჯერ არ არის"
-              />
-              <p className="text-sm text-ink-soft text-center px-2">
-                მონიშნეთ რომელი მოსწავლის ტესტირების ისტორია გაინტერესებთ და
-                დააჭირეთ ღილაკს
-              </p>
-              <button
-                type="button"
-                onClick={show}
-                disabled={loading || !selectedId}
-                className={SHOW_BTN}
-              >
-                {loading ? "იტვირთება..." : "გამოაჩინე"}
-              </button>
-              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
-              {results}
-            </>
+
+          {view === "by-student" && (
+            <ScrollPicker
+              title="მონიშნეთ მოსწავლე"
+              items={students}
+              value={selectedId}
+              onChange={pick}
+              emptyText="ჩატარებული ტესტები ჯერ არ არის"
+            />
           )}
-                    {view === "by-result" && (
-            <>
-              <ScrollPicker
-                title="მონიშნეთ შედეგი"
-                items={PERCENTS}
-                value={selectedId}
-                onChange={pick}
-                emptyText=""
-              />
-              <p className="text-sm text-ink-soft text-center px-2">
-                მონიშნეთ შედეგი და გამოჩნდება რომელ მოსწავლეებს რომელ ტესტში აქვთ ეს
-                შეფასება მიღებული
-              </p>
-              <button
-                type="button"
-                onClick={show}
-                disabled={loading || !selectedId}
-                className={SHOW_BTN}
-              >
-                {loading ? "იტვირთება..." : "გამოაჩინე"}
-              </button>
-              {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
-              {results}
-            </>
+
+          {view === "by-result" && (
+            <ScrollPicker
+              title="მონიშნეთ შედეგი"
+              items={PERCENTS}
+              value={selectedId}
+              onChange={pick}
+              emptyText=""
+            />
           )}
+
+          {results}
         </div>
       )}
     </div>
