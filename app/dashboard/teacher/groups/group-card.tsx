@@ -198,7 +198,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
       </SortableContext>
     </DndContext>
 
-<div className="mt-1 flex items-center justify-between gap-x-3 gap-y-1 flex-wrap">
+<div className="mt-1 flex flex-col gap-3">
   <button
     onClick={onAddStudent}
     className="text-sm text-marker font-medium text-left hover:text-marker-dark"
@@ -209,13 +209,16 @@ function handleStudentDragEnd(event: DragEndEvent) {
     <button
       onClick={() => setConfirmingInvite(true)}
       disabled={sendingInvite}
-      className="text-sm text-marker font-medium hover:text-marker-dark disabled:opacity-50"
+      className="self-end rounded-full border-2 border-marker text-marker font-medium
+                 text-sm px-4 py-1 transition-colors hover:bg-paper disabled:opacity-50"
     >
-      {sendingInvite ? "იგზავნება..." : "✉ Log in URL გაგზავნა"}
+      {sendingInvite ? "იგზავნება..." : "Send Login URL"}
     </button>
   )}
 </div>
-{inviteMsg && <p className="text-xs text-ink-soft">{inviteMsg}</p>}
+{inviteMsg && (
+  <p className="text-xs text-ink-soft text-right">{inviteMsg}</p>
+)}
   </div>
 )}
 
