@@ -16,6 +16,8 @@ export async function GET() {
     },
     orderBy: [{ sentTest: { sentAt: "desc" } }, { completedAt: "desc" }],
     select: {
+      id: true,
+      durationSeconds: true,
       sentTestId: true,
       score: true,
       totalQuestions: true,
@@ -59,6 +61,8 @@ export async function GET() {
       studentName:
         [a.student.name, a.student.surname].filter(Boolean).join(" ") || "—",
       studentOrder: a.student.order,
+      attemptId: a.id,
+      durationSeconds: a.durationSeconds,
       score: a.score,
       total: a.totalQuestions,
     });

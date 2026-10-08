@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import DropdownSelect from "@/components/dropdown-select";
 import HScrollText from "@/components/h-scroll-text";
+import Link from "next/link";
+import { formatDuration } from "@/lib/format-time";
 
 type Row = {
   eventKey: string;
@@ -17,9 +19,20 @@ type Row = {
   studentOrder: number;
   score: number;
   total: number;
+  attemptId: string;
+  durationSeconds: number | null;
+  href: string;
 };
 
-type StudentLine = { id: string; name: string; order: number; score: number; total: number };
+type StudentLine = {
+  id: string;
+  name: string;
+  order: number;
+  score: number;
+  total: number;
+  href: string;
+  durationSeconds: number | null;
+};
 type GroupLine = { id: string; name: string; order: number; students: StudentLine[] };
 type TestBlock = { key: string; sentAt: string; title: string; groups: GroupLine[] };
 type EventBlock = { key: string; sentAt: string; title: string; students: StudentLine[] };
@@ -64,6 +77,8 @@ function toStudent(r: Row): StudentLine {
     order: r.studentOrder,
     score: r.score,
     total: r.total,
+    href: r.href,
+    durationSeconds: r.durationSeconds,
   };
 }
 
@@ -118,9 +133,14 @@ function StudentRows({ students }: { students: StudentLine[] }) {
         >
           <HScrollText className="flex-1 min-w-0">{s.name}</HScrollText>
           <span className="text-paper-line">|</span>
-          <span className="shrink-0">
+          <Link
+            href={s.href}
+            className="shrink-0 text-marker underline underline-offset-2"
+          >
             {s.score}/{s.total}
-          </span>
+          </Link>
+          <span className="text-paper-line">|</span>
+          <span className="shrink-0">{formatDuration(s.durationSeconds)}</span>
         </div>
       ))}
     </>
@@ -181,9 +201,16 @@ function StudentFrame({ row }: { row: Row }) {
     <div className="border border-paper-line rounded-md bg-white px-3 py-2 flex flex-col gap-1 shadow-sm text-xs text-ink">
       <span className="text-ink-soft">{ymd(row.sentAt)}</span>
       <HScrollText className="min-w-0 font-medium">{row.testTitle}</HScrollText>
-      <span>
-        {row.score}/{row.total}
-      </span>
+      <div className="flex items-center gap-2">
+        <Link
+          href={row.href}
+          className="text-marker underline underline-offset-2"
+        >
+          {row.score}/{row.total}
+        </Link>
+        <span className="text-paper-line">|</span>
+        <span>{formatDuration(row.durationSeconds)}</span>
+      </div>
     </div>
   );
 }
@@ -197,9 +224,16 @@ function ResultFrame({ row }: { row: Row }) {
       <HScrollText className="min-w-0 font-medium">{row.studentName}</HScrollText>
       <HScrollText className="min-w-0">{row.testTitle}</HScrollText>
       <span className="text-ink-soft">{ymd(row.sentAt)}</span>
-      <span>
-        {row.score}/{row.total} ({pctOf(row)}%)
-      </span>
+      <div className="flex items-center gap-2">
+        <Link
+          href={row.href}
+          className="text-marker underline underline-offset-2"
+        >
+          {row.score}/{row.total} ({pctOf(row)}%)
+        </Link>
+        <span className="text-paper-line">|</span>
+        <span>{formatDuration(row.durationSeconds)}</span>
+      </div>
     </div>
   );
 }
@@ -329,6 +363,9 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(PAGE);
+  const base = endpoint.includes("/tester/")
+    ? "/dashboard/tester/groups/students"
+    : "/dashboard/teacher/groups/students";
 
   async function loadRows(): Promise<boolean> {
     setLoading(true);
@@ -337,7 +374,12 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
       const res = await fetch(endpoint, { cache: "no-store" });
       if (!res.ok) throw new Error();
       const data = await res.json();
-      setRows(data.rows ?? []);
+            setRows(
+        (data.rows ?? []).map((r: Omit<Row, "href">) => ({
+          ...r,
+          href: `${base}/${r.studentId}/history/${r.attemptId}`,
+        }))
+      );
       setLoading(false);
       return true;
     } catch {
