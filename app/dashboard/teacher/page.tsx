@@ -124,6 +124,7 @@ export default function StartTab() {
     const key = selection + "|" + testId;
     if (lastSentKey.current === key) {
       setDuplicateNote(true);
+      setStatus("idle");
       return;
     }
     lastSentKey.current = key; // იბლოკება მაშინვე, პასუხის ლოდინის გარეშე
@@ -143,6 +144,12 @@ export default function StartTab() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
+
+    if (res.status === 409) {
+      setDuplicateNote(true);
+      setStatus("idle");
+      return;
+    }
 
     if (!res.ok) {
       lastSentKey.current = "";

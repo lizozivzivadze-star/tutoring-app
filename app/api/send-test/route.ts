@@ -47,6 +47,13 @@ export async function POST(req: NextRequest) {
     if (!student || student.group?.teacherId !== teacherId) {
       return NextResponse.json({ error: "მოსწავლე ვერ მოიძებნა" }, { status: 404 });
     }
+   const pending = await prisma.sentTest.findFirst({
+      where: { studentId, testId, attempts: { none: {} } },
+      select: { id: true },
+    });
+    if (pending) {
+      return NextResponse.json({ error: "duplicate" }, { status: 409 });
+    }
     const sentTest = await prisma.sentTest.create({ data: { studentId, testId, ...settings } })
     return NextResponse.json({ sentTest });
   }
@@ -66,9 +73,23 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const pending = await prisma.sentTest.findMany({
+    where: {
+      testId,
+      studentId: { in: students.map((s) => s.id) },
+      attempts: { none: {} },
+    },
+    select: { studentId: true },
+  });
+  const pendingIds = new Set(pending.map((p) => p.studentId));
+  const toSend = students.filter((s) => !pendingIds.has(s.id));
+  if (toSend.length === 0) {
+    return NextResponse.json({ error: "duplicate" }, { status: 409 });
+  }
+
   const sentAt = new Date();
   const result = await prisma.sentTest.createMany({
-    data: students.map((s) => ({ studentId: s.id, testId, sentAt, ...settings })),
+    data: toSend.map((s) => ({ studentId: s.id, testId, sentAt, ...settings })),
   });
   return NextResponse.json({ count: result.count });
 }
