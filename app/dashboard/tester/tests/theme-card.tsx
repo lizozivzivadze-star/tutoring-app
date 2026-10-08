@@ -5,8 +5,6 @@ import Link from "next/link";
 import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
 import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import HScrollText from "@/components/h-scroll-text";
 
 const DEFAULT_DELETE_CONFIRM =
@@ -38,20 +36,7 @@ export default function ThemeCard({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [renameError, setRenameError] = useState("");
   const [deleteError, setDeleteError] = useState("");
-  const {
-  attributes,
-  listeners,
-  setNodeRef,
-  transform,
-  transition,
-  isDragging,
-} = useSortable({ id: theme.id });
 
-const style = {
-  transform: CSS.Transform.toString(transform),
-  transition,
-  opacity: isDragging ? 0.5 : 1,
-};
 
   async function saveRename() {
     if (!draftName.trim() || draftName === theme.name) {
@@ -68,11 +53,7 @@ const style = {
   }
 
   return (
-<div
-  ref={setNodeRef}
-  style={style}
-  className="border border-paper-line rounded-md bg-white px-4 py-3"
->
+<div className="border border-paper-line rounded-md bg-white px-4 py-3">
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
@@ -114,15 +95,6 @@ const style = {
         >
           ×
         </button>
-                <span
-  {...attributes}
-  {...listeners}
-  style={{ touchAction: "none" }}
-  className="cursor-grab text-ink-soft/60 select-none px-1 text-[18px]"
-  title="გადაადგილება"
->
-  ⠿
-</span>
       </div>
 
       {renameError && (

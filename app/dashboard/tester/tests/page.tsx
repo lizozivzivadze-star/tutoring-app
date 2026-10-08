@@ -5,19 +5,7 @@ import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
 import LoadingBar from "@/components/loading-bar";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+
 
 export default function ThemesAndTestsTab() {
   const [themes, setThemes] = useState<ThemeRecord[] | null>(null);
@@ -25,11 +13,7 @@ export default function ThemesAndTestsTab() {
   const [deleteConfirmTemplate, setDeleteConfirmTemplate] = useState<
     string | undefined
   >(undefined);
-  const sensors = useSensors(
-  useSensor(PointerSensor, {
-    activationConstraint: { distance: 8 },
-  })
-);
+
   const [addThemeOpen, setAddThemeOpen] = useState(false);
 
   const load = useCallback(async () => {
@@ -77,26 +61,7 @@ export default function ThemesAndTestsTab() {
     setThemes((prev) => prev?.filter((t) => t.id !== themeId) ?? prev);
   }
 
-function handleThemeDragEnd(event: DragEndEvent) {
-  const { active, over } = event;
-  if (!themes || !over || active.id === over.id) return;
 
-  const ids = themes.map((t) => t.id);
-  const fromIndex = ids.indexOf(active.id as string);
-  const toIndex = ids.indexOf(over.id as string);
-  const newIds = arrayMove(ids, fromIndex, toIndex);
-
-  const reordered = newIds
-    .map((id) => themes.find((t) => t.id === id)!)
-    .filter(Boolean);
-  setThemes(reordered);
-
-  fetch("/api/themes/reorder", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ orderedIds: newIds }),
-  });
-}
 
   if (!themes) {
     return (
@@ -123,15 +88,6 @@ function handleThemeDragEnd(event: DragEndEvent) {
         </p>
       )}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleThemeDragEnd}
-      >
-        <SortableContext
-          items={themes.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
           {themes.map((theme, i) => (
             <ThemeCard
               key={theme.id}
@@ -144,8 +100,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
               deleteConfirmTemplate={deleteConfirmTemplate}
             />
           ))}
-        </SortableContext>
-      </DndContext>
+
 
       <button
         onClick={() => setAddThemeOpen(true)}
