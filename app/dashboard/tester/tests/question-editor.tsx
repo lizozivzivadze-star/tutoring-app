@@ -14,7 +14,7 @@ export function newQuestion(): QuestionDraft {
   return {
     clientId: crypto.randomUUID(),
     prompt: "",
-    options: [makeOption(), makeOption()],
+    options: [makeOption(), makeOption(), makeOption(), makeOption()],
   };
 }
 
