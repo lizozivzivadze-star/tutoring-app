@@ -56,12 +56,12 @@ export default function StudentDashboard() {
           {pending?.length === 0 && (
             <p className="text-ink-soft text-sm">ახალი ტესტი არ არის.</p>
           )}
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-3">
             {pending?.map((t) => (
               <li key={t.sentTestId}>
                 <Link
                   href={`/dashboard/student/take/${t.sentTestId}`}
-                  className="flex items-center gap-2 text-ink hover:text-marker"
+                  className="flex items-center gap-2 text-ink hover:text-marker bg-[#f0dfb5]/50 rounded-md px-3 py-3"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
                   <span>
