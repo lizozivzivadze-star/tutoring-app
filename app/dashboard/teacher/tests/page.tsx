@@ -96,7 +96,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
 
   return (
     <div className="flex flex-col gap-2.5">
-      <h2 className="font-body text-sm font-medium text-ink border-b border-paper-line pb-2">
+      <h2 className="font-body text-[18.5px] font-medium text-ink border-b border-paper-line pb-2">
         თემები & ტესტები
       </h2>
 
