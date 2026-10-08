@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import QuestionEditor, { newQuestion } from "./question-editor";
-import { QuestionDraft, TestTemplate, TYPE_LABELS } from "./types";
+import { QuestionDraft, TestTemplate, TYPE_LABELS, TYPES } from "./types";
 import DropdownSelect from "@/components/dropdown-select";
 
 type ThemeOption = { id: string; name: string };
@@ -22,6 +22,7 @@ export default function TestForm({
   onSave,
   onPublish,
   saveLabel = "Save",
+  onTypeChange,
 }: {
   initialThemeId: string;
   type: TestTemplate;
@@ -45,6 +46,7 @@ export default function TestForm({
     published: boolean;
   }) => Promise<string | void>;
   saveLabel?: string;
+  onTypeChange?: (type: TestTemplate) => void;
 }) {
   const [themes, setThemes] = useState<ThemeOption[]>([]);
   const [themeId, setThemeId] = useState(initialThemeId);
@@ -125,9 +127,21 @@ export default function TestForm({
 
       <div>
         <label className="block text-sm text-ink-soft mb-2">ტიპი</label>
-        <div className="border border-paper-line rounded-sm px-3 py-2.5 text-ink-soft bg-paper">
-          {TYPE_LABELS[type]}
-        </div>
+        {onTypeChange ? (
+          <DropdownSelect
+            value={type}
+            onChange={(v) => onTypeChange(v as TestTemplate)}
+            options={TYPES.map((t) => ({
+              value: t,
+              label: TYPE_LABELS[t],
+              disabled: t !== "type1",
+            }))}
+          />
+        ) : (
+          <div className="border border-paper-line rounded-sm px-3 py-2.5 text-ink-soft bg-paper">
+            {TYPE_LABELS[type]}
+          </div>
+        )}
       </div>
 
       <div>

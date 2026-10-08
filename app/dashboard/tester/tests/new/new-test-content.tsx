@@ -26,7 +26,10 @@ export default function NewTestContent() {
   const params = useSearchParams();
   const router = useRouter();
   const themeId = params.get("themeId") ?? "";
-  const type = (params.get("type") ?? "type1") as TestTemplate;
+  const typeParam = params.get("type");
+  const [type, setType] = useState<TestTemplate>(
+    (typeParam ?? "type1") as TestTemplate
+  );
 
   // Once the first Save creates the row, we keep its id here and
   // switch to PATCH — otherwise every subsequent Save would create
@@ -53,6 +56,7 @@ async function persist(
   values: FormValues,
   options?: { republish?: boolean }
 ): Promise<{ id: string } | { error: string }> {
+    if (!values.themeId) return { error: "აირჩიე თემა" };
   const res = savedTestId
     ? await fetch(`/api/tests/${savedTestId}`, {
         method: "PATCH",
@@ -105,16 +109,6 @@ async function persist(
   router.push(`/dashboard/tester/tests/${result.id}`);
 }
 
-  if (!themeId) {
-    return (
-      <p className="text-sm text-marker-dark text-center py-12">
-        თემა არ არის მითითებული.{" "}
-        <Link href="/dashboard/tester/tests" className="text-marker font-medium">
-          უკან
-        </Link>
-      </p>
-    );
-  }
 
   return (
     <div>
@@ -134,6 +128,7 @@ async function persist(
         <TestForm
           initialThemeId={themeId}
           type={type}
+          onTypeChange={!typeParam && !savedTestId ? setType : undefined}
           initialInstruction={defaultInstruction}
           onSave={handleSave}
           onPublish={handlePublish}

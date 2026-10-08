@@ -5,6 +5,7 @@ import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
 import LoadingBar from "@/components/loading-bar";
+import Link from "next/link";
 
 
 export default function ThemesAndTestsTab() {
@@ -73,9 +74,18 @@ export default function ThemesAndTestsTab() {
     <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
     <div className="flex flex-col gap-2.5">
       <div className="border-b border-paper-line pb-[2px] -mb-[6px]">
-        <h2 className="font-body text-[17.5px] font-medium text-ink">
-          თემები & ტესტები
-        </h2>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-body text-[17.5px] font-medium text-ink">
+            თემები & ტესტები
+          </h2>
+          <Link
+            href="/dashboard/tester/tests/new"
+            className="shrink-0 rounded-full border-2 border-marker text-marker font-body
+                       font-medium text-sm px-3 py-0.5 transition-colors hover:bg-paper"
+          >
+            + ტესტი
+          </Link>
+        </div>
         <p className="text-[8px] text-ink-soft mt-0.5">
           (თემებზე და ტესტებზე მუშაობა რეკომენდებულია ლეპტოპიდან და არა
           ტელეფონიდან)
