@@ -45,6 +45,11 @@ export default function TakeTestPage() {
   const [elapsed, setElapsed] = useState(0);
   const answersRef = useRef<Answer[]>([]);
   const startedAtRef = useRef<number | null>(null);
+  const liveRef = useRef<{
+  test: TestData | null;
+  questionIndex: number;
+  selected: string | null;
+}>({ test: null, questionIndex: 0, selected: null });
 
   useEffect(() => {
     fetch(`/api/student/sent-tests/${sentTestId}`)
@@ -143,6 +148,35 @@ export default function TakeTestPage() {
     }, 1000);
     return () => clearInterval(id);
   }, [stage, test]);
+
+  // ყოველთვის ბოლო მდგომარეობა ინახება, რომ "უკან"-ზე სწორი პასუხები გავგზავნოთ.
+useEffect(() => {
+  liveRef.current = { test, questionIndex, selected };
+}, [test, questionIndex, selected]);
+
+// ტელეფონის "უკან" ღილაკი ტესტის დროს: ტესტი მაშინვე სრულდება
+// უკვე მონიშნული პასუხებით, ხელახლა დაწყება აღარ შეიძლება.
+useEffect(() => {
+  if (stage !== "question") return;
+
+  // ერთი დამატებითი ჩანაწერი ისტორიაში, რომ "უკან" ამ გვერდზე დარჩეს
+  // და ჩვენ შევძლოთ მისი დაჭერა.
+  window.history.pushState({ inTest: true }, "");
+
+  function onPopState() {
+    const { test, questionIndex, selected } = liveRef.current;
+    if (!test) return;
+    const updated = [...answersRef.current];
+    updated[questionIndex] = {
+      questionId: test.questions[questionIndex].id,
+      selectedOptionId: selected,
+    };
+    submit(updated.filter(Boolean));
+  }
+
+  window.addEventListener("popstate", onPopState);
+  return () => window.removeEventListener("popstate", onPopState);
+}, [stage, submit]);
 
   if (stage === "loading" || stage === "already-done") {
     return (
