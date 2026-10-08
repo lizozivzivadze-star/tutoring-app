@@ -51,7 +51,7 @@ export default function NewSentTests({
     const refresh = () => {
       if (document.visibilityState === "visible") load(true);
     };
-    const timer = setInterval(refresh, 10000);
+    const timer = setInterval(refresh, 100);
     document.addEventListener("visibilitychange", refresh);
     window.addEventListener("focus", refresh);
     window.addEventListener("sent-tests-changed", refresh);
