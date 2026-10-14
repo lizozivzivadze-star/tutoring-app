@@ -198,8 +198,8 @@ useEffect(() => {
 
   if (stage === "instructions") {
     return (
-      <main className="min-h-screen flex items-center justify-center px-6">
-        <div className="w-full max-w-sm">
+<main className="min-h-screen flex items-center justify-center">
+  <div className="w-[90%]">
 <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4 text-center">
   ინსტრუქცია
 </h1>
@@ -239,8 +239,8 @@ useEffect(() => {
   const question = test.questions[questionIndex];
 
   return (
-    <main className="min-h-screen px-6 py-8">
-      <div className="max-w-sm mx-auto">
+<main className="min-h-screen py-8">
+  <div className="w-[90%] mx-auto">
 <div className="border-[2.5px] border-paper-line rounded-md bg-paper px-4 py-3 mb-6">
   <p className="text-sm text-ink-soft mb-1">ტესტი: {test.title}</p>
   <p className="text-sm text-ink-soft">

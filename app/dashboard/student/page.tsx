@@ -44,7 +44,7 @@ export default function StudentDashboard() {
   <UserMenu />
 </header>
 
-      <main className="py-8 flex flex-col gap-8">
+      <main className="py-8 flex flex-col gap-8 mx-auto w-[90%]">
         <section className="rounded-lg p-4 bg-[#fff7e6] border border-[#f0dfb5]">
           <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
             ახალი ტესტები

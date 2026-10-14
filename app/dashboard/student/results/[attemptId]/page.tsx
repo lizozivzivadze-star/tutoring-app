@@ -43,8 +43,8 @@ export default function ResultsPage() {
   }, [secondsLeft, router]);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm text-center">
+<main className="min-h-screen flex flex-col items-center justify-center">
+  <div className="w-[90%] text-center">
         <p className="font-display text-lg text-ink">თქვენი</p>
         <p className="font-display text-lg text-ink mb-4">შედეგი</p>
         <p className="text-4xl font-display text-marker mb-8">

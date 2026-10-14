@@ -53,8 +53,8 @@ export default function ReviewPage() {
         <Greeting />
         <UserMenu />
       </header>
-      <main className="px-6 py-8">
-      <div className="max-w-sm mx-auto">
+      <main className="py-8">
+      <div className="w-[90%] mx-auto">
         <Link
   href="/dashboard/student"
   className="text-sm text-marker font-medium"

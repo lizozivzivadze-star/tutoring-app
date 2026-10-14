@@ -25,9 +25,7 @@ export default async function AdminDashboardLayout({
         <AdminTabs />
       </div>
 
-      <main className="px-6 py-8 max-w-sm mx-auto">
-        <div className="p-5">{children}</div>
-      </main>
+<main className="py-8 mx-auto w-[90%]">{children}</main>
     </div>
   );
 }
