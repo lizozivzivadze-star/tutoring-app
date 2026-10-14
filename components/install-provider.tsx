@@ -71,16 +71,20 @@ export default function InstallProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const promptInstall = useCallback(async () => {
-    const ev = window.__bip;
-    if (!ev) return "unavailable" as const;
+const promptInstall = useCallback(async () => {
+  const ev = window.__bip;
+  if (!ev) return "unavailable" as const;
+  // ერთ ივენთზე prompt() მხოლოდ ერთხელ გამოიძახება.
+  window.__bip = null;
+  setCanPrompt(false);
+  try {
     await ev.prompt();
     const { outcome } = await ev.userChoice;
-    // ერთ ივენთზე prompt() მხოლოდ ერთხელ გამოიძახება.
-    window.__bip = null;
-    setCanPrompt(false);
     return outcome;
-  }, []);
+  } catch {
+    return "unavailable" as const;
+  }
+}, []);
 
   return (
     <InstallContext.Provider value={{ canPrompt, installed, promptInstall }}>
