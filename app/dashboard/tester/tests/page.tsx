@@ -73,7 +73,7 @@ export default function ThemesAndTestsTab() {
   return (
     <div>
     <div className="flex flex-col gap-2.5">
-      <div className="border-b border-paper-line pb-[2px] -mb-[6px]">
+      <div className="border-b border-paper-line pb-[5px] -mb-[5px]">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-body text-[17.5px] font-medium text-ink">
             თემები & ტესტები
@@ -86,10 +86,6 @@ export default function ThemesAndTestsTab() {
             <span className="glyph-btn inline-block align-middle">+</span> ტესტი
           </Link>
         </div>
-        <p className="text-[8px] text-ink-soft mt-0.5">
-          (თემებზე და ტესტებზე მუშაობა რეკომენდებულია ლეპტოპიდან და არა
-          ტელეფონიდან)
-        </p>
       </div>
 
       {themes.length === 0 && (
