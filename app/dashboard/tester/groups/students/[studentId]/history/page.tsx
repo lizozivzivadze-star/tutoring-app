@@ -38,8 +38,8 @@ export default function TesterStudentHistoryPage() {
   }, [studentId]);
 
   return (
-    <main className="min-h-screen px-6 py-8">
-      <div className="w-[90vw] relative left-1/2 -ml-[45vw]">
+<main className="min-h-screen py-8">
+  <div>
         <Link
           href="/dashboard/tester/groups"
           className="text-sm text-marker font-medium"

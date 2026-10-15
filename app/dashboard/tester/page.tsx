@@ -190,8 +190,8 @@ export default function TesterStartTab() {
 
   return (
     <form onSubmit={handleSend} className="flex flex-col gap-5">
-      <div className="w-screen relative left-1/2 -ml-[50vw] flex flex-col items-center gap-5">
-        <div className="w-[80vw]">
+      <div className="flex flex-col gap-5">
+        <div>
           <label className="block text-sm text-ink-soft mb-2">
             აირჩიე ჯგუფი ან მოსწავლე
           </label>
@@ -210,7 +210,7 @@ export default function TesterStartTab() {
           />
         </div>
 
-        <div className="w-[80vw]">
+        <div>
           <label className="block text-sm text-ink-soft mb-2">
             აირჩიე ტესტი
           </label>

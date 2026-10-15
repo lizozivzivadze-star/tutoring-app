@@ -71,7 +71,7 @@ export default function ThemesAndTestsTab() {
   }
 
   return (
-    <div className="w-screen relative left-1/2 -ml-[50vw] px-[2.5vw]">
+    <div>
     <div className="flex flex-col gap-2.5">
       <div className="border-b border-paper-line pb-[2px] -mb-[6px]">
         <div className="flex items-center justify-between gap-2">
