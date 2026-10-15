@@ -24,7 +24,9 @@ type Status = "idle" | "sending" | "sent" | "error";
 
 export default function TesterStartTab() {
   const [groups, setGroups] = useState<GroupOption[]>([]);
-  const [tests, setTests] = useState<TestOption[]>([]);
+  const [themeOptions, setThemeOptions] = useState<TestOption[]>([]);
+  const [testsByTheme, setTestsByTheme] = useState<Record<string, TestOption[]>>({});
+  const [themeId, setThemeId] = useState("");
   const [questionCounts, setQuestionCounts] = useState<Record<string, number>>({});
   const [selection, setSelection] = useState(""); // "group:<id>" ან "student:<id>"
   const [testId, setTestId] = useState("");
@@ -96,7 +98,8 @@ export default function TesterStartTab() {
           }[];
         };
 
-        const flattened: TestOption[] = [];
+        const themeList: TestOption[] = [];
+        const byTheme: Record<string, TestOption[]> = {};
         const counts: Record<string, number> = {};
         (data.themes ?? []).forEach((theme: ThemeWithTests) => {
           theme.tests.forEach((t) => {
@@ -106,28 +109,24 @@ export default function TesterStartTab() {
           const published = theme.tests.filter((t) => t.published);
           const types = Array.from(new Set(published.map((t) => t.type)));
 
-          if (published.length > 0) {
-            flattened.push({
-              value: `header:${theme.id}`,
-              label: `[თემა] ${theme.name}`,
-              disabled: true,
-            });
-          }
+          if (published.length === 0) return;
+          themeList.push({ value: theme.id, label: theme.name });
+          byTheme[theme.id] = [];
 
           types.forEach((type) => {
             published
               .filter((t) => t.type === type)
               .forEach((t) => {
-                flattened.push({
+                byTheme[theme.id].push({
                   value: t.id,
-                  label: `[ტესტი] ${t.title} · ${TYPE_LABELS[type]}`,
-                  indent: true,
+                  label: `${t.title} · ${TYPE_LABELS[type]}`,
                 });
               });
           });
         });
 
-        setTests(flattened);
+        setThemeOptions(themeList);
+        setTestsByTheme(byTheme);
         setQuestionCounts(counts);
       });
   }, []);
@@ -179,6 +178,8 @@ export default function TesterStartTab() {
   }
 
   const active = !!testId;
+  const themeActive = !!selection;
+  const testStepActive = !!themeId;
   const totalSeconds = (questionCounts[testId] ?? 0) * QUESTION_TIME_SECONDS;
   const timeLabel = `${Math.floor(totalSeconds / 60)}:${String(
     totalSeconds % 60
@@ -211,7 +212,32 @@ export default function TesterStartTab() {
         </div>
 
         <div>
-          <label className="block text-sm text-ink-soft mb-2">
+          <label
+            className={`block text-sm mb-2 ${
+              themeActive ? "text-ink-soft" : "text-ink-soft/50"
+            }`}
+          >
+            აირჩიე თემა
+          </label>
+          <DropdownSelect
+            value={themeId}
+            onChange={(v) => {
+              setThemeId(v);
+              setTestId("");
+              setTimerOn(true);
+              setBackOn(false);
+            }}
+            disabled={!themeActive}
+            options={themeOptions}
+          />
+        </div>
+
+        <div>
+          <label
+            className={`block text-sm mb-2 ${
+              testStepActive ? "text-ink-soft" : "text-ink-soft/50"
+            }`}
+          >
             აირჩიე ტესტი
           </label>
           <DropdownSelect
@@ -222,7 +248,8 @@ export default function TesterStartTab() {
               setBackOn(false);
             }}
             required
-            options={tests}
+            disabled={!testStepActive}
+            options={testsByTheme[themeId] ?? []}
           />
         </div>
       </div>
