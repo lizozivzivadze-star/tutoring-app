@@ -178,9 +178,27 @@ export default function UserMenu({
           <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-fit py-1 overflow-hidden">
             <button
               onClick={handleAddToHome}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
             >
-              ეკრანზე დამატება
+              <svg
+                width="16"
+                height="16"
+                viewBox="270 120 1210 1215"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="64"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="shrink-0"
+              >
+                <rect x="310" y="377" width="396" height="402" rx="14" />
+                <rect x="824" y="377" width="396" height="402" rx="14" />
+                <rect x="310" y="894" width="396" height="402" rx="14" />
+                <rect x="824" y="894" width="396" height="402" rx="14" />
+                <path d="M1249 250H1438M1343 157V343" />
+              </svg>
+              ეკრანზე
             </button>
             <button
               onClick={() => {
