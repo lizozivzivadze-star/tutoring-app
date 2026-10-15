@@ -48,7 +48,7 @@ export default function FeedbackButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        aria-label="Feedback"
+        aria-label="რის გაუმჯობესებას გვირჩევთ?"
         className="fixed left-4 z-40 w-9 h-9 rounded-full border border-ink-soft/50
                    bg-white text-ink-soft text-base font-medium shadow-sm
                    hover:text-marker hover:border-marker transition-colors"
@@ -58,7 +58,7 @@ export default function FeedbackButton() {
       </button>
 
       {open && (
-        <Modal title="Feedback" onClose={close} topAligned>
+        <Modal title="რის გაუმჯობესებას გვირჩევთ?" onClose={close} topAligned>
           {status === "sent" ? (
             <div className="flex flex-col gap-4">
               <p className="text-sm text-ink text-center">
@@ -78,7 +78,7 @@ export default function FeedbackButton() {
                 autoFocus
                 rows={5}
                 maxLength={2000}
-                placeholder="დაწერეთ თქვენი აზრი ან პრობლემა"
+                placeholder="მოგვწერეთ ..."
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onFocus={(e) =>

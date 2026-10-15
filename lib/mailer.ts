@@ -118,12 +118,16 @@ export async function sendFeedbackEmail({
   page,
   senderEmail,
   senderRole,
+  senderName,
+  senderPhone,
 }: {
   to: string[];
   message: string;
   page: string;
   senderEmail: string | null;
   senderRole: string | null;
+  senderName: string | null;
+  senderPhone: string | null;
 }) {
   const t = getTransporter();
 
@@ -131,9 +135,11 @@ export async function sendFeedbackEmail({
     ? `${senderEmail} (${senderRole ?? "?"})`
     : "არაავტორიზებული მომხმარებელი";
   const subject = "Feedback პლატფორმიდან";
-  const text = `ვისგან: ${who}\nგვერდი: ${page || "—"}\n\n${message}`;
+  const name = senderName || "—";
+  const phone = senderPhone || "—";
+  const text = `ვისგან: ${who}\nსახელი/გვარი: ${name}\nმობილური: ${phone}\nგვერდი: ${page || "—"}\n\n${message}`;
   const html =
-    `<p><b>ვისგან:</b> ${escapeHtml(who)}<br/><b>გვერდი:</b> ${escapeHtml(page || "—")}</p>` +
+    `<p><b>ვისგან:</b> ${escapeHtml(who)}<br/><b>სახელი/გვარი:</b> ${escapeHtml(name)}<br/><b>მობილური:</b> ${escapeHtml(phone)}<br/><b>გვერდი:</b> ${escapeHtml(page || "—")}</p>` +
     `<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`;
 
   if (!t) {

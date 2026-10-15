@@ -29,6 +29,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "ვერ გაიგზავნა" }, { status: 500 });
   }
 
+  let senderName: string | null = null;
+  let senderPhone: string | null = null;
+  try {
+    const u = session?.user;
+    if (u) {
+      const p =
+        u.role === "teacher"
+          ? await prisma.teacher.findUnique({ where: { id: u.id } })
+          : u.role === "student"
+          ? await prisma.student.findUnique({ where: { id: u.id } })
+          : u.role === "admin"
+          ? await prisma.admin.findUnique({ where: { id: u.id } })
+          : u.role === "tester"
+          ? await prisma.tester.findUnique({ where: { id: u.id } })
+          : null;
+      if (p) {
+        senderName = [p.name, p.surname].filter(Boolean).join(" ") || null;
+        senderPhone = ("contact" in p ? p.contact : p.phone) || null;
+      }
+    }
+  } catch {
+    // პროფილის ამოღება ვერ მოხერხდა — შეტყობინება მაინც გაიგზავნება
+  }
+
   try {
     await sendFeedbackEmail({
       to,
@@ -36,6 +60,8 @@ export async function POST(req: Request) {
       page,
       senderEmail: session?.user?.email ?? null,
       senderRole: session?.user?.role ?? null,
+      senderName,
+      senderPhone,
     });
   } catch {
     return NextResponse.json({ error: "ვერ გაიგზავნა" }, { status: 500 });
