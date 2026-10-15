@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const SNAP_DELAY = 140; // ms სქროლის გაჩერების მერე
+const SHOW_AFTER_UP = 80; // px ზემოთ სქროლვა (~2 სმ), რომ მენიუ გამოჩნდეს
 
 export default function HideOnScroll({
   children,
@@ -17,6 +18,7 @@ export default function HideOnScroll({
 
     let lastY = window.scrollY;
     let offset = 0; // 0 = სრულად ჩანს, -h = სრულად დამალულია
+    let upRun = 0; // ზემოთ დაგროვილი სქროლი
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     function apply(animate: boolean) {
@@ -32,10 +34,19 @@ export default function HideOnScroll({
 
       if (y <= h) {
         offset = 0; // გვერდის თავში მენიუ ყოველთვის სრულად ჩანს
-      } else {
-        offset = Math.min(0, Math.max(-h, offset - dy)); // მიჰყვება სქროლს
+        upRun = 0;
+        apply(false);
+      } else if (dy > 0) {
+        upRun = 0;
+        offset = Math.max(-h, offset - dy); // ქვემოთ: მიჰყვება სქროლს
+        apply(false);
+      } else if (dy < 0) {
+        upRun -= dy;
+        if (upRun >= SHOW_AFTER_UP && offset !== 0) {
+          offset = 0; // საკმარისად ასქროლა: რბილად გამოჩნდეს
+          apply(true);
+        }
       }
-      apply(false);
 
       clearTimeout(timer);
       timer = setTimeout(() => {
