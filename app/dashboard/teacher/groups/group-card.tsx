@@ -206,7 +206,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
       className="self-end rounded-full border-2 border-marker text-marker font-medium
                  text-sm px-4 py-1 transition-colors hover:bg-paper disabled:opacity-50"
     >
-      {sendingInvite ? "იგზავნება..." : "Send Login URL"}
+      {sendingInvite ? "იგზავნება..." : "გააგზავნე login ბმული"}
     </button>
   )}
 </div>
