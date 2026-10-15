@@ -544,7 +544,6 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
             placeholder="აირჩიე გამოჩენის პრინციპი"
             flipArrow
             centered
-            defaultOpen
             borderClassName="border-marker/50"
           />
 
