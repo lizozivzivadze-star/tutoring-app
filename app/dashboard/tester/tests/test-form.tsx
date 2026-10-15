@@ -153,6 +153,23 @@ export default function TestForm({
         />
       </div>
 
+      <div>
+        <label className="block text-sm text-ink-soft mb-2">
+          გრიფირებული სახელმძღვანელო
+        </label>
+        <textarea
+          rows={3}
+          maxLength={500}
+          value={instruction}
+          onChange={(e) => setInstruction(e.target.value)}
+          onFocus={(e) =>
+            e.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })
+          }
+          placeholder="მაგ.: ტესტი მომზადებულია ... გრიფირებული სახელმძღვანელოს მიხედვით"
+          className={inputClass}
+        />
+      </div>
+
       <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
         {locked
           ? questions.map((q, i) => (

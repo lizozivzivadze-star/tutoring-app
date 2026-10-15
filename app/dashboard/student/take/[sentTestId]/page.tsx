@@ -212,6 +212,11 @@ useEffect(() => {
       მოსანიშნად.
     </p>
   )}
+  {test.instruction && (
+    <p className="text-ink font-medium whitespace-pre-line">
+      {test.instruction}
+    </p>
+  )}
 </div>
           <button
             onClick={() => {
