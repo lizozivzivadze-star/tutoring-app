@@ -7,6 +7,7 @@ import AddGroupModal from "./add-group-modal";
 import StudentFormModal from "./student-form-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
 import LoadingBar from "@/components/loading-bar";
+import Toast from "@/components/toast";
 import {
   DndContext,
   closestCenter,
@@ -25,6 +26,7 @@ export default function GroupsTab() {
   const [groups, setGroups] = useState<GroupRecord[] | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [addGroupOpen, setAddGroupOpen] = useState(false);
+  const [toast, setToast] = useState("");
   const [addStudentGroupId, setAddStudentGroupId] = useState<string | null>(
     null
   );
@@ -153,6 +155,7 @@ export default function GroupsTab() {
 
   return (
     <div>
+    {toast && <Toast message={toast} onClose={() => setToast("")} />}
     <div className="flex flex-col gap-3">
       {groups.length === 0 && (
         <p className="text-ink-soft text-sm text-center pb-8">
@@ -218,10 +221,15 @@ export default function GroupsTab() {
                 body: JSON.stringify(values),
               }
             );
+            const data = await res.json().catch(() => null);
             if (!res.ok) {
-              const data = await res.json().catch(() => null);
               return data?.error ?? "ვერ დაემატა";
             }
+            setToast(
+              data?.emailSent === false
+                ? "მოსწავლე დამატებულია, მაგრამ მეილი ვერ გაიგზავნა"
+                : "მოსწავლე დამატებულია. შესვლის ბმული გაეგზავნა მეილზე"
+            );
             setAddStudentGroupId(null);
             setExpandedIds((prev) => new Set(prev).add(addStudentGroupId));
             load();

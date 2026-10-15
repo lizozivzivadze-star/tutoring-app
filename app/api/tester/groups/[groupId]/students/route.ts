@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentTesterId } from "@/lib/current-teacher";
 import { generateAccessCode } from "@/lib/access-code";
 import { isStaffEmail } from "@/lib/staff-email";
+import { sendLoginInviteEmail } from "@/lib/mailer";
+
+export const maxDuration = 30;
 
 export async function POST(
   req: NextRequest,
@@ -68,5 +71,16 @@ export async function POST(
     },
   });
 
-  return NextResponse.json({ student });
+  let emailSent = true;
+  try {
+    await sendLoginInviteEmail({
+      to: student.email,
+      name: student.name,
+      url: process.env.NEXTAUTH_URL!,
+    });
+  } catch {
+    emailSent = false;
+  }
+
+  return NextResponse.json({ student, emailSent });
 }
