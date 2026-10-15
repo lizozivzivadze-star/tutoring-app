@@ -524,7 +524,10 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
     <div className="w-full flex flex-col gap-2">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (!open && !view) changeView("chronological");
+          setOpen((v) => !v);
+        }}
         aria-expanded={open}
 className="w-full rounded-md border-2 border-marker text-marker font-body
            font-medium py-2.5 transition-colors hover:bg-paper"
@@ -541,6 +544,8 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
             placeholder="აირჩიე გამოჩენის პრინციპი"
             flipArrow
             centered
+            defaultOpen
+            borderClassName="border-marker/50"
           />
 
           {loading && (

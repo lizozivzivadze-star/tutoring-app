@@ -21,6 +21,8 @@ export default function DropdownSelect({
   className = "",
   flipArrow = false,
   centered = false,
+  defaultOpen = false,
+  borderClassName = "border-paper-line",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -31,8 +33,10 @@ export default function DropdownSelect({
   className?: string;
   flipArrow?: boolean;
   centered?: boolean;
+  defaultOpen?: boolean; // გამოჩენისთანავე ჩამოშლილი
+  borderClassName?: string; // ღილაკისა და სიის კანტის ფერი
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,7 +69,7 @@ export default function DropdownSelect({
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
         className={
-          `w-full border border-paper-line rounded-sm px-3 py-2.5 ` +
+          `w-full border ${borderClassName} rounded-sm px-3 py-2.5 ` +
           `bg-white font-body text-ink text-sm flex items-center justify-between gap-2 ` +
           `focus:outline-none focus:ring-2 focus:ring-marker/40 focus:border-marker ` +
           `disabled:opacity-50 disabled:cursor-not-allowed ${className}`
@@ -79,7 +83,7 @@ export default function DropdownSelect({
           )}
         </span>
         <span
-          className={`text-ink-soft shrink-0 transition-transform ${
+          className={`arrow-glyph -my-[2px] text-ink-soft shrink-0 transition-transform ${
             flipArrow && open ? "rotate-180" : ""
           }`}
         >
@@ -88,7 +92,7 @@ export default function DropdownSelect({
       </button>
 
       {open && (
-<div className="absolute z-40 mt-1 w-full bg-white border border-paper-line rounded-sm shadow-lg overflow-hidden">
+<div className={`absolute z-40 mt-1 w-full bg-white border ${borderClassName} rounded-sm shadow-lg overflow-hidden`}>
   <VScrollBox drag={false} showScrollbar className="max-h-64">
     <ul>
 {options.map((o) =>

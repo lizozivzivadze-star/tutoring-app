@@ -55,3 +55,9 @@ body {
   font-size: 2rem;
   line-height: 1;
 }
+
+/* ▾ სამკუთხედის საერთო ზომა (ყველა dropdown-სა და გახსნის ღილაკში). ერთი რიცხვი ყველასთვის. */
+.arrow-glyph {
+  font-size: 1.75rem;
+  line-height: 1;
+}
