@@ -189,7 +189,7 @@ export default function UserMenu({
               }}
               className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
             >
-              Profile
+              პროფილი
             </button>
             {showCancelPending && (
               <button
@@ -206,7 +206,7 @@ export default function UserMenu({
               onClick={() => signOut({ callbackUrl: "/login" })}
               className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
-              Log out
+              გასვლა
             </button>
           </div>
         </>
