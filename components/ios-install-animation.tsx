@@ -172,7 +172,7 @@ function StepAdd() {
             alt=""
             className="w-10 h-10 rounded-lg"
           />
-          <span className="text-sm text-ink">ტუტორი</span>
+         <span className="text-sm text-ink">Tvinion</span>
         </div>
         <div className="mt-3 flex items-center justify-between text-[11px] text-ink-soft">
           <span>Open as Web App</span>

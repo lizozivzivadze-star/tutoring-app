@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: settings.siteDescription,
         appleWebApp: {
       capable: true,
-      title: "ტუტორი",
+      title: "Tvinion",
       statusBarStyle: "default",
     },
   };
