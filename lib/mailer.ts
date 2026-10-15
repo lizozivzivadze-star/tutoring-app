@@ -137,9 +137,9 @@ export async function sendFeedbackEmail({
   const subject = "Feedback პლატფორმიდან";
   const name = senderName || "—";
   const phone = senderPhone || "—";
-  const text = `ვისგან: ${who}\nსახელი/გვარი: ${name}\nმობილური: ${phone}\nგვერდი: ${page || "—"}\n\n${message}`;
+  const text = `მეილი: ${who}\nსახელი/გვარი: ${name}\nმობილური: ${phone}\n\n${message}`;
   const html =
-    `<p><b>ვისგან:</b> ${escapeHtml(who)}<br/><b>სახელი/გვარი:</b> ${escapeHtml(name)}<br/><b>მობილური:</b> ${escapeHtml(phone)}<br/><b>გვერდი:</b> ${escapeHtml(page || "—")}</p>` +
+    `<p><b>მეილი:</b> ${escapeHtml(who)}<br/><b>სახელი/გვარი:</b> ${escapeHtml(name)}<br/><b>მობილური:</b> ${escapeHtml(phone)}</p>` +
     `<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`;
 
   if (!t) {
