@@ -213,7 +213,7 @@ useEffect(() => {
     </p>
   )}
   {test.instruction && (
-    <p className="text-ink font-medium whitespace-pre-line">
+    <p className="whitespace-pre-line">
       {test.instruction}
     </p>
   )}
