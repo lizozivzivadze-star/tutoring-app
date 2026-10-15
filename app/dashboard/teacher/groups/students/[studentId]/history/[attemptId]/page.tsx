@@ -52,8 +52,8 @@ export default function TeacherAttemptReviewPage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-8">
-      <div className="w-[80vw] relative left-1/2 -ml-[40vw]">
+    <main className="min-h-screen py-8">
+      <div className="w-full">
         <Link
           href={`/dashboard/teacher/groups/students/${studentId}/history`}
           className="text-sm text-marker font-medium"
