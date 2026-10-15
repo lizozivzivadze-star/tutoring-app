@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const SNAP_DELAY = 200; // ms სქროლის სრული გაჩერების მერე
-const SHOW_AFTER_UP = 80; // px ზემოთ სქროლვა (~2 სმ), რომ მენიუ გამოჩნდეს
+const SHOW_AFTER_UP = 150; // px ზემოთ სქროლვა (ტელეფონზე ~2.5 სმ), რომ მენიუ გამოჩნდეს
 
 export default function HideOnScroll({
   children,
