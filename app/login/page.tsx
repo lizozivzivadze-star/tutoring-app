@@ -5,11 +5,32 @@ import { useState, useEffect, FormEvent } from "react";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
+type Stats = {
+  subjects: number;
+  tests: number;
+  questions: number;
+  teachers: number;
+  sentTests: number;
+  attempts: number;
+  students: number;
+};
+
+const fmt = (n?: number) => (n === undefined ? "–" : String(n));
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+
+    const [stats, setStats] = useState<Stats | null>(null);
+
+  useEffect(() => {
+    fetch("/api/public-stats")
+      .then((r) => r.json())
+      .then(setStats)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     try {
@@ -61,16 +82,22 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex flex-col items-center px-6 md:justify-center">
-      <div className="flex-1 md:hidden" />
+    <main className="min-h-dvh flex flex-col items-center px-6 pt-10 pb-6">
       <div className="w-full max-w-sm">
-        {/* Title block — echoes the marker-boxed card from the sketch.
-            One shared entry point now, so the label is role-neutral;
-            the server decides teacher vs. student from the email. */}
+        <div className="flex flex-col items-center text-sm text-ink-soft text-center">
+          <div className="w-24 h-24 rounded-full border border-paper-line bg-white flex items-center justify-center">
+            ლოგო
+          </div>
+          <p className="mt-4">ერთი, ორი, სამი</p>
+          <p className="mt-2">
+            {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
+            {fmt(stats?.questions)} შეკითხვა
+          </p>
+        </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-paper-line rounded-md px-6 py-8 shadow-sm"
+                    className="my-5 bg-white border border-paper-line rounded-md px-6 py-8 shadow-sm"
         >
          <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
           შეიყვანეთ
@@ -105,8 +132,18 @@ export default function LoginPage() {
             <p className="mt-4 text-sm text-marker-dark">{errorMessage}</p>
           )}
         </form>
+      
+        <p className="text-sm text-ink-soft text-center">
+          დღეის მდგომარეობით {fmt(stats?.teachers)} მასწავლებელმა ჩაატარა{" "}
+          {fmt(stats?.sentTests)} ტესტი, ხოლო {fmt(stats?.students)} მოსწავლემ
+          გააკეთა {fmt(stats?.attempts)} ტესტი.
+        </p>
       </div>
-      <div className="flex-[2] md:hidden" />   
+
+      <p className="mt-auto pt-10 w-full max-w-sm text-sm text-ink-soft text-center">
+        ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
+        განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
+      </p>
     </main>
   );
 }
