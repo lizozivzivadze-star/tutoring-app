@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-// ქვემოთ სქროლვისას მენიუ იმალება, ზემოთ ~2.5 სმ-ზე ისევ ჩნდება.
-const HIDE_AFTER_DOWN = 12; // px ქვემოთ სქროლვა, რომ დაიმალოს
-const SHOW_AFTER_UP = 90; // px ზემოთ სქროლვა, რომ გამოჩნდეს
+const SNAP_DELAY = 140; // ms სქროლის გაჩერების მერე
 
 export default function HideOnScroll({
   children,
@@ -12,40 +10,50 @@ export default function HideOnScroll({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
     let lastY = window.scrollY;
-    let run = 0; // დაგროვილი სქროლი მიმდინარე მიმართულებით (+ ქვემოთ, − ზემოთ)
+    let offset = 0; // 0 = სრულად ჩანს, -h = სრულად დამალულია
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    function apply(animate: boolean) {
+      el!.style.transition = animate ? "transform 260ms ease-out" : "none";
+      el!.style.transform = `translateY(${offset}px)`;
+    }
 
     function onScroll() {
+      const h = el!.offsetHeight;
       const y = window.scrollY;
       const dy = y - lastY;
       lastY = y;
 
-      const h = ref.current?.offsetHeight ?? 0;
       if (y <= h) {
-        setHidden(false);
-        run = 0;
-        return;
+        offset = 0; // გვერდის თავში მენიუ ყოველთვის სრულად ჩანს
+      } else {
+        offset = Math.min(0, Math.max(-h, offset - dy)); // მიჰყვება სქროლს
       }
-      if (dy === 0) return;
-      if (dy > 0 !== run > 0) run = 0;
-      run += dy;
-      if (run > HIDE_AFTER_DOWN) setHidden(true);
-      else if (run < -SHOW_AFTER_UP) setHidden(false);
+      apply(false);
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        // სქროლი გაჩერდა: ბოლომდე დამალე ან ბოლომდე აჩვენე
+        offset = offset < -h / 2 && window.scrollY > h ? -h : 0;
+        apply(true);
+      }, SNAP_DELAY);
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className="sticky top-0 z-20 bg-white transition-transform duration-200"
-      style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
-    >
+    <div ref={ref} className="sticky top-0 z-20 bg-white will-change-transform">
       {children}
     </div>
   );
