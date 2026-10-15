@@ -1,5 +1,6 @@
 import AdminTabs from "./admin-tabs";
 import UserMenu from "@/components/user-menu";
+import HideOnScroll from "@/components/hide-on-scroll";
 import Greeting from "@/components/greeting";
 import { prisma } from "@/lib/prisma";
 import { getCurrentAdminId } from "@/lib/current-admin";
@@ -16,14 +17,14 @@ export default async function AdminDashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <div className="sticky top-0 z-20 bg-white">
+      <HideOnScroll>
         <header className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
           <Greeting name={admin?.name} />
           <UserMenu />
         </header>
 
         <AdminTabs />
-      </div>
+      </HideOnScroll>
 
 <main className="py-8 mx-auto w-[90%]">{children}</main>
     </div>

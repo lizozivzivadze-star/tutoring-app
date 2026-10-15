@@ -1,5 +1,6 @@
 import TeacherTabs from "./teacher-tabs";
 import UserMenu from "@/components/user-menu";
+import HideOnScroll from "@/components/hide-on-scroll";
 import Greeting from "@/components/greeting";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTeacherId } from "@/lib/current-teacher";
@@ -17,14 +18,14 @@ export default async function TeacherDashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <div className="sticky top-0 z-20 bg-white">
+      <HideOnScroll>
         <header data-app-menu className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
           <Greeting name={teacher?.name} />
           <UserMenu showCancelPending />
         </header>
 
         <TeacherTabs />
-      </div>
+      </HideOnScroll>
 
 <DashboardMain>{children}</DashboardMain>
     </div>

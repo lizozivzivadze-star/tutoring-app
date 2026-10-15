@@ -19,7 +19,7 @@ export default function Modal({
   const [top] = useState(() => {
     if (!topAligned || typeof document === "undefined") return 0;
     const menu = document.querySelector("[data-app-menu]");
-    return menu ? menu.getBoundingClientRect().bottom : 0;
+    return menu ? Math.max(0, menu.getBoundingClientRect().bottom) : 0;
   });
 
   return (
