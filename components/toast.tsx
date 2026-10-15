@@ -24,8 +24,9 @@ export default function Toast({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pointer-events-none">
-      <div className="w-full max-w-sm bg-green-600 border border-green-700 rounded-md px-4 py-3 text-sm text-white text-center shadow-lg">
-        {message}
+      <div className="w-full max-w-sm bg-white border border-marker rounded-md px-4 py-3 text-sm text-ink shadow-md flex items-center justify-center gap-2">
+        <span className="text-green-600 font-bold">✓</span>
+        <span>{message}</span>
       </div>
     </div>
   );
