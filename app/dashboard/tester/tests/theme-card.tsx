@@ -89,17 +89,17 @@ export default function ThemeCard({
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-dark px-1"
+          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
           ×
         </button>
       </div>
 
       {renameError && (
-        <p className="mt-1 pl-6 text-xs text-marker-dark">{renameError}</p>
+        <p className="mt-1 pl-6 text-xs text-danger">{renameError}</p>
       )}
       {deleteError && (
-        <p className="mt-1 pl-6 text-xs text-marker-dark">{deleteError}</p>
+        <p className="mt-1 pl-6 text-xs text-danger">{deleteError}</p>
       )}
 
       {expanded && (

@@ -38,7 +38,7 @@ export default function TeacherAttemptReviewPage() {
   if (notFound) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-marker-dark">შედეგი ვერ მოიძებნა.</p>
+        <p className="text-sm text-danger">შედეგი ვერ მოიძებნა.</p>
       </main>
     );
   }
@@ -85,7 +85,7 @@ export default function TeacherAttemptReviewPage() {
                 className={`text-sm ${
                   q.yourAnswer === q.correctAnswer
                     ? "text-ledger"
-                    : "text-marker-dark"
+                    : "text-danger"
                 }`}
               >
                 თქვენი პასუხი: {q.yourAnswer}

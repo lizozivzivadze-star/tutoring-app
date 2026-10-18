@@ -283,7 +283,7 @@ export default function TesterStartTab() {
         type="submit"
         disabled={status === "sending"}
 className="mb-5 rounded-full bg-marker text-white font-body font-medium
-           py-2.5 transition-colors hover:bg-marker-dark
+           py-2.5 transition-colors hover:bg-marker-hover
            disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "sending" ? "იგზავნება..." : "გააგზავნე"}
@@ -291,7 +291,7 @@ className="mb-5 rounded-full bg-marker text-white font-body font-medium
 
 
       {status === "error" && (
-        <p className="text-sm text-marker-dark text-center">{error}</p>
+        <p className="text-sm text-danger text-center">{error}</p>
       )}
 
       {notice && (
@@ -301,7 +301,7 @@ className="mb-5 rounded-full bg-marker text-white font-body font-medium
           } ${
             notice.type === "sent"
               ? "text-base font-display font-semibold text-ledger"
-              : "text-sm text-marker-dark"
+              : "text-sm text-danger"
           }`}
         >
           {notice.type === "sent"

@@ -67,7 +67,7 @@ export default function FeedbackButton() {
               <button
                 onClick={close}
                 className="rounded-full bg-marker text-white font-medium py-2.5
-                           hover:bg-marker-dark transition-colors"
+                           hover:bg-marker-hover transition-colors"
               >
                 დახურვა
               </button>
@@ -92,12 +92,12 @@ export default function FeedbackButton() {
                            focus:outline-none focus:ring-2 focus:ring-marker/40
                            focus:border-marker"
               />
-              {error && <p className="text-sm text-marker-dark">{error}</p>}
+              {error && <p className="text-sm text-danger">{error}</p>}
               <button
                 onClick={send}
                 disabled={status === "sending" || !text.trim()}
                 className="rounded-full bg-marker text-white font-medium py-2.5
-                           hover:bg-marker-dark transition-colors disabled:opacity-50"
+                           hover:bg-marker-hover transition-colors disabled:opacity-50"
               >
                 {status === "sending" ? "იგზავნება..." : "გაგზავნა"}
               </button>

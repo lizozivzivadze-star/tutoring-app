@@ -512,7 +512,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
         <button
           type="button"
           onClick={() => setVisible((v) => v + PAGE)}
-          className="text-sm text-marker font-medium hover:text-marker-dark py-1"
+          className="text-sm text-marker font-medium hover:text-marker-hover py-1"
         >
           - ნახეთ მეტი (+{Math.min(PAGE, list.length - visible)}) -
         </button>
@@ -550,7 +550,7 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
           {loading && (
             <p className="text-sm text-ink-soft text-center">იტვირთება...</p>
           )}
-          {error && <p className="text-sm text-marker-dark text-center">{error}</p>}
+          {error && <p className="text-sm text-danger text-center">{error}</p>}
 
           {view === "by-test" && (
             <ScrollPicker

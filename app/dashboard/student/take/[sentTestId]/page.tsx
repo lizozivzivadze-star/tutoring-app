@@ -189,7 +189,7 @@ useEffect(() => {
   if (stage === "error") {
     return (
       <main className="min-h-screen flex items-center justify-center px-6">
-        <p className="text-sm text-marker-dark text-center">{errorMessage}</p>
+        <p className="text-sm text-danger text-center">{errorMessage}</p>
       </main>
     );
   }
@@ -224,7 +224,7 @@ useEffect(() => {
               setStage("question");
             }}
             className="w-full rounded-full bg-marker text-white font-medium py-3
-                       hover:bg-marker-dark transition-colors"
+                       hover:bg-marker-hover transition-colors"
           >
             დაწყება
           </button>
@@ -294,7 +294,7 @@ useEffect(() => {
   <button
     onClick={confirmAndAdvance}
     className="rounded-full bg-marker text-white font-medium px-8 py-2.5
-               hover:bg-marker-dark transition-colors"
+               hover:bg-marker-hover transition-colors"
   >
     {questionIndex + 1 >= test.questions.length ? "დასრულება" : "შემდეგი"}
   </button>

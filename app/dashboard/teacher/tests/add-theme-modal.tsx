@@ -54,12 +54,12 @@ export default function AddThemeModal({
             className={inputClass}
           />
         </div>
-        {error && <p className="text-sm text-marker-dark">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
         <button
           type="submit"
           disabled={saving}
           className="rounded-full bg-marker text-white font-medium py-2.5
-                     hover:bg-marker-dark transition-colors disabled:opacity-50"
+                     hover:bg-marker-hover transition-colors disabled:opacity-50"
         >
           {saving ? "ინახება..." : "Save"}
         </button>

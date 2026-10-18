@@ -110,7 +110,7 @@ export default function ThemesAndTestsTab() {
 
       <button
         onClick={() => setAddThemeOpen(true)}
-        className="mt-2 text-base text-marker font-medium text-left hover:text-marker-dark"
+        className="mt-2 text-base text-marker font-medium text-left hover:text-marker-hover"
       >
         <span className="glyph-btn inline-block align-middle">+</span> თემა
       </button>

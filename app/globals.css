@@ -1,19 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paper / ink palette, grounded in the hand-drawn note cards this
-     product was designed from: cream paper, ink-navy text, marker-red
-     for primary actions, a quiet ledger-green for success states. */
-  --color-paper: #faf8f3;
-  --color-paper-line: #e7e1d3;
-  --color-ink: #1f2937;
-  --color-ink-soft: #5b6472;
-  --color-marker: #b33f2e;
-  --color-marker-dark: #8f3123;
+  /* Tvinion palette — logo-based.
+     Brand indigo #564CBF + gold #FFD65A. ყველა ფერი მხოლოდ აქ იცვლება. */
+
+  /* ფონები და ხაზები */
+  --color-paper: #f7f6fd;        /* გვერდის ფონი */
+  --color-paper-line: #e2dff3;   /* ჩვეულებრივი ხაზები/საზღვრები */
+  --color-paper-edge: #cbc7e6;   /* ცხრილის ხაზები */
+
+  /* ტექსტი */
+  --color-ink: #1e1b3a;          /* ძირითადი ტექსტი */
+  --color-ink-soft: #5e5b7e;     /* მეორეხარისხოვანი ტექსტი */
+
+  /* ბრენდის ძირითადი ფერი (ღილაკები, ბმულები) */
+  --color-marker: #564cbf;
+  --color-marker-hover: #43399f;
+
+  /* შეცდომა / მცდარი პასუხი */
+  --color-danger: #c0392b;
+
+  /* წარმატება / სწორი პასუხი */
   --color-ledger: #2e6b5e;
   --color-ledger-soft: #e4efec;
-  --color-fresh: #fff7e6;
-  --color-fresh-line: #f0dfb5;
+
+  /* აქცენტი: ახალი ტესტები (ოქროსფერი) */
+  --color-fresh: #fff7db;
+  --color-fresh-line: #f7de8f;
 
   --font-display: "Noto Sans Georgian", "Noto Sans", sans-serif;
 

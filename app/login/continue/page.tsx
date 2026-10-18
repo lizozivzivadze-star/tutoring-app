@@ -33,7 +33,7 @@ function ContinueForm() {
         {status === "working" ? "შემოწმდება..." : "შესვლა"}
       </button>
       {status === "error" && (
-        <p className="mt-4 text-sm text-marker-dark">
+        <p className="mt-4 text-sm text-danger">
           ბმული ვადაგასულია ან უკვე გამოყენებულია — სცადეთ თავიდან.
         </p>
       )}

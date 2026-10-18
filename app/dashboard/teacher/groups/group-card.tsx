@@ -150,7 +150,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-dark px-1"
+          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
           ×
         </button>
@@ -166,7 +166,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
       </div>
 
       {renameError && (
-        <p className="px-4 pb-2 text-xs text-marker-dark">{renameError}</p>
+        <p className="px-4 pb-2 text-xs text-danger">{renameError}</p>
       )}
 
 {expanded && (
@@ -195,7 +195,7 @@ function handleStudentDragEnd(event: DragEndEvent) {
 <div className="mt-1 flex flex-col gap-3">
   <button
     onClick={onAddStudent}
-    className="text-sm text-marker font-medium text-left hover:text-marker-dark"
+    className="text-sm text-marker font-medium text-left hover:text-marker-hover"
   >
     <span className="glyph-btn inline-block align-middle">+</span> მოსწავლის დამატება
   </button>

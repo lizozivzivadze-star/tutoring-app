@@ -216,7 +216,7 @@ export default function TestForm({
         )}
       </div>
 
-      {error && <p className="text-sm text-marker-dark">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
       {!error && savedNotice && (
         <p className="text-sm text-ledger">შენახულია</p>
       )}

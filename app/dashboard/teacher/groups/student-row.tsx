@@ -71,7 +71,7 @@ export default function StudentRow({
 </button>
 <button
   onClick={onDelete}
-  className="glyph-btn text-ink-soft hover:text-marker-dark px-1 shrink-0"
+  className="glyph-btn text-ink-soft hover:text-marker-hover px-1 shrink-0"
 >
   ×
 </button>

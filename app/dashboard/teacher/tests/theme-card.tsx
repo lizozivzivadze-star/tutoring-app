@@ -94,7 +94,7 @@ const style = {
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-dark px-1"
+          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
           ×
         </button>
@@ -110,10 +110,10 @@ const style = {
       </div>
 
       {renameError && (
-        <p className="mt-1 pl-6 text-xs text-marker-dark">{renameError}</p>
+        <p className="mt-1 pl-6 text-xs text-danger">{renameError}</p>
       )}
       {deleteError && (
-        <p className="mt-1 pl-6 text-xs text-marker-dark">{deleteError}</p>
+        <p className="mt-1 pl-6 text-xs text-danger">{deleteError}</p>
       )}
 
       <div className="mt-2 pl-6 flex flex-col gap-1.5">

@@ -86,7 +86,7 @@ export default function ReviewPage() {
                 className={`text-sm ${
                   q.yourAnswer === q.correctAnswer
                     ? "text-ledger"
-                    : "text-marker-dark"
+                    : "text-danger"
                 }`}
               >
                 <span className="font-semibold">თქვენი პასუხი:</span> {q.yourAnswer}

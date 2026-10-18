@@ -108,7 +108,7 @@ export default function TestDetailPage() {
 
   if (notFound) {
     return (
-      <p className="text-sm text-marker-dark text-center py-12">
+      <p className="text-sm text-danger text-center py-12">
         ტესტი ვერ მოიძებნა.{" "}
         <Link href="/dashboard/tester/tests" className="text-marker font-medium">
           უკან
@@ -175,7 +175,7 @@ return (
             </button>
             <button
               onClick={() => setConfirmingDelete(true)}
-              className="glyph-btn text-ink-soft hover:text-marker-dark"
+              className="glyph-btn text-ink-soft hover:text-marker-hover"
             >
               ×
             </button>
@@ -253,7 +253,7 @@ return (
       )}
 
       {deleteError && (
-        <p className="text-sm text-marker-dark mt-3">{deleteError}</p>
+        <p className="text-sm text-danger mt-3">{deleteError}</p>
       )}
 
       {confirmingDelete && (

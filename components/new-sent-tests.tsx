@@ -99,7 +99,7 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
       {open && (
         <div className="bg-white border border-paper-line rounded-md overflow-hidden">
           {error && (
-            <p className="px-3 py-3 text-sm text-marker-dark text-center">{error}</p>
+            <p className="px-3 py-3 text-sm text-danger text-center">{error}</p>
           )}
 
           {items && items.length === 0 && !error && (
@@ -125,7 +125,7 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
                   <button
                     type="button"
                     onClick={() => setToDelete(item)}
-                    className="glyph-btn shrink-0 px-1 text-ink-soft hover:text-marker-dark"
+                    className="glyph-btn shrink-0 px-1 text-ink-soft hover:text-marker-hover"
                     aria-label="წაშლა"
                   >
                     ×

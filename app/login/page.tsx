@@ -137,7 +137,7 @@ export default function LoginPage() {
           </button>
 
           {status === "error" && (
-            <p className="mt-4 text-sm text-marker-dark">{errorMessage}</p>
+            <p className="mt-4 text-sm text-danger">{errorMessage}</p>
           )}
         </form>
       

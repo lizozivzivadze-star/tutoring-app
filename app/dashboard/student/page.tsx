@@ -45,7 +45,7 @@ export default function StudentDashboard() {
 </header>
 
       <main className="py-8 flex flex-col gap-8 mx-auto w-[90%]">
-        <section className="rounded-lg p-4 bg-[#fff7e6] border border-[#f0dfb5]">
+        <section className="rounded-lg p-4 bg-fresh border border-fresh-line">
           <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
             ახალი ტესტები
           </h2>
@@ -61,7 +61,7 @@ export default function StudentDashboard() {
               <li key={t.sentTestId}>
                 <Link
                   href={`/dashboard/student/take/${t.sentTestId}`}
-                  className="flex items-center gap-2 text-ink hover:text-marker bg-[#f0dfb5]/50 rounded-md px-3 py-3"
+                  className="flex items-center gap-2 text-ink hover:text-marker bg-fresh-line/50 rounded-md px-3 py-3"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
                   <span>
@@ -76,7 +76,7 @@ export default function StudentDashboard() {
           </ul>
         </section>
 
-       <section className="rounded-lg p-4 bg-[#e4efec] border border-[#e7e1d3]">
+       <section className="rounded-lg p-4 bg-ledger-soft border border-paper-line">
           <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
             უკვე გაკეთებული ტესტები
           </h2>

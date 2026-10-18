@@ -107,7 +107,7 @@ async function persist(
 
   if (!themeId) {
     return (
-      <p className="text-sm text-marker-dark text-center py-12">
+      <p className="text-sm text-danger text-center py-12">
         თემა არ არის მითითებული.{" "}
         <Link href="/dashboard/teacher/tests" className="text-marker font-medium">
           უკან
