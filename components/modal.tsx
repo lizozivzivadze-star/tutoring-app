@@ -7,6 +7,7 @@ export default function Modal({
   onClose,
   children,
   topAligned = false,
+  onBackdropClick,
 }: {
   title: string;
   onClose: () => void;
@@ -15,6 +16,8 @@ export default function Modal({
   // instead of being vertically centered, so an open keyboard
   // doesn't cover the fields.
   topAligned?: boolean;
+    // გამოიძახება, როცა მომხმარებელი ფანჯრის გარეთ (გამუქებულ ფონზე) დააჭერს
+  onBackdropClick?: () => void;
 }) {
   const [top] = useState(() => {
     if (!topAligned || typeof document === "undefined") return 0;
@@ -24,6 +27,9 @@ export default function Modal({
 
   return (
     <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onBackdropClick?.();
+      }}
       className={`fixed inset-0 bg-ink/40 flex justify-center z-50 px-6 ${
         topAligned ? "items-start overflow-y-auto pb-6" : "items-center"
       }`}

@@ -58,7 +58,14 @@ export default function FeedbackButton() {
       </button>
 
       {open && (
-        <Modal title="რის გაუმჯობესებას გვირჩევთ?" onClose={close} topAligned>
+        <Modal
+          title="რის გაუმჯობესებას გვირჩევთ?"
+          onClose={close}
+          topAligned
+          onBackdropClick={() => {
+            if (!text.trim()) close();
+          }}
+        >
           {status === "sent" ? (
             <div className="flex flex-col gap-4">
               <p className="text-sm text-ink text-center">
