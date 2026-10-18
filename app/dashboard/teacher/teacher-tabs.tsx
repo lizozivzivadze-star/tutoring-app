@@ -23,7 +23,7 @@ export default function TeacherTabs() {
             key={tab.href}
             href={tab.href}
             className={`flex-auto text-center px-2 pt-[1.125rem] pb-[0.9375rem] text-[17.5px] font-medium whitespace-nowrap rounded-t-lg transition-colors ${
-              active ? "bg-paper text-marker" : "text-ink-soft hover:text-marker"
+              active ? "bg-paper text-marker shadow-[inset_0_4px_0_0_var(--color-gold)]" : "text-ink-soft hover:text-marker"
             }`}
           >
             {tab.label}
