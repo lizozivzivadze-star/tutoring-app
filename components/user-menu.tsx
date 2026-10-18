@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
 import IosInstallAnimation from "@/components/ios-install-animation";
@@ -96,10 +97,9 @@ const GUIDES: Record<InstallEnv, Guide> = {
 // ღილაკი ახლა ყოველთვის ჩანს. თუ საიტი უკვე ხატულადანაა გახსნილი
 // (standalone), დაჭერისას ამას ვეუბნებით და ვუხსნით, როგორ დაამატოს ხელახლა.
 const INSTALLED_GUIDE: Guide = {
-  title: "ხატულა უკვე თქვენს ეკრანზეა",
+  title: "აპი უკვე დაინსტალირებულია",
   steps: [
-    "ამჟამად საიტი მთავარი ეკრანის ხატულადან გაქვთ გახსნილი",
-    "ხატულის ხელახლა დასამატებლად გახსენით საიტი ბრაუზერში (Safari / Chrome) და იქიდან დააჭირეთ „Add to HOME“-ს",
+    "ხატულა უკვე დამატებულია. მოძებნეთ Windows-ზე Start მენიუში, Mac-ზე Launchpad-ში, ტელეფონზე მთავარ ეკრანზე.",
   ],
 };
 
@@ -230,7 +230,7 @@ export default function UserMenu({
         </>
       )}
 
-      {guide && (
+      {guide && createPortal(
         <>
           <div
             className="fixed inset-0 z-50 bg-black/40"
@@ -245,7 +245,7 @@ export default function UserMenu({
               {guide.animation === "ios" && <IosInstallAnimation />}
 
               {!guide.animation && (
-                <ol className="text-sm text-ink-soft flex flex-col gap-2 list-decimal pl-5">
+                <ol className={`text-sm text-ink-soft flex flex-col gap-2 ${guide.steps.length > 1 ? "list-decimal pl-5" : "list-none"}`}>
                   {guide.steps.map((s) => (
                     <li key={s}>{s}</li>
                   ))}
@@ -284,7 +284,8 @@ export default function UserMenu({
 
             <div className={guide.animation ? "flex-1" : "flex-[2]"} />
           </div>
-        </>
+        </>,
+        document.body
       )}
 
       {confirmCancel && (
