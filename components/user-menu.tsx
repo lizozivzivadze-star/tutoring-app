@@ -148,6 +148,13 @@ export default function UserMenu({
     } catch {
       // ფუნქცია მიუწვდომელია: გადადის ზოგად ინსტრუქციაზე
     }
+        try {
+      if (localStorage.getItem("tvinion-installed") === "1") {
+        setCopied(false);
+        setGuide(INSTALLED_GUIDE);
+        return;
+      }
+    } catch {}
 
     // ყველა დანარჩენი (iOS, Firefox, ჩაშენებული ბრაუზერები...) —
     // ზუსტად იმ მოწყობილობისთვის მორგებული ინსტრუქცია.

@@ -45,6 +45,9 @@ export default function InstallProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setInstalled(isStandalone());
+    if (isStandalone()) {
+      try { localStorage.setItem("tvinion-installed", "1"); } catch {}
+    }
     setCanPrompt(!!window.__bip);
 
     function onBip(e: Event) {
@@ -53,6 +56,7 @@ export default function InstallProvider({ children }: { children: ReactNode }) {
       setCanPrompt(true);
     }
     function onInstalled() {
+      try { localStorage.setItem("tvinion-installed", "1"); } catch {}
       window.__bip = null;
       setCanPrompt(false);
       setInstalled(true);
