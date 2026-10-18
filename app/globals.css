@@ -79,3 +79,12 @@ body {
   font-size: 2.25rem;
   line-height: 1;
 }
+
+@keyframes ptr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.ptr-spin {
+  animation: ptr-spin 0.9s steps(12) infinite;
+}

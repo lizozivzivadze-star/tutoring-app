@@ -87,22 +87,42 @@ export default function PullToRefresh() {
 
   if (pull === 0 && !refreshing) return null;
 
+  const progress = Math.min(1, pull / THRESHOLD);
+  const visible = refreshing ? 12 : Math.round(progress * 12);
+
   return (
     <div
       className="fixed left-0 right-0 z-[60] flex justify-center pointer-events-none"
       style={{
         top: "env(safe-area-inset-top)",
-        transform: `translateY(${pull - 40}px)`,
+        transform: `translateY(${pull * 0.6}px)`,
+        opacity: refreshing ? 1 : Math.min(1, progress * 1.5),
       }}
     >
-      <div className="w-9 h-9 rounded-full bg-white border border-paper-line shadow-sm flex items-center justify-center text-ink-soft">
-        <span
-          className={`inline-block ${refreshing ? "animate-spin" : ""}`}
-          style={refreshing ? undefined : { transform: `rotate(${pull * 4}deg)` }}
-        >
-          ↻
-        </span>
-      </div>
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 28 28"
+        className={refreshing ? "ptr-spin" : ""}
+        aria-hidden="true"
+      >
+        {Array.from({ length: 12 }, (_, i) => (
+          <line
+            key={i}
+            x1="14"
+            y1="3"
+            x2="14"
+            y2="8"
+            stroke="#8e8e93"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            transform={`rotate(${i * 30} 14 14)`}
+            opacity={
+              i < visible ? (refreshing ? 0.15 + 0.85 * (i / 11) : 1) : 0
+            }
+          />
+        ))}
+      </svg>
     </div>
   );
 }
