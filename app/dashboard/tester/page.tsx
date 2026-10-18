@@ -282,8 +282,8 @@ export default function TesterStartTab() {
       <button
         type="submit"
         disabled={status === "sending"}
-className="mb-5 rounded-full bg-marker text-white font-body font-medium
-           py-2.5 transition-colors hover:bg-marker-hover
+className="mb-5 rounded-full bg-gold text-ink font-body font-medium
+           py-2.5 transition-colors hover:bg-gold-hover
            disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "sending" ? "იგზავნება..." : "გააგზავნე"}

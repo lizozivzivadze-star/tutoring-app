@@ -23,8 +23,8 @@ export default function ConfirmDialog({
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 rounded-full bg-marker text-white py-2 text-sm
-                       font-medium hover:bg-marker-hover transition-colors"
+            className="flex-1 rounded-full bg-gold text-ink py-2 text-sm
+                       font-medium hover:bg-gold-hover transition-colors"
           >
             დადასტურება
           </button>

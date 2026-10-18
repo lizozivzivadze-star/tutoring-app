@@ -259,7 +259,7 @@ export default function UserMenu({
               {guide.actions?.includes("chrome") && (
                 <button
                   onClick={handleOpenChrome}
-                  className="mt-4 w-full rounded-full bg-marker text-white text-sm font-medium py-2"
+                  className="mt-4 w-full rounded-full bg-gold text-ink text-sm font-medium py-2"
                 >
                   Chrome-ში გახსნა
                 </button>
@@ -306,7 +306,7 @@ export default function UserMenu({
                 <button
                   onClick={handleCancelPending}
                   disabled={cancelling}
-                  className="flex-1 rounded-full bg-marker text-white text-sm font-medium py-2 disabled:opacity-50"
+                  className="flex-1 rounded-full bg-gold text-ink text-sm font-medium py-2 disabled:opacity-50"
                 >
                   {cancelling ? "..." : "დიახ"}
                 </button>

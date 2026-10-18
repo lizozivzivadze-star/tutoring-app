@@ -58,8 +58,8 @@ export default function AddThemeModal({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-full bg-marker text-white font-medium py-2.5
-                     hover:bg-marker-hover transition-colors disabled:opacity-50"
+          className="rounded-full bg-gold text-ink font-medium py-2.5
+                     hover:bg-gold-hover transition-colors disabled:opacity-50"
         >
           {saving ? "ინახება..." : "Save"}
         </button>

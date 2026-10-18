@@ -31,6 +31,8 @@
     /* ბრენდის აქცენტი: ოქროსფერი (ლოგოდან) */
   --color-gold: #ffd65a;
 
+    --color-gold-hover: #f2c230;   /* ოქროსფერი ღილაკის hover */
+
   --font-display: "Noto Sans Georgian", "Noto Sans", sans-serif;
 
   --text-xs: 1rem;

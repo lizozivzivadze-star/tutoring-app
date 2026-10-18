@@ -223,8 +223,8 @@ useEffect(() => {
               startedAtRef.current = Date.now();
               setStage("question");
             }}
-            className="w-full rounded-full bg-marker text-white font-medium py-3
-                       hover:bg-marker-hover transition-colors"
+            className="w-full rounded-full bg-gold text-ink font-medium py-3
+                       hover:bg-gold-hover transition-colors"
           >
             დაწყება
           </button>
@@ -293,8 +293,8 @@ useEffect(() => {
   )}
   <button
     onClick={confirmAndAdvance}
-    className="rounded-full bg-marker text-white font-medium px-8 py-2.5
-               hover:bg-marker-hover transition-colors"
+    className="rounded-full bg-gold text-ink font-medium px-8 py-2.5
+               hover:bg-gold-hover transition-colors"
   >
     {questionIndex + 1 >= test.questions.length ? "დასრულება" : "შემდეგი"}
   </button>

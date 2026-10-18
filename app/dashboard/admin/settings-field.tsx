@@ -62,8 +62,8 @@ export default function SettingsField({
           type="button"
           onClick={save}
           disabled={status === "saving"}
-          className="rounded-full bg-marker text-white font-body font-medium text-sm
-                     px-4 py-2 transition-colors hover:bg-marker-hover
+          className="rounded-full bg-gold text-ink font-body font-medium text-sm
+                     px-4 py-2 transition-colors hover:bg-gold-hover
                      disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === "saving" ? "იბარდება..." : "შენახვა"}
