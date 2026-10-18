@@ -134,6 +134,21 @@ export default function UserMenu({
       if (result !== "unavailable") return;
     }
 
+        // ჩვეულებრივ ჩანართშია გახსნილი, მაგრამ აპი ამ მოწყობილობაზე უკვე დაინსტალირებულია?
+    try {
+      const nav = navigator as Navigator & {
+        getInstalledRelatedApps?: () => Promise<unknown[]>;
+      };
+      const apps = nav.getInstalledRelatedApps ? await nav.getInstalledRelatedApps() : [];
+      if (apps.length > 0) {
+        setCopied(false);
+        setGuide(INSTALLED_GUIDE);
+        return;
+      }
+    } catch {
+      // ფუნქცია მიუწვდომელია: გადადის ზოგად ინსტრუქციაზე
+    }
+
     // ყველა დანარჩენი (iOS, Firefox, ჩაშენებული ბრაუზერები...) —
     // ზუსტად იმ მოწყობილობისთვის მორგებული ინსტრუქცია.
     setCopied(false);
