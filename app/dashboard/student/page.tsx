@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
-import Greeting from "@/components/greeting";
+import LogoLink from "@/components/logo-link";
 import LoadingBar from "@/components/loading-bar";
 import { formatDate } from "@/lib/format-time";
 
@@ -40,7 +40,7 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen">
       <header className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
-  <Greeting name={name} />
+  <LogoLink />
   <UserMenu />
 </header>
 

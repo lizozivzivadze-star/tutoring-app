@@ -1,7 +1,7 @@
 import TeacherTabs from "./teacher-tabs";
 import UserMenu from "@/components/user-menu";
 import HideOnScroll from "@/components/hide-on-scroll";
-import Greeting from "@/components/greeting";
+import LogoLink from "@/components/logo-link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTeacherId } from "@/lib/current-teacher";
 import DashboardMain from "./dashboard-main";
@@ -20,7 +20,7 @@ export default async function TeacherDashboardLayout({
     <div className="min-h-screen">
       <HideOnScroll>
         <header data-app-menu className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
-          <Greeting name={teacher?.name} />
+          <LogoLink />
           <UserMenu showCancelPending />
         </header>
 

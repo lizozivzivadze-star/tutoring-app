@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import UserMenu from "@/components/user-menu";
-import Greeting from "@/components/greeting";
+import LogoLink from "@/components/logo-link";
 import LoadingBar from "@/components/loading-bar";
 import { formatDateTime, formatDuration } from "@/lib/format-time";
 
@@ -37,7 +37,7 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen">
 <header className="ruled-edge bg-white px-6 py-4 flex items-center justify-between gap-4">
-  <Greeting />
+  <LogoLink />
   <UserMenu />
 </header>
         <main className="min-h-screen flex items-center justify-center">
@@ -50,7 +50,7 @@ export default function ReviewPage() {
   return (
     <div className="min-h-screen">
       <header className="ruled-edge bg-white px-6 py-4 flex items-center justify-between gap-4">
-        <Greeting />
+        <LogoLink />
         <UserMenu />
       </header>
       <main className="py-8">
