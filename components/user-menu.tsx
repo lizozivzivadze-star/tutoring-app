@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
@@ -111,6 +111,19 @@ export default function UserMenu({
   cancelEndpoint?: string;
 }) {
   const [open, setOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+  // მენიუს გარეთ ნებისმიერ ადგილას დაჭერა ხურავს მას
+  useEffect(() => {
+    if (!open) return;
+    function onDown(e: PointerEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
   const [showProfile, setShowProfile] = useState(false);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
@@ -183,7 +196,7 @@ export default function UserMenu({
   }
 
   return (
-    <div className="relative">
+    <div ref={menuRef} className="relative">
 <button
   aria-label="მენიუ"
   onClick={() => setOpen((v) => !v)}
@@ -196,7 +209,6 @@ export default function UserMenu({
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-fit py-1 overflow-hidden">
             <button
               onClick={handleAddToHome}
