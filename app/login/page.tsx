@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect, FormEvent } from "react";
+import Image from "next/image";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -85,9 +86,16 @@ export default function LoginPage() {
     <main className="min-h-dvh flex flex-col items-center px-6 pt-10 pb-6">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
-          <div className="w-24 h-24 rounded-full border border-paper-line bg-white flex items-center justify-center">
-            ლოგო
-          </div>
+<a href="/" aria-label="Tvinion">
+  <Image
+    src="/tvinion-logo.png"
+    alt="Tvinion"
+    width={900}
+    height={224}
+    priority
+    className="w-56 h-auto"
+  />
+</a>
           <p className="mt-4">ერთი, ორი, სამი</p>
           <p className="mt-2">
             {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
