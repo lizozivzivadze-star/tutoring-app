@@ -25,6 +25,13 @@ function getTransporter(): Transporter | null {
   return transporter;
 }
 
+function getFrom(): { name: string; address: string } {
+  const raw = process.env.SMTP_FROM || process.env.SMTP_USER || "";
+  const match = raw.match(/<([^>]+)>/);
+  const address = (match ? match[1] : raw).trim();
+  return { name: "Tvini🧠n", address };
+}
+
 const ROLE_LABELS: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "მასწავლებლის",
   student: "მოსწავლის",
@@ -71,7 +78,7 @@ export async function sendMagicLinkEmail({
     return;
   }
 
-  const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
+  const from = getFrom();
 
   await t.sendMail({ from, to, subject, text, html });
 }
@@ -92,7 +99,7 @@ export async function sendLoginInviteEmail({
   const t = getTransporter();
 
   const greeting = name ? `გამარჯობა ${name},` : "გამარჯობა,";
-  const subject = "🧠💡შესვლა პლატფორმაზე";
+  const subject = "შესვლა პლატფორმაზე";
   const text =
     `${greeting}\n\n` +
     `პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (${to}). ` +
@@ -108,7 +115,7 @@ export async function sendLoginInviteEmail({
     return;
   }
 
-  const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
+  const from = getFrom();
   await t.sendMail({ from, to, subject, text, html });
 }
 
@@ -147,7 +154,7 @@ export async function sendFeedbackEmail({
     return;
   }
 
-  const from = process.env.SMTP_FROM || process.env.SMTP_USER!;
+  const from = getFrom();
   await t.sendMail({
     from,
     to,
