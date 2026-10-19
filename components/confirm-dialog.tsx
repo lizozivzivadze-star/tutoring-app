@@ -10,7 +10,12 @@ export default function ConfirmDialog({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 bg-ink/40 flex items-center justify-center z-50 px-6">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
+      className="fixed inset-0 bg-ink/40 flex items-center justify-center z-50 px-6"
+    >
       <div className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-xs">
         <p className="text-ink text-center mb-6">{message}</p>
         <div className="flex gap-3">

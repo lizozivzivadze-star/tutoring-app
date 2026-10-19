@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Modal({
   title,
@@ -25,10 +25,33 @@ export default function Modal({
     return menu ? Math.max(0, menu.getBoundingClientRect().bottom) : 0;
   });
 
+    const cardRef = useRef<HTMLDivElement>(null);
+  const downOnBackdrop = useRef(false);
+
+  // გარეთ დაჭერა: ხურავს, თუ არცერთ ველში ტექსტი არ წერია
+  function handleBackdropClick() {
+    if (onBackdropClick) {
+      onBackdropClick();
+      return;
+    }
+    const fields = Array.from(
+      cardRef.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+        "input:not([disabled]), textarea"
+      ) ?? []
+    );
+    if (!fields.some((f) => f.value.trim() !== "")) onClose();
+  }
+
   return (
     <div
+      onPointerDown={(e) => {
+        downOnBackdrop.current = e.target === e.currentTarget;
+      }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onBackdropClick?.();
+        if (downOnBackdrop.current && e.target === e.currentTarget) {
+          handleBackdropClick();
+        }
+        downOnBackdrop.current = false;
       }}
       className={`fixed inset-0 bg-ink/40 flex justify-center z-50 px-6 ${
         topAligned ? "items-start overflow-y-auto pb-6" : "items-center"
@@ -36,6 +59,7 @@ export default function Modal({
       style={topAligned ? { paddingTop: top + 8 } : undefined}
     >
       <div className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm">
+      <div ref={cardRef} className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm"></div>
         <div className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}>
           <h2 className="font-display text-lg text-ink">{title}</h2>
           <button
