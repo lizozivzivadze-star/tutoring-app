@@ -1,6 +1,7 @@
 "use client";
-import { createPortal } from "react-dom";
+
 import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function Modal({
   title,
@@ -16,7 +17,7 @@ export default function Modal({
   // instead of being vertically centered, so an open keyboard
   // doesn't cover the fields.
   topAligned?: boolean;
-    // გამოიძახება, როცა მომხმარებელი ფანჯრის გარეთ (გამუქებულ ფონზე) დააჭერს
+  // გამოიძახება, როცა მომხმარებელი ფანჯრის გარეთ (გამუქებულ ფონზე) დააჭერს
   onBackdropClick?: () => void;
 }) {
   const [top] = useState(() => {
@@ -25,7 +26,7 @@ export default function Modal({
     return menu ? Math.max(0, menu.getBoundingClientRect().bottom) : 0;
   });
 
-    const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const downOnBackdrop = useRef(false);
 
   // გარეთ დაჭერა: ხურავს, თუ არცერთ ველში ტექსტი არ წერია
@@ -60,9 +61,13 @@ export default function Modal({
       }`}
       style={topAligned ? { paddingTop: top + 8 } : undefined}
     >
-      <div className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm">
-      <div ref={cardRef} className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm"></div>
-        <div className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}>
+      <div
+        ref={cardRef}
+        className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm"
+      >
+        <div
+          className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}
+        >
           <h2 className="font-display text-lg text-ink">{title}</h2>
           <button
             onClick={onClose}
