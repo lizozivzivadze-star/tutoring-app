@@ -23,6 +23,7 @@ export default function StudentDashboard() {
   const [pending, setPending] = useState<PendingTest[] | null>(null);
   const [name, setName] = useState<string | null>(null);
     const [group, setGroup] = useState<GroupInfo | null>(null);
+  const [newOpen, setNewOpen] = useState(true);
 
   useEffect(() => {
     fetch("/api/student/dashboard")
@@ -59,36 +60,44 @@ export default function StudentDashboard() {
             </p>
           </section>
         )}
-        <section className="rounded-lg p-4 bg-fresh border border-fresh-line">
-          <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
+                <div className="w-full flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => setNewOpen((v) => !v)}
+            aria-expanded={newOpen}
+            className="w-full rounded-md border-2 border-marker text-marker font-body
+                       font-medium py-2.5 transition-colors hover:bg-paper"
+          >
             ახალი ტესტები
-          </h2>
+          </button>
 
-          {pending === null && (
-           <LoadingBar className="py-3" />
-          )}
-          {pending?.length === 0 && (
-            <p className="text-ink-soft text-sm">ახალი ტესტი არ არის.</p>
-          )}
-          <ul className="flex flex-col gap-3">
-            {pending?.map((t) => (
-              <li key={t.sentTestId}>
+          {newOpen && (
+            <div className="bg-white border border-paper-line rounded-md overflow-hidden">
+              {pending === null && <LoadingBar className="py-3" />}
+
+              {pending?.length === 0 && (
+                <p className="px-3 py-3 text-sm text-ink-soft text-center">
+                  ახალი ტესტი არ არის.
+                </p>
+              )}
+
+              {pending?.map((t) => (
                 <Link
+                  key={t.sentTestId}
                   href={`/dashboard/student/take/${t.sentTestId}`}
-                  className="flex items-center gap-2 text-ink hover:text-marker bg-fresh-line/50 rounded-md px-3 py-3"
+                  className="flex items-center gap-2 px-3 py-3 text-sm text-ink hover:text-marker
+                             border-b border-paper-line last:border-b-0"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
                   <span>
-{t.title}{" "}
-<span className="text-ink-soft text-sm">
-  [{t.typeLabel}]
-</span>
+                    {t.title}{" "}
+                    <span className="text-ink-soft text-xs">[{t.typeLabel}]</span>
                   </span>
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+              ))}
+            </div>
+          )}
+        </div>
                 <SentTestsArchive endpoint="/api/student/archive" studentMode />
       </main>
     </div>
