@@ -97,7 +97,7 @@ export default function LoginPage() {
   />
 </a>
           <p className="mt-3">ერთი, ორი, სამი</p>
-          <p className="mt-1">
+          <p className="mt-12">
             {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
             {fmt(stats?.questions)} შეკითხვა
           </p>
@@ -105,7 +105,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-                    className="mt-12 mb-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
+                    className="my-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
         >
          <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
           შეიყვანეთ
