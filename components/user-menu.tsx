@@ -322,11 +322,11 @@ export default function UserMenu({
         document.body
       )}
 
-      {confirmCancel && (
+      {confirmCancel && createPortal(
         <>
           <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setConfirmCancel(false)} />
           <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
-            <div className="flex-[2]" />
+            <div className="flex-1" />
             <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm p-4">
               <p className="text-sm text-ink mb-4">
                 გსურთ გააუქმოთ ყველა გაგზავნილი და ამ მომენტისთვის შეუსრულებელი ტესტი?
@@ -347,18 +347,19 @@ export default function UserMenu({
                 </button>
               </div>
             </div>
-            <div className="flex-[3]" />
+            <div className="flex-[2]" />
           </div>
-        </>
+        </>,
+        document.body
       )}
 
             {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
 
-      {cancelResult && (
+      {cancelResult && createPortal(
         <>
           <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setCancelResult(null)} />
           <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
-            <div className="flex-[2]" />
+            <div className="flex-1" />
             <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm max-h-[70dvh] flex flex-col overflow-hidden">
               <VScrollBox drag={false} className="p-4 min-h-0">
                 <p className="text-sm text-ink mb-3 font-medium">
@@ -387,9 +388,10 @@ export default function UserMenu({
                 </button>
               </VScrollBox>
             </div>
-            <div className="flex-[3]" />
+            <div className="flex-[2]" />
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
