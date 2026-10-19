@@ -23,6 +23,23 @@ export default function StudentRow({
   onDelete: () => void;
 }) {
   const [viewing, setViewing] = useState(false);
+  const [sendState, setSendState] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+
+  async function sendLogin() {
+    if (sendState === "sending") return;
+    setSendState("sending");
+    try {
+      const res = await fetch(`/api/students/${student.id}/send-login`, {
+        method: "POST",
+      });
+      setSendState(res.ok ? "sent" : "error");
+    } catch {
+      setSendState("error");
+    }
+    setTimeout(() => setSendState("idle"), 2500);
+  }
 
   const {
     attributes,
@@ -61,6 +78,20 @@ export default function StudentRow({
 >
   results
 </Link>
+
+<button
+  onClick={sendLogin}
+  disabled={sendState === "sending"}
+  className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
+>
+  {sendState === "sending"
+    ? "..."
+    : sendState === "sent"
+    ? "✓"
+    : sendState === "error"
+    ? "!"
+    : "SendURL"}
+</button>
 
 <button
   onClick={onEdit}
