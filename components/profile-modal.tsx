@@ -11,8 +11,6 @@ const inputClass =
 export default function ProfileModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -23,8 +21,6 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
       .then((data) => {
         if (data.profile) {
           setName(data.profile.name);
-          setSurname(data.profile.surname);
-          setPhone(data.profile.phone);
           setEmail(data.profile.email);
         }
         setLoading(false);
@@ -39,7 +35,7 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
     const res = await fetch("/api/profile", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, surname, phone }),
+            body: JSON.stringify({ name }),
     });
 
     if (!res.ok) {
@@ -64,23 +60,6 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
               maxLength={30}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-ink-soft mb-2">გვარი</label>
-            <input
-              maxLength={30}
-              value={surname}
-              onChange={(e) => setSurname(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-ink-soft mb-2">მობილური</label>
-            <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
               className={inputClass}
             />
           </div>

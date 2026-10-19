@@ -87,8 +87,6 @@ export async function PATCH(
     where: { id: studentId },
     data: {
       name: name.trim(),
-      surname: surname?.trim() || null,
-      contact: contact?.trim() || null,
       email: email.trim(),
     },
   });

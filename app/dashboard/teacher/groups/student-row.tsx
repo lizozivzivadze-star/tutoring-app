@@ -93,14 +93,6 @@ export default function StudentRow({
               <span className="text-ink">{student.name || "—"}</span>
             </div>
             <div>
-              <span className="text-ink-soft">გვარი: </span>
-              <span className="text-ink">{student.surname || "—"}</span>
-            </div>
-            <div>
-              <span className="text-ink-soft">მობილური: </span>
-              <span className="text-ink">{student.contact || "—"}</span>
-            </div>
-            <div>
               <span className="text-ink-soft">email: </span>
               <span className="text-ink">{student.email}</span>
             </div>

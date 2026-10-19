@@ -19,14 +19,10 @@ export default function StudentFormModal({
   onClose: () => void;
   onSubmit: (values: {
     name: string;
-    surname: string;
-    contact: string;
     email: string;
   }) => Promise<string | void>;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
-  const [surname, setSurname] = useState(initial?.surname ?? "");
-  const [contact, setContact] = useState(initial?.contact ?? "");
   const [email, setEmail] = useState(initial?.email ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +32,7 @@ export default function StudentFormModal({
     setSaving(true);
     setError("");
 
-    const result = await onSubmit({ name, surname, contact, email });
+    const result = await onSubmit({ name, email });
     if (result) {
       setError(result);
       setSaving(false);
@@ -56,24 +52,6 @@ export default function StudentFormModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={`${inputClass} placeholder:text-ink-soft/40`}
-          />
-        </div>
-        <div>
-          <label className="block text-sm text-ink-soft mb-2">გვარი</label>
-          <input
-            maxLength={30}
-            placeholder="30-მდე სიმბოლო"
-            value={surname}
-            onChange={(e) => setSurname(e.target.value)}
-            className={`${inputClass} placeholder:text-ink-soft/40`}
-          />
-        </div>
-        <div>
-          <label className="block text-sm text-ink-soft mb-2">მობილური</label>
-          <input
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            className={inputClass}
           />
         </div>
         <div>
