@@ -6,11 +6,21 @@ export const dynamic = "force-dynamic";
 // login გვერდის საჯარო სტატისტიკა. მხოლოდ რაოდენობებს აბრუნებს,
 // პირად მონაცემს არაფერს.
 export async function GET() {
-  const [subjects, tests, questions, teachers, sentTests, attempts, students] =
+  // საგნის ცალკე მოდელი ჯერ არ გვაქვს; ამჟამად საგანი ერთია (ისტორია).
+  // როცა საგნები დაემატება, აქ ბაზიდან ვთვლით.
+  const subjects = 1;
+
+  // ვითვლით მხოლოდ იმ გამოქვეყნებულ ტესტებს, რომლებსაც მასწავლებლები ხედავენ
+  // (ტესტერს აქვს მასწავლებლებთან წვდომა). სატესტო ანგარიშები არ ითვლება.
+  const visible = {
+    published: true,
+    theme: { tester: { teacherAccess: { some: {} } } },
+  };
+
+  const [tests, questions, teachers, sentTests, attempts, students] =
     await Promise.all([
-      prisma.theme.count({ where: { tests: { some: { published: true } } } }),
-      prisma.test.count({ where: { published: true } }),
-      prisma.question.count({ where: { test: { published: true } } }),
+      prisma.test.count({ where: visible }),
+      prisma.question.count({ where: { test: visible } }),
       prisma.teacher.count(),
       prisma.sentTest.count(),
       prisma.testAttempt.count(),
