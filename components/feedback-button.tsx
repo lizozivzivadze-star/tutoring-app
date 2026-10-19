@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Modal from "@/components/modal";
+import { usePathname } from "next/navigation";
 
 export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
+    const pathname = usePathname();
+  const isLogin = pathname?.startsWith("/login");
   const [text, setText] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
@@ -81,6 +84,11 @@ export default function FeedbackButton() {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
+              {isLogin && (
+                <p className="text-sm text-ink-soft">
+                  თუ გსურთ დაგიბრუნდეთ პასუხით, მოგვწერეთ თქვენი მობილურიც და/ან მეილიც.
+                </p>
+              )}
               <textarea
                 autoFocus
                 rows={5}
