@@ -66,6 +66,8 @@ export async function PATCH(req: NextRequest) {
   } else if (role === "tester") {
     await prisma.tester.update({ where: { id }, data: { name } });
   } else {
+    return NextResponse.json({ error: "unknown role" }, { status: 400 });
+  }
 
   const profile = await loadProfile(role, id);
   return NextResponse.json({ profile });
