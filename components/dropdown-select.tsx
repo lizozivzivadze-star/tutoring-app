@@ -24,6 +24,7 @@ export default function DropdownSelect({
   defaultOpen = false,
   borderClassName = "border-paper-line",
   placeholderInList = false,
+    compactList = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -39,6 +40,8 @@ export default function DropdownSelect({
     // true: placeholder-ის ტექსტი სიის #1 სტრიქონადაც ჩანს, ღილაკში კი
   // სიის გახსნისას იმალება
   placeholderInList?: boolean;
+    // true: სია მაქსიმუმ 5 სტრიქონს აჩვენებს, დანარჩენი სქროლდება
+  compactList?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -97,7 +100,7 @@ export default function DropdownSelect({
 
       {open && (
 <div className={`absolute z-40 mt-1 w-full bg-white border ${borderClassName} rounded-sm shadow-lg overflow-hidden`}>
-  <VScrollBox drag={false} showScrollbar className="max-h-64">
+  <VScrollBox drag={false} showScrollbar className={compactList ? "max-h-[195px]" : "max-h-64"}>
     <ul>
           {placeholderInList && (
         <li
@@ -141,7 +144,7 @@ className={`w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[2
       {open && (
         <div
           aria-hidden
-          className="absolute left-0 top-full mt-1 h-[calc(16rem+50px)] w-px pointer-events-none"
+          className={`absolute left-0 top-full mt-1 ${compactList ? "h-[245px]" : "h-[calc(16rem+50px)]"} w-px pointer-events-none`}
         />
       )}
     </div>

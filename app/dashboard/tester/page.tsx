@@ -197,7 +197,8 @@ export default function TesterStartTab() {
           onChange={setSelection}
           required
           placeholder="აირჩიეთ ჯგუფი ან მოსწავლე"
-          placeholderInList
+                    placeholderInList
+          compactList
           options={groups.flatMap((g) => [
             { value: `group:${g.id}`, label: g.name },
             ...g.students.map((s) => ({
@@ -218,7 +219,8 @@ export default function TesterStartTab() {
           }}
           disabled={!themeActive}
           placeholder="აირჩიეთ თემა"
-          placeholderInList
+                    placeholderInList
+          compactList
           options={themeOptions}
         />
 
@@ -232,7 +234,8 @@ export default function TesterStartTab() {
           required
           disabled={!testStepActive}
           placeholder="აირჩიეთ ტესტი"
-          placeholderInList
+                    placeholderInList
+          compactList
           options={testsByTheme[themeId] ?? []}
         />
       </div>

@@ -198,6 +198,7 @@ export default function StartTab() {
           required
           placeholder="აირჩიეთ ჯგუფი ან მოსწავლე"
           placeholderInList
+          compactList
           options={groups.flatMap((g) => [
             { value: `group:${g.id}`, label: g.name },
             ...g.students.map((s) => ({
@@ -219,6 +220,7 @@ export default function StartTab() {
           disabled={!themeActive}
           placeholder="აირჩიეთ თემა"
           placeholderInList
+          compactList
           options={themeOptions}
         />
 
@@ -233,6 +235,7 @@ export default function StartTab() {
           disabled={!testStepActive}
           placeholder="აირჩიეთ ტესტი"
           placeholderInList
+          compactList
           options={testsByTheme[themeId] ?? []}
         />
       </div>
