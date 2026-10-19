@@ -9,7 +9,10 @@ export async function GET() {
     return NextResponse.json({ error: "not authenticated" }, { status: 401 });
   }
 
-  const student = await prisma.student.findUnique({ where: { id: studentId } });
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+    include: { group: { include: { teacher: true, tester: true } } },
+  });
   if (!student) {
     return NextResponse.json({ pending: [], completed: [], name: null });
   }
@@ -53,5 +56,15 @@ export async function GET() {
     totalQuestions: a.totalQuestions,
   }));
 
-  return NextResponse.json({ pending, completed, name: student.name });
+  const owner = student.group?.teacher ?? student.group?.tester;
+  const group =
+    student.group && owner
+      ? {
+          name: student.group.name,
+          teacherName:
+            [owner.name, owner.surname].filter(Boolean).join(" ") || null,
+        }
+      : null;
+
+  return NextResponse.json({ pending, completed, name: student.name, group });
 }

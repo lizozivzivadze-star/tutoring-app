@@ -21,11 +21,16 @@ type CompletedTest = {
   score: number;
   totalQuestions: number;
 };
+type GroupInfo = {
+  name: string;
+  teacherName: string | null;
+};
 
 export default function StudentDashboard() {
   const [pending, setPending] = useState<PendingTest[] | null>(null);
   const [completed, setCompleted] = useState<CompletedTest[] | null>(null);
   const [name, setName] = useState<string | null>(null);
+    const [group, setGroup] = useState<GroupInfo | null>(null);
 
   useEffect(() => {
     fetch("/api/student/dashboard")
@@ -34,6 +39,7 @@ export default function StudentDashboard() {
         setPending(data.pending ?? []);
         setCompleted(data.completed ?? []);
         setName(data.name ?? null);
+        setGroup(data.group ?? null);
       });
   }, []);
 
@@ -45,6 +51,23 @@ export default function StudentDashboard() {
 </header>
 
       <main className="py-8 flex flex-col gap-8 mx-auto w-[90%]">
+              {group && (
+          <section className="text-sm text-ink flex flex-col gap-1 px-1">
+            <p>
+              <span className="text-ink-soft">საგანი: </span>ისტორია
+            </p>
+            {group.teacherName && (
+              <p>
+                <span className="text-ink-soft">მასწავლებელი: </span>
+                {group.teacherName}
+              </p>
+            )}
+            <p>
+              <span className="text-ink-soft">ჯგუფი: </span>
+              {group.name}
+            </p>
+          </section>
+        )}
         <section className="rounded-lg p-4 bg-fresh border border-fresh-line">
           <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
             ახალი ტესტები
