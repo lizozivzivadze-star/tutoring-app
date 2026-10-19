@@ -62,7 +62,7 @@ export default function FeedbackButton() {
 
       {open && (
         <Modal
-          title={isLogin ? "" : "რის გაუმჯობესებას გვირჩევთ?"}
+          title="რის გაუმჯობესებას გვირჩევთ?"
           onClose={close}
           topAligned
           onBackdropClick={() => {
@@ -84,16 +84,15 @@ export default function FeedbackButton() {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              {isLogin && (
-                <p className="text-sm text-ink-soft">
-                  თუ გსურთ დაგიბრუნდეთ პასუხით, მოგვწერეთ თქვენი მობილურიც და/ან მეილიც.
-                </p>
-              )}
               <textarea
                 autoFocus
                 rows={5}
                 maxLength={2000}
-                placeholder="მოგვწერეთ ..."
+                placeholder={
+                  isLogin
+                    ? "თუ გსურთ დაგიბრუნდეთ პასუხით, მოგვწერეთ თქვენი მობილურიც და/ან მეილიც."
+                    : "მოგვწერეთ ..."
+                }
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onFocus={(e) =>
