@@ -351,7 +351,13 @@ function ScrollPicker({
   );
 }
 
-export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
+export default function SentTestsArchive({
+  endpoint,
+  studentMode = false,
+}: {
+  endpoint: string;
+  studentMode?: boolean;
+}) {
   const [open, setOpen] = useState(false);
     const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -382,7 +388,9 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
       setRows(
         (data.rows ?? []).map((r: Omit<Row, "href">) => ({
           ...r,
-          href: `${base}/${r.studentId}/history/${r.attemptId}`,
+          href: studentMode
+            ? `/dashboard/student/results/${r.attemptId}/review`
+            : `${base}/${r.studentId}/history/${r.attemptId}`,
         }))
       );
       if (!silent) setLoading(false);
@@ -507,6 +515,8 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
         <p className="text-sm text-ink-soft text-center">
           {view === "by-result"
             ? "ამ შედეგით ტესტი არავის აქვს ჩატარებული"
+            : studentMode
+            ? "ჯერ არაფერი გაქვთ გაკეთებული."
             : "ჩატარებული ტესტები ჯერ არ არის"}
         </p>
       )}
@@ -539,20 +549,22 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
 className="w-full rounded-md border-2 border-marker text-marker font-body
            font-medium py-2.5 transition-colors hover:bg-paper"
       >
-        ჩატარებული ტესტების არქივი
+        {studentMode ? "გაკეთებული ტესტების არქივი" : "ჩატარებული ტესტების არქივი"}
       </button>
 
       {open && (
         <div className="flex flex-col gap-3">
-          <DropdownSelect
-            value={view}
-            onChange={changeView}
-            options={VIEWS}
-            placeholder="აირჩიე გამოჩენის პრინციპი"
-            flipArrow
-            centered
-            borderClassName="border-marker/50"
-          />
+          {!studentMode && (
+            <DropdownSelect
+              value={view}
+              onChange={changeView}
+              options={VIEWS}
+              placeholder="აირჩიე გამოჩენის პრინციპი"
+              flipArrow
+              centered
+              borderClassName="border-marker/50"
+            />
+          )}
 
           {loading && (
             <p className="text-sm text-ink-soft text-center">იტვირთება...</p>

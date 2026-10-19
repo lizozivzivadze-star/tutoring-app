@@ -5,7 +5,7 @@ import Link from "next/link";
 import UserMenu from "@/components/user-menu";
 import LogoLink from "@/components/logo-link";
 import LoadingBar from "@/components/loading-bar";
-import { formatDate } from "@/lib/format-time";
+import SentTestsArchive from "@/components/sent-tests-archive";
 
 type PendingTest = {
   sentTestId: string;
@@ -14,13 +14,6 @@ type PendingTest = {
   typeLabel: string;
 };
 
-type CompletedTest = {
-  attemptId: string;
-  testTitle: string;
-  completedAt: string;
-  score: number;
-  totalQuestions: number;
-};
 type GroupInfo = {
   name: string;
   teacherName: string | null;
@@ -28,7 +21,6 @@ type GroupInfo = {
 
 export default function StudentDashboard() {
   const [pending, setPending] = useState<PendingTest[] | null>(null);
-  const [completed, setCompleted] = useState<CompletedTest[] | null>(null);
   const [name, setName] = useState<string | null>(null);
     const [group, setGroup] = useState<GroupInfo | null>(null);
 
@@ -37,7 +29,6 @@ export default function StudentDashboard() {
       .then((r) => r.json())
       .then((data) => {
         setPending(data.pending ?? []);
-        setCompleted(data.completed ?? []);
         setName(data.name ?? null);
         setGroup(data.group ?? null);
       });
@@ -98,60 +89,7 @@ export default function StudentDashboard() {
             ))}
           </ul>
         </section>
-
-       <section className="rounded-lg p-4 bg-ledger-soft border border-paper-line">
-          <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-3">
-            უკვე გაკეთებული ტესტები
-          </h2>
-
-          {completed === null && (
-            <LoadingBar className="py-3" />
-          )}
-          {completed?.length === 0 && (
-            <p className="text-ink-soft text-sm">ჯერ არაფერი გაქვთ გაკეთებული.</p>
-          )}
-{completed && completed.length > 0 && (
-  <table className="w-full text-sm table-fixed border border-paper-line">
-<colgroup>
-  <col className="w-[30%]" />
-  <col className="w-[26%]" />
-  <col className="w-[24%]" />
-  <col className="w-[20%]" />
-</colgroup>
-    <thead>
-      <tr className="text-left text-ink-soft border-b border-paper-line">
-        <th className="py-2 px-2 font-medium border-r border-paper-line text-left">ტესტი</th>
-        <th className="py-2 px-2 font-medium border-r border-paper-line text-left">თარიღი</th>
-        <th className="py-2 px-2 font-medium border-r border-paper-line text-left">შედეგი</th>
-        <th className="py-2 px-2 font-medium text-left">review</th>
-      </tr>
-    </thead>
-    <tbody>
-      {completed.map((c) => (
-        <tr key={c.attemptId} className="border-b border-paper-line">
-          <td className="py-2 px-2 text-ink border-r border-paper-line text-left overflow-hidden">
-            <span className="block truncate">{c.testTitle}</span>
-          </td>
-          <td className="py-2 px-2 text-ink-soft border-r border-paper-line text-left">
-            {formatDate(c.completedAt)}
-          </td>
-          <td className="py-2 px-2 text-ink border-r border-paper-line text-left whitespace-nowrap">
-  {c.score}/{c.totalQuestions}
-</td>
-          <td className="py-2 px-2 text-left">
-            <Link
-              href={`/dashboard/student/results/${c.attemptId}/review`}
-              className="text-marker font-medium"
-            >
-              review
-            </Link>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-)}
-        </section>
+                <SentTestsArchive endpoint="/api/student/archive" studentMode />
       </main>
     </div>
   );
