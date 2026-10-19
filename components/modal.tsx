@@ -36,7 +36,7 @@ export default function Modal({
       style={topAligned ? { paddingTop: top + 8 } : undefined}
     >
       <div className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm">
-        <div className="flex items-center justify-between mb-5">
+        <div className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}>
           <h2 className="font-display text-lg text-ink">{title}</h2>
           <button
             onClick={onClose}
