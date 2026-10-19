@@ -62,7 +62,7 @@ export default function FeedbackButton() {
 
       {open && (
         <Modal
-          title="რის გაუმჯობესებას გვირჩევთ?"
+          title={isLogin ? "" : "რის გაუმჯობესებას გვირჩევთ?"}
           onClose={close}
           topAligned
           onBackdropClick={() => {
