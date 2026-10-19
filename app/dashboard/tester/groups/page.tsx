@@ -211,6 +211,7 @@ export default function GroupsTab() {
       {addStudentGroupId && (
         <StudentFormModal
           title="მოსწავლის დამატება"
+          searchUrl="/api/tester/students/search"
           onClose={() => setAddStudentGroupId(null)}
           onSubmit={async (values) => {
             const res = await fetch(

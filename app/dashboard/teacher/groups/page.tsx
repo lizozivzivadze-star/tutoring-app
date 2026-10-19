@@ -212,6 +212,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
       {addStudentGroupId && (
         <StudentFormModal
           title="მოსწავლის დამატება"
+          searchUrl="/api/students/search"
           onClose={() => setAddStudentGroupId(null)}
           onSubmit={async (values) => {
             const res = await fetch(

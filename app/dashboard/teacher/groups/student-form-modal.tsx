@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Modal from "@/components/modal";
 import { StudentRecord } from "./types";
 
@@ -13,9 +13,11 @@ export default function StudentFormModal({
   initial,
   onClose,
   onSubmit,
+  searchUrl,
 }: {
   title: string;
   initial?: Partial<StudentRecord>;
+  searchUrl?: string;
   onClose: () => void;
   onSubmit: (values: {
     name: string;
@@ -26,6 +28,32 @@ export default function StudentFormModal({
   const [email, setEmail] = useState(initial?.email ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+    const [suggestions, setSuggestions] = useState<
+    { id: string; email: string; name: string | null; surname: string | null }[]
+  >([]);
+  const [picked, setPicked] = useState(false);
+
+  useEffect(() => {
+    const q = email.trim();
+    if (!searchUrl || picked || q.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`${searchUrl}?q=${encodeURIComponent(q)}`);
+        const data = await res.json().catch(() => null);
+        if (!cancelled) setSuggestions(res.ok ? data?.students ?? [] : []);
+      } catch {
+        if (!cancelled) setSuggestions([]);
+      }
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [email, searchUrl, picked]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -60,9 +88,31 @@ export default function StudentFormModal({
             type="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setPicked(false);
+            }}
             className={inputClass}
           />
+          {suggestions.length > 0 && (
+            <div className="mt-1 border border-paper-line rounded-sm bg-white shadow-sm">
+              {suggestions.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setEmail(s.email);
+                    if (!name.trim()) setName(s.name ?? "");
+                    setPicked(true);
+                    setSuggestions([]);
+                  }}
+                  className="block w-full text-left px-3 py-2 text-sm text-ink hover:bg-paper truncate"
+                >
+                  {s.email}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         {error && <p className="text-sm text-danger">{error}</p>}
         <button

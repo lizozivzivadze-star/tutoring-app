@@ -41,13 +41,13 @@ export async function POST(
   const existing = await prisma.student.findFirst({
     where: { email: { equals: cleanEmail, mode: "insensitive" } },
   });
-  if (existing) {
+  if (existing && existing.groupId !== null) {
     return NextResponse.json(
       { error: "ეს email უკვე რეგისტრირებულია" },
       { status: 409 }
     );
   }
-  if (await isStaffEmail(cleanEmail)) {
+  if (!existing && (await isStaffEmail(cleanEmail))) {
     return NextResponse.json(
       { error: "ეს email უკვე გამოიყენება სხვა ანგარიშზე" },
       { status: 409 }
@@ -59,17 +59,29 @@ export async function POST(
     orderBy: { order: "desc" },
   });
 
-  const student = await prisma.student.create({
-    data: {
-      name: name.trim(),
-      surname: surname?.trim() || null,
-      contact: contact?.trim() || null,
-      email: email.trim(),
-      accessCode: await generateAccessCode(),
-      groupId,
-      order: (last?.order ?? -1) + 1,
-    },
-  });
+  const nextOrder = (last?.order ?? -1) + 1;
+  const student = existing
+    ? await prisma.student.update({
+        where: { id: existing.id },
+        data: {
+          name: name.trim(),
+          surname: surname?.trim() || existing.surname,
+          contact: contact?.trim() || existing.contact,
+          groupId,
+          order: nextOrder,
+        },
+      })
+    : await prisma.student.create({
+        data: {
+          name: name.trim(),
+          surname: surname?.trim() || null,
+          contact: contact?.trim() || null,
+          email: email.trim(),
+          accessCode: await generateAccessCode(),
+          groupId,
+          order: nextOrder,
+        },
+      });
 
   let emailSent = true;
   try {
