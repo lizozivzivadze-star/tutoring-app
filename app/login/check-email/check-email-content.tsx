@@ -5,17 +5,33 @@ import { useSearchParams } from "next/navigation";
 import LoadingBar from "@/components/loading-bar";
 
 const MAIL_APPS = [
-  { name: "Gmail", color: "#d93025", web: "https://mail.google.com/mail/u/0/#inbox", ios: "googlegmail://" },
-  { name: "Outlook", color: "#0a64c8", web: "https://outlook.live.com/mail/", ios: "ms-outlook://" },
-  { name: "Yahoo", color: "#6001d2", web: "https://mail.yahoo.com/", ios: "ymail://" },
+  { name: "Gmail", color: "#d93025", web: "https://mail.google.com/mail/u/0/#inbox", ios: "googlegmail://", androidPkg: "com.google.android.gm" },
+  { name: "Outlook", color: "#0a64c8", web: "https://outlook.live.com/mail/", ios: "ms-outlook://", androidPkg: "com.microsoft.office.outlook" },
+  { name: "Yahoo", color: "#6001d2", web: "https://mail.yahoo.com/", ios: "ymail://", androidPkg: "com.yahoo.mobile.client.android.mail" },
 ];
 
 function openMail(e: MouseEvent<HTMLAnchorElement>, app: (typeof MAIL_APPS)[number]) {
-  // Android/დესკტოპზე ჩვეულებრივი ბმული მუშაობს. iPhone-ზე app-ს
-  // პირდაპირ scheme-ით მივმართავთ.
-  if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
-  e.preventDefault();
-  window.location.href = app.ios;
+  const ua = navigator.userAgent;
+
+  // iPhone/iPad: აპს პირდაპირ scheme-ით ვუძახებთ.
+  if (/iPad|iPhone|iPod/.test(ua)) {
+    e.preventDefault();
+    window.location.href = app.ios;
+    return;
+  }
+
+  // Android: intent ბმული აპს ხსნის; თუ დაყენებული არ არის,
+  // browser_fallback_url გახსნის ვებ-ვერსიას.
+  if (/Android/i.test(ua)) {
+    e.preventDefault();
+    window.location.href =
+      `intent://#Intent;action=android.intent.action.MAIN;` +
+      `category=android.intent.category.LAUNCHER;` +
+      `package=${app.androidPkg};` +
+      `S.browser_fallback_url=${encodeURIComponent(app.web)};end`;
+    return;
+  }
+  // დესკტოპზე ჩვეულებრივი ბმული (ახალ ჩანართში) მუშაობს.
 }
 
 export default function CheckEmailContent({ template }: { template: string }) {
