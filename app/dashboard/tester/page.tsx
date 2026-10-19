@@ -192,66 +192,49 @@ export default function TesterStartTab() {
   return (
     <form onSubmit={handleSend} className="flex flex-col gap-5">
       <div className="flex flex-col gap-5">
-        <div>
-          <label className="block text-sm text-ink-soft mb-2">
-            აირჩიე ჯგუფი ან მოსწავლე
-          </label>
-          <DropdownSelect
-            value={selection}
-            onChange={setSelection}
-            required
-            options={groups.flatMap((g) => [
-              { value: `group:${g.id}`, label: g.name },
-              ...g.students.map((s) => ({
-                value: `student:${s.id}`,
-                label: s.label,
-                indent: true,
-              })),
-            ])}
-          />
-        </div>
+        <DropdownSelect
+          value={selection}
+          onChange={setSelection}
+          required
+          placeholder="აირჩიეთ ჯგუფი ან მოსწავლე"
+          placeholderInList
+          options={groups.flatMap((g) => [
+            { value: `group:${g.id}`, label: g.name },
+            ...g.students.map((s) => ({
+              value: `student:${s.id}`,
+              label: s.label,
+              indent: true,
+            })),
+          ])}
+        />
 
-        <div>
-          <label
-            className={`block text-sm mb-2 ${
-              themeActive ? "text-ink-soft" : "text-ink-soft/50"
-            }`}
-          >
-            აირჩიე თემა
-          </label>
-          <DropdownSelect
-            value={themeId}
-            onChange={(v) => {
-              setThemeId(v);
-              setTestId("");
-              setTimerOn(true);
-              setBackOn(false);
-            }}
-            disabled={!themeActive}
-            options={themeOptions}
-          />
-        </div>
+        <DropdownSelect
+          value={themeId}
+          onChange={(v) => {
+            setThemeId(v);
+            setTestId("");
+            setTimerOn(true);
+            setBackOn(false);
+          }}
+          disabled={!themeActive}
+          placeholder="აირჩიეთ თემა"
+          placeholderInList
+          options={themeOptions}
+        />
 
-        <div>
-          <label
-            className={`block text-sm mb-2 ${
-              testStepActive ? "text-ink-soft" : "text-ink-soft/50"
-            }`}
-          >
-            აირჩიე ტესტი
-          </label>
-          <DropdownSelect
-            value={testId}
-            onChange={(v) => {
-              setTestId(v);
-              setTimerOn(true);
-              setBackOn(false);
-            }}
-            required
-            disabled={!testStepActive}
-            options={testsByTheme[themeId] ?? []}
-          />
-        </div>
+        <DropdownSelect
+          value={testId}
+          onChange={(v) => {
+            setTestId(v);
+            setTimerOn(true);
+            setBackOn(false);
+          }}
+          required
+          disabled={!testStepActive}
+          placeholder="აირჩიეთ ტესტი"
+          placeholderInList
+          options={testsByTheme[themeId] ?? []}
+        />
       </div>
 
       <div className="flex justify-center gap-[6%] mt-2">

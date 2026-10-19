@@ -23,6 +23,7 @@ export default function DropdownSelect({
   centered = false,
   defaultOpen = false,
   borderClassName = "border-paper-line",
+  placeholderInList = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -35,6 +36,9 @@ export default function DropdownSelect({
   centered?: boolean;
   defaultOpen?: boolean; // გამოჩენისთანავე ჩამოშლილი
   borderClassName?: string; // ღილაკისა და სიის კანტის ფერი
+    // true: placeholder-ის ტექსტი სიის #1 სტრიქონადაც ჩანს, ღილაკში კი
+  // სიის გახსნისას იმალება
+  placeholderInList?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -79,7 +83,7 @@ export default function DropdownSelect({
           {selected ? (
             <HScrollText>{selected.label}</HScrollText>
           ) : (
-            placeholder
+            placeholderInList && open ? "\u00A0" : placeholder
           )}
         </span>
         <span
@@ -95,6 +99,14 @@ export default function DropdownSelect({
 <div className={`absolute z-40 mt-1 w-full bg-white border ${borderClassName} rounded-sm shadow-lg overflow-hidden`}>
   <VScrollBox drag={false} showScrollbar className="max-h-64">
     <ul>
+          {placeholderInList && (
+        <li
+          aria-disabled="true"
+          className={`${centered ? "text-center" : "text-left"} px-3 py-2.5 font-body text-sm text-ink-soft cursor-default select-none`}
+        >
+          {placeholder}
+        </li>
+      )}
 {options.map((o) =>
   o.disabled ? (
     <li
