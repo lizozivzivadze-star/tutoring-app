@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { revealOnOpen } from "@/lib/reveal-on-open";
 import DropdownSelect from "@/components/dropdown-select";
 import HScrollText from "@/components/h-scroll-text";
 import Link from "next/link";
@@ -352,6 +353,12 @@ function ScrollPicker({
 
 export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   const [open, setOpen] = useState(false);
+    const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || !wrapRef.current) return;
+    return revealOnOpen(wrapRef.current);
+  }, [open]);
   const [view, setView] = useState("");
   const [rows, setRows] = useState<Row[] | null>(null);
   const [shown, setShown] = useState(false);
@@ -521,7 +528,7 @@ export default function SentTestsArchive({ endpoint }: { endpoint: string }) {
   );
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div ref={wrapRef} className="w-full flex flex-col gap-2">
       <button
         type="button"
         onClick={() => {

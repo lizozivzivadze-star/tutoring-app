@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { revealOnOpen } from "@/lib/reveal-on-open";
 import HScrollText from "@/components/h-scroll-text";
 import ConfirmDialog from "@/components/confirm-dialog";
 import VScrollBox from "@/components/v-scroll-box";
@@ -24,6 +25,12 @@ export default function NewSentTests({
   const [items, setItems] = useState<Item[] | null>(null);
   const [error, setError] = useState("");
   const [toDelete, setToDelete] = useState<Item | null>(null);
+    const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || !wrapRef.current) return;
+    return revealOnOpen(wrapRef.current);
+  }, [open]);
 
   const load = useCallback(
     async (silent = false) => {
@@ -85,7 +92,7 @@ export default function NewSentTests({
   }
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div ref={wrapRef} className="w-full flex flex-col gap-2">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
