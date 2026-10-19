@@ -97,7 +97,7 @@ export default function LoginPage() {
   />
 </a>
           <p className="mt-3">ერთი, ორი, სამი</p>
-          <p className="mt-12">
+          <p className="mt-9">
             {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
             {fmt(stats?.questions)} შეკითხვა
           </p>
