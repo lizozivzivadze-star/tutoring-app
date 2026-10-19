@@ -7,6 +7,7 @@ import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import VScrollBox from "@/components/v-scroll-box";
 import {
   DndContext,
   closestCenter,
@@ -111,6 +112,16 @@ async function sendLoginPage() {
     onReorderStudents(arrayMove(ids, fromIndex, toIndex));
   }
 
+  const studentRows = group.students.map((student, i) => (
+  <StudentRow
+    key={student.id}
+    student={student}
+    index={i}
+    onEdit={() => onEditStudent(student)}
+    onDelete={() => onDeleteStudent(student)}
+  />
+));
+
   return (
     <div
       ref={setNodeRef}
@@ -178,15 +189,13 @@ async function sendLoginPage() {
               items={group.students.map((s) => s.id)}
               strategy={verticalListSortingStrategy}
             >
-              {group.students.map((student, i) => (
-                <StudentRow
-                  key={student.id}
-                  student={student}
-                  index={i}
-                  onEdit={() => onEditStudent(student)}
-                  onDelete={() => onDeleteStudent(student)}
-                />
-              ))}
+        {group.students.length > 4 ? (
+          <VScrollBox drag={false} showScrollbar className="max-h-[33dvh]">
+            <div className="flex flex-col gap-2 pr-2">{studentRows}</div>
+          </VScrollBox>
+        ) : (
+          studentRows
+        )}
             </SortableContext>
           </DndContext>
 

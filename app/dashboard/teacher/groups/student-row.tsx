@@ -37,14 +37,13 @@ export default function StudentRow({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: "none" as const,
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="border border-paper-line rounded-sm bg-paper px-3 py-2.5"
+      className="border border-paper-line rounded-sm bg-paper px-3 py-[9px]"
     >
       <div className="flex items-center gap-2 text-sm">
         <span className="text-ink-soft shrink-0">{index + 1}</span>
@@ -78,6 +77,7 @@ export default function StudentRow({
         <span
           {...attributes}
           {...listeners}
+          style={{ touchAction: "none" }}
           className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 text-[18px]"
           title="გადაადგილება"
         >
