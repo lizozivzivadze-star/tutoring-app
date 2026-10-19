@@ -1,4 +1,5 @@
 "use client";
+import { createPortal } from "react-dom";
 
 export default function ConfirmDialog({
   message,
@@ -9,7 +10,9 @@ export default function ConfirmDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
       onClick={(e) => {
         if (e.target === e.currentTarget) onCancel();
@@ -35,6 +38,7 @@ export default function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import { createPortal } from "react-dom";
 import { useRef, useState } from "react";
 
 export default function Modal({
@@ -42,7 +42,9 @@ export default function Modal({
     if (!fields.some((f) => f.value.trim() !== "")) onClose();
   }
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
       onPointerDown={(e) => {
         downOnBackdrop.current = e.target === e.currentTarget;
@@ -72,6 +74,7 @@ export default function Modal({
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
