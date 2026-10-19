@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const STORAGE_KEY = "sent-tests-section-open";
+import { useState } from "react";
 
 export default function CollapsibleSection({
   children,
@@ -11,21 +9,10 @@ export default function CollapsibleSection({
 }) {
   const [open, setOpen] = useState(false);
 
-  // წინა ჯერზე ღია რომ დატოვა, ისევ ღია იქნება
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === "1") setOpen(true);
-    } catch {}
-  }, []);
+
 
   function toggle() {
-    setOpen((v) => {
-      const next = !v;
-      try {
-        localStorage.setItem(STORAGE_KEY, next ? "1" : "0");
-      } catch {}
-      return next;
-    });
+    setOpen((v) => !v);
   }
 
   return (
