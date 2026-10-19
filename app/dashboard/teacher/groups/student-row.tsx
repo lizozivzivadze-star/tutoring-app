@@ -79,6 +79,20 @@ export default function StudentRow({
   results
 </Link>
 
+
+<button
+  onClick={onEdit}
+  className="text-base text-ink-soft hover:text-marker px-1 shrink-0"
+>
+  edit
+</button>
+<button
+  onClick={onDelete}
+  className="glyph-btn text-ink-soft hover:text-marker-hover px-1 shrink-0"
+>
+  ×
+</button>
+
 <button
   onClick={sendLogin}
   disabled={sendState === "sending"}
@@ -93,18 +107,6 @@ export default function StudentRow({
     : "SendURL"}
 </button>
 
-<button
-  onClick={onEdit}
-  className="text-base text-ink-soft hover:text-marker px-1 shrink-0"
->
-  edit
-</button>
-<button
-  onClick={onDelete}
-  className="glyph-btn text-ink-soft hover:text-marker-hover px-1 shrink-0"
->
-  ×
-</button>
         <span
           {...attributes}
           {...listeners}
