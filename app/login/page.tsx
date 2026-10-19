@@ -148,7 +148,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <p className="mt-auto pt-10 w-full max-w-sm text-xs text-ink-soft text-center">
+      <p className="mt-auto pt-10 w-full max-w-sm text-[11px] text-ink-soft text-center">
         ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
         განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
       </p>
