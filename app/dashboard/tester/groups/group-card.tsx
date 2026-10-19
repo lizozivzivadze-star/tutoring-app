@@ -163,6 +163,14 @@ async function sendLoginPage() {
         >
           ×
         </button>
+
+        <button
+          onClick={() => setConfirmingInvite(true)}
+          disabled={sendingInvite || group.students.length === 0}
+          className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
+        >
+          {sendingInvite ? "..." : "SendURL"}
+        </button>
         <span
           {...attributes}
           {...listeners}
@@ -176,6 +184,10 @@ async function sendLoginPage() {
 
       {renameError && (
         <p className="px-4 pb-2 text-xs text-danger">{renameError}</p>
+      )}
+
+            {inviteMsg && (
+        <p className="px-4 pb-2 text-xs text-ink-soft text-right">{inviteMsg}</p>
       )}
 
       {expanded && (
@@ -206,20 +218,7 @@ async function sendLoginPage() {
   >
     <span className="glyph-btn inline-block align-middle">+</span> მოსწავლის დამატება
   </button>
-  {group.students.length > 0 && (
-    <button
-      onClick={() => setConfirmingInvite(true)}
-      disabled={sendingInvite}
-      className="self-end rounded-full border-2 border-marker text-marker font-medium
-                 text-sm px-4 py-1 transition-colors hover:bg-paper disabled:opacity-50"
-    >
-      {sendingInvite ? "იგზავნება..." : "გააგზავნე login ბმული"}
-    </button>
-  )}
 </div>
-{inviteMsg && (
-  <p className="text-xs text-ink-soft text-right">{inviteMsg}</p>
-)}
         </div>
       )}
       {confirmingDelete && (
