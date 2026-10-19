@@ -73,8 +73,13 @@ export async function POST(req: NextRequest) {
       ? tester.notificationEmail
       : email;
 
+  // Greeting name: same source as the record the email matched on.
+  const recipientName =
+    teacher?.name ?? student?.name ?? admin?.name ?? tester?.name ?? null;
+
   await sendMagicLinkEmail({
     to: deliverTo,
+    name: recipientName,
     role,
     url,
     subjectTemplate: settings.magicLinkSubject,

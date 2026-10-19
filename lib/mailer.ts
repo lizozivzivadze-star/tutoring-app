@@ -41,12 +41,14 @@ const ROLE_LABELS: Record<"teacher" | "student" | "admin" | "tester", string> = 
 
 export async function sendMagicLinkEmail({
   to,
+  name,
   role,
   url,
   subjectTemplate,
   bodyTemplate,
 }: {
   to: string;
+  name?: string | null;
   role: "teacher" | "student" | "admin" | "tester";
   url: string;
   // Admin-edited templates from Settings. Callers always pass these
@@ -61,7 +63,8 @@ export async function sendMagicLinkEmail({
 
   const roleLabel = ROLE_LABELS[role];
   const subject = fillTemplate(subjectTemplate, { roleLabel, url });
-  const text = fillTemplate(bodyTemplate, { roleLabel, url });
+  const greeting = name ? `გამარჯობა ${name},` : "გამარჯობა,";
+  const text = `${greeting}\n\n${fillTemplate(bodyTemplate, { roleLabel, url })}`;
   const html = text
     .split("\n\n")
     .map((para) =>
