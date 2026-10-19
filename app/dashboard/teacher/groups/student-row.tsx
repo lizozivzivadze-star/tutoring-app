@@ -43,7 +43,7 @@ export default function StudentRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="border border-paper-line rounded-sm bg-paper px-3 py-[9px]"
+      className="border border-paper-line rounded-sm bg-paper px-3 py-[8px]"
     >
       <div className="flex items-center gap-2 text-sm">
         <span className="text-ink-soft shrink-0">{index + 1}</span>
