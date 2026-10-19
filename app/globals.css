@@ -52,7 +52,6 @@ body {
   background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-body);
-  padding-bottom: 50px;
 }
 
 /* A single, deliberate texture: a faint ruled line under the header,
@@ -89,9 +88,10 @@ body {
   animation: ptr-spin 0.9s steps(12) infinite;
 }
 
-/* body-ს ქვემოთ 50px აქვს („?“ ღილაკისთვის). სრულეკრანიანი გვერდები
-   ამ 50px-ით დაბალია, რომ მოკლე გვერდი ზედმეტად არ სქროლდებოდეს. */
+/* სრულეკრანიანი გვერდები ზუსტად ხილულ ეკრანს უდრის (მობილურზე 100vh
+   ზედმეტად მაღალია). ქვედა 50px-ს bottom-space.tsx ამატებს მხოლოდ მაშინ,
+   როცა გვერდი ეკრანს აჭარბებს. */
 .min-h-dvh,
 .min-h-screen {
-  min-height: calc(100dvh - 50px);
+  min-height: 100dvh;
 }

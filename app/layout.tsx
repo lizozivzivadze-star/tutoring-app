@@ -4,6 +4,7 @@ import { getSettings } from "@/lib/settings";
 import InstallProvider from "@/components/install-provider";
 import FeedbackButton from "@/components/feedback-button";
 import PullToRefresh from "@/components/pull-to-refresh";
+import BottomSpace from "@/components/bottom-space";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -49,6 +50,8 @@ export default function RootLayout({
         <InstallProvider>{children}</InstallProvider>
 <FeedbackButton />
 <PullToRefresh />
+<PullToRefresh />
+<BottomSpace />
       </body>
     </html>
   );
