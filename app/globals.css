@@ -88,3 +88,10 @@ body {
 .ptr-spin {
   animation: ptr-spin 0.9s steps(12) infinite;
 }
+
+/* body-ს ქვემოთ 50px აქვს („?“ ღილაკისთვის). სრულეკრანიანი გვერდები
+   ამ 50px-ით დაბალია, რომ მოკლე გვერდი ზედმეტად არ სქროლდებოდეს. */
+.min-h-dvh,
+.min-h-screen {
+  min-height: calc(100dvh - 50px);
+}
