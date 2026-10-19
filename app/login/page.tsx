@@ -83,7 +83,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex flex-col items-center px-6 pt-6 pb-4">
+    <main className="min-h-dvh flex flex-col items-center px-6 pt-12 pb-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
 <a href="/" aria-label="Tvinion">
@@ -105,7 +105,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-                    className="my-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
+                    className="mt-12 mb-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
         >
          <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
           შეიყვანეთ
