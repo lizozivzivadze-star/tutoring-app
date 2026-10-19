@@ -80,8 +80,7 @@ export default function ThemesAndTestsTab() {
           </h2>
           <Link
             href="/dashboard/tester/tests/new"
-            className="shrink-0 rounded-full border-2 border-marker text-marker font-body
-                       font-medium text-sm px-3 py-0.5 transition-colors hover:bg-paper"
+            className="shrink-0 text-base text-marker font-medium hover:text-marker-hover"
           >
             <span className="glyph-btn inline-block align-middle">+</span> ტესტი
           </Link>
