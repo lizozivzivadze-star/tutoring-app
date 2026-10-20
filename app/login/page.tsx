@@ -85,7 +85,7 @@ export default function LoginPage() {
   return (
     <main className="h-dvh overflow-hidden flex flex-col items-center px-6 pb-4">
       <div className="w-full max-w-sm h-full flex flex-col">
-        <div className="flex-[2] min-h-6" />
+        <div className="h-[53px] shrink-0" />
 
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
           <a href="/" aria-label="Tvinion">
@@ -101,7 +101,7 @@ export default function LoginPage() {
           <p className="mt-3">ერთი, ორი, სამი</p>
         </div>
 
-        <div className="flex-[2] min-h-6" />
+        <div className="h-[53px] shrink-0" />
 
         <p className="text-sm text-ink-soft text-center">
           {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
@@ -151,7 +151,7 @@ export default function LoginPage() {
           გააკეთა {fmt(stats?.attempts)} ტესტი.
         </p>
 
-        <div className="flex-[3] min-h-6" />
+        <div className="flex-1 min-h-6" />
 
         <p className="w-full text-[11px] text-ink-soft text-center pb-12">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
