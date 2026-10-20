@@ -83,8 +83,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="h-dvh overflow-hidden flex flex-col items-center px-6 pb-4">
-      <div className="w-full max-w-sm h-full flex flex-col">
+    <main className="flex flex-col items-center px-6 pb-4">
+      <div className="w-full max-w-sm flex flex-col">
         <div className="h-[53px] shrink-0" />
 
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
