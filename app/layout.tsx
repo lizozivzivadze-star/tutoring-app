@@ -50,7 +50,6 @@ export default function RootLayout({
         <InstallProvider>{children}</InstallProvider>
 <FeedbackButton />
 <PullToRefresh />
-<PullToRefresh />
 <BottomSpace />
       </body>
     </html>
