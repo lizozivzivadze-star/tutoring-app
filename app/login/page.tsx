@@ -151,7 +151,7 @@ export default function LoginPage() {
           გააკეთა {fmt(stats?.attempts)} ტესტი.
         </p>
 
-        <div className="flex-1 min-h-6" />
+        <div className="h-[88px] shrink-0" />
 
         <p className="w-full text-[11px] text-ink-soft text-center pb-12">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
