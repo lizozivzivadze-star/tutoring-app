@@ -47,7 +47,9 @@ export default function RootLayout({
         />
       </head>
             <body>
-        <InstallProvider>{children}</InstallProvider>
+        <InstallProvider>
+  <div id="page-shell">{children}</div>
+</InstallProvider>
 <FeedbackButton />
 <PullToRefresh />
 <BottomSpace />

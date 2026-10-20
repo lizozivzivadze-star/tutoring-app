@@ -95,3 +95,8 @@ body {
 .min-h-screen {
   min-height: 100dvh;
 }
+/* ბრაუზერის საკუთარი გადაწევა/განახლება გამორთულია: ჩვენი გვაქვს */
+html,
+body {
+  overscroll-behavior-y: none;
+}
