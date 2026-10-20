@@ -83,33 +83,38 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex flex-col items-center px-6 pt-12 pb-[66px] [@media(display-mode:standalone)]:pb-[162px]">
-      <div className="w-full max-w-sm">
+    <main className="h-dvh overflow-hidden flex flex-col items-center px-6 pb-4">
+      <div className="w-full max-w-sm h-full flex flex-col">
+        <div className="flex-[2] min-h-6" />
+
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
-<a href="/" aria-label="Tvinion">
-  <Image
-    src="/tvinion-logo.png"
-    alt="Tvinion"
-    width={900}
-    height={224}
-    priority
-    className="w-56 h-auto"
-  />
-</a>
+          <a href="/" aria-label="Tvinion">
+            <Image
+              src="/tvinion-logo.png"
+              alt="Tvinion"
+              width={900}
+              height={224}
+              priority
+              className="w-56 h-auto"
+            />
+          </a>
           <p className="mt-3">ერთი, ორი, სამი</p>
-          <p className="mt-9">
-            {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
-            {fmt(stats?.questions)} შეკითხვა
-          </p>
         </div>
+
+        <div className="flex-[2] min-h-6" />
+
+        <p className="text-sm text-ink-soft text-center">
+          {fmt(stats?.subjects)} საგანი, {fmt(stats?.tests)} ტესტი,{" "}
+          {fmt(stats?.questions)} შეკითხვა
+        </p>
 
         <form
           onSubmit={handleSubmit}
-                    className="my-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
+          className="my-4 bg-white border border-paper-line rounded-md px-6 py-6 shadow-sm"
         >
-         <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
-          შეიყვანეთ
-        </label>
+          <label htmlFor="email" className="block text-sm text-ink-soft mb-2 text-center">
+            შეიყვანეთ
+          </label>
           <input
             id="email"
             name="email"
@@ -118,7 +123,6 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })}
             placeholder="Email"
             className="w-full border border-paper-line rounded-sm px-3 py-2.5 mb-5
                        font-body text-ink text-center placeholder:text-ink-soft/50
@@ -140,18 +144,20 @@ export default function LoginPage() {
             <p className="mt-4 text-sm text-danger">{errorMessage}</p>
           )}
         </form>
-      
+
         <p className="text-sm text-ink-soft text-center">
           დღეის მდგომარეობით {fmt(stats?.teachers)} მასწავლებელმა ჩაატარა{" "}
           {fmt(stats?.sentTests)} ტესტი, ხოლო {fmt(stats?.students)} მოსწავლემ
           გააკეთა {fmt(stats?.attempts)} ტესტი.
         </p>
-      </div>
 
-      <p className="mt-auto pt-6 w-full max-w-sm text-[11px] text-ink-soft text-center">
-        ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
-        განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
-      </p>
+        <div className="flex-[3] min-h-6" />
+
+        <p className="w-full text-[11px] text-ink-soft text-center pb-12">
+          ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
+          განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
+        </p>
+      </div>
     </main>
   );
 }
