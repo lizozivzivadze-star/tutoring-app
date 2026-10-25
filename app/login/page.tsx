@@ -153,7 +153,7 @@ export default function LoginPage() {
 
 <div className="flex-1 min-h-[88px]" />
 
-<p className="w-full text-[11px] leading-4 text-ink-soft text-center px-9 pb-4">
+<p className="w-full text-[11px] leading-4 text-ink-soft text-center pb-[calc(max(1rem,env(safe-area-inset-bottom))+52px)]">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
           განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
         </p>
