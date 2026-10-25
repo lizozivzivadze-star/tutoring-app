@@ -5,6 +5,9 @@ import InstallProvider from "@/components/install-provider";
 import FeedbackButton from "@/components/feedback-button";
 import PullToRefresh from "@/components/pull-to-refresh";
 import BottomSpace from "@/components/bottom-space";
+// ერთადერთი thumbnail-ის ფაილი მთელი საიტისთვის: bookmark-ი, ბრაუზერის
+// ტაბი, ბმულის პრევიუ (Messenger, WhatsApp...). შეცვლა მხოლოდ აქ.
+const THUMBNAIL = "/icons/icon-512.png";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -12,9 +15,29 @@ import BottomSpace from "@/components/bottom-space";
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   return {
+    metadataBase: new URL(
+      process.env.NEXTAUTH_URL ?? "https://tutoring-app-dusky.vercel.app",
+    ),
     title: settings.siteTitle,
     description: settings.siteDescription,
-        appleWebApp: {
+    icons: {
+      icon: THUMBNAIL,
+      shortcut: THUMBNAIL,
+      apple: THUMBNAIL,
+    },
+    openGraph: {
+      title: settings.siteTitle,
+      description: settings.siteDescription,
+      type: "website",
+      images: [{ url: THUMBNAIL, width: 512, height: 512 }],
+    },
+    twitter: {
+      card: "summary",
+      title: settings.siteTitle,
+      description: settings.siteDescription,
+      images: [THUMBNAIL],
+    },
+    appleWebApp: {
       capable: true,
       title: "Tvinion",
       statusBarStyle: "default",
@@ -37,7 +60,6 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="theme-color" content="#564cbf" />
                 <script
           dangerouslySetInnerHTML={{
