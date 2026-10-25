@@ -21,9 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: settings.siteTitle,
     description: settings.siteDescription,
     icons: {
-      icon: THUMBNAIL,
-      shortcut: THUMBNAIL,
-      apple: THUMBNAIL,
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: THUMBNAIL, type: "image/png", sizes: "512x512" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: { url: THUMBNAIL, sizes: "512x512" },
     },
     openGraph: {
       title: settings.siteTitle,
