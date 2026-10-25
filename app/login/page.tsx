@@ -83,8 +83,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex flex-col items-center px-6 pb-4">
-      <div className="w-full max-w-sm flex flex-col">
+<main className="min-h-dvh flex flex-col items-center px-6">
+  <div className="w-full max-w-sm flex-1 flex flex-col">
         <div className="h-[53px] shrink-0" />
 
         <div className="flex flex-col items-center text-sm text-ink-soft text-center">
@@ -151,9 +151,9 @@ export default function LoginPage() {
           გააკეთა {fmt(stats?.attempts)} ტესტი.
         </p>
 
-        <div className="h-[88px] shrink-0" />
+<div className="flex-1 min-h-[88px]" />
 
-        <p className="w-full text-[11px] text-ink-soft text-center pb-12">
+<p className="w-full text-[11px] leading-4 text-ink-soft text-center px-9 pb-4">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
           განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
         </p>
