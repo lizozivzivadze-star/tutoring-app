@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import { useInstall } from "@/components/install-provider";
 import IosInstallAnimation from "@/components/ios-install-animation";
 import ProfileModal from "@/components/profile-modal";
+import ConfirmDialog from "@/components/confirm-dialog";
 import VScrollBox from "@/components/v-scroll-box";
 import {
   chromeIntentUrl,
@@ -128,6 +129,7 @@ export default function UserMenu({
   const [guide, setGuide] = useState<Guide | null>(null);
   const [copied, setCopied] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelResult, setCancelResult] = useState<{ testTitle: string; groupName: string | null; studentName: string | null }[] | null>(null);
   const { canPrompt, installed, promptInstall } = useInstall();
@@ -255,7 +257,10 @@ export default function UserMenu({
               </button>
             )}
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+onClick={() => {
+  setOpen(false);
+  setConfirmLogout(true);
+}}
               className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
             >
               გასვლა
@@ -353,7 +358,13 @@ export default function UserMenu({
         document.body
       )}
 
-            {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
+            {confirmLogout && (
+  <ConfirmDialog
+message="გსურთ აპლიკაციიდან გასვლა?"
+    onConfirm={() => signOut({ callbackUrl: "/login" })}
+    onCancel={() => setConfirmLogout(false)}
+  />
+)}
 
       {cancelResult && createPortal(
         <>
