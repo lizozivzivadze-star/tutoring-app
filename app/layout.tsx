@@ -62,8 +62,8 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
         <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png" />
         <link rel="icon" type="image/png" sizes="128x128" href="/icons/favicon-128.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icons/mascot-192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href={THUMBNAIL} />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/round-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icons/round-512.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/mascot-180.png" />
         <meta name="theme-color" content="#564cbf" />
                 <script
