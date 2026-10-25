@@ -20,20 +20,6 @@ export async function generateMetadata(): Promise<Metadata> {
     ),
     title: settings.siteTitle,
     description: settings.siteDescription,
-    icons: {
-      icon: [
-        { url: "/favicon.ico", sizes: "any" },
-        { url: "/icons/favicon-16.png", type: "image/png", sizes: "16x16" },
-        { url: "/icons/favicon-32.png", type: "image/png", sizes: "32x32" },
-        { url: "/icons/favicon-48.png", type: "image/png", sizes: "48x48" },
-        { url: "/icons/favicon-96.png", type: "image/png", sizes: "96x96" },
-        { url: "/icons/favicon-128.png", type: "image/png", sizes: "128x128" },
-        { url: "/icons/mascot-192.png", type: "image/png", sizes: "192x192" },
-        { url: THUMBNAIL, type: "image/png", sizes: "512x512" },
-      ],
-      shortcut: "/favicon.ico",
-      apple: { url: "/icons/mascot-180.png", sizes: "180x180" },
-    },
     openGraph: {
       title: settings.siteTitle,
       description: settings.siteDescription,
@@ -69,6 +55,15 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
+                <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png" />
+        <link rel="icon" type="image/png" sizes="128x128" href="/icons/favicon-128.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/mascot-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href={THUMBNAIL} />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/mascot-180.png" />
         <meta name="theme-color" content="#564cbf" />
                 <script
           dangerouslySetInnerHTML={{
