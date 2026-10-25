@@ -23,10 +23,16 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         { url: "/favicon.ico", sizes: "any" },
+        { url: "/icons/favicon-16.png", type: "image/png", sizes: "16x16" },
+        { url: "/icons/favicon-32.png", type: "image/png", sizes: "32x32" },
+        { url: "/icons/favicon-48.png", type: "image/png", sizes: "48x48" },
+        { url: "/icons/favicon-96.png", type: "image/png", sizes: "96x96" },
+        { url: "/icons/favicon-128.png", type: "image/png", sizes: "128x128" },
+        { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
         { url: THUMBNAIL, type: "image/png", sizes: "512x512" },
       ],
       shortcut: "/favicon.ico",
-      apple: { url: THUMBNAIL, sizes: "512x512" },
+      apple: { url: "/icons/apple-touch-icon.png", sizes: "180x180" },
     },
     openGraph: {
       title: settings.siteTitle,
