@@ -7,7 +7,7 @@ import PullToRefresh from "@/components/pull-to-refresh";
 import BottomSpace from "@/components/bottom-space";
 // ერთადერთი thumbnail-ის ფაილი მთელი საიტისთვის: bookmark-ი, ბრაუზერის
 // ტაბი, ბმულის პრევიუ (Messenger, WhatsApp...). შეცვლა მხოლოდ აქ.
-const THUMBNAIL = "/icons/icon-512.png";
+const THUMBNAIL = "/icons/mascot-512.png";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -28,11 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
         { url: "/icons/favicon-48.png", type: "image/png", sizes: "48x48" },
         { url: "/icons/favicon-96.png", type: "image/png", sizes: "96x96" },
         { url: "/icons/favicon-128.png", type: "image/png", sizes: "128x128" },
-        { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+        { url: "/icons/mascot-192.png", type: "image/png", sizes: "192x192" },
         { url: THUMBNAIL, type: "image/png", sizes: "512x512" },
       ],
       shortcut: "/favicon.ico",
-      apple: { url: "/icons/apple-touch-icon.png", sizes: "180x180" },
+      apple: { url: "/icons/mascot-180.png", sizes: "180x180" },
     },
     openGraph: {
       title: settings.siteTitle,
