@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import LoginPage from "./login/page";
 
 export default async function RootPage() {
   const session = await auth();
@@ -17,5 +18,7 @@ export default async function RootPage() {
     redirect("/dashboard/tester");
   }
 
-  redirect("/login");
+  // დაულოგინებელს (მათ შორის bookmark-ის/პრევიუს სერვისებს) მთავარი
+  // მისამართი რეალურ HTML-ს აძლევს icon/og:image თეგებით და არა გადამისამართებას.
+  return <LoginPage />;
 }
