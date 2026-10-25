@@ -56,6 +56,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
                 <link rel="icon" href="/favicon.ico" sizes="any" />
+                <link rel="icon" type="image/svg+xml" href="/icons/mascot.svg" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
         <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
