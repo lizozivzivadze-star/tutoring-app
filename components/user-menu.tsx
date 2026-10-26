@@ -218,10 +218,10 @@ export default function UserMenu({
               className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
             >
               <span className="inline-flex items-center justify-center shrink-0" style={{ width: 20, height: 20 }}>
-              <svg
-                width="18"
-                height="18"
-                viewBox="270 120 1210 1215"
+<svg
+  width="19"
+  height="19"
+  viewBox="270 120 1210 1215"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="64"
