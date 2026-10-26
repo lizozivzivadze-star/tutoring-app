@@ -5,6 +5,7 @@ type IconName =
   | "send-url"
   | "results"
   | "check"
+  | "check-green"
   | "profile"
   | "red-button"
   | "log-out"

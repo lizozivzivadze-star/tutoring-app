@@ -4,7 +4,6 @@ import { useState } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import StudentRow from "./student-row";
 import ConfirmDialog from "@/components/confirm-dialog";
-import UiIcon from "@/components/ui-icon";
 import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -18,6 +17,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import UiIcon from "@/components/ui-icon";
 
 const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
 
@@ -53,6 +53,7 @@ export default function GroupCard({
   const [confirmingInvite, setConfirmingInvite] = useState(false);
   const [sendingInvite, setSendingInvite] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
+  const [inviteOk, setInviteOk] = useState(false);
   const {
   attributes,
   listeners,
@@ -89,6 +90,7 @@ const studentSensors = useSensors(
 async function sendLoginPage() {
   setSendingInvite(true);
   setInviteMsg("");
+  setInviteOk(false);
   try {
     const res = await fetch(`/api/groups/${group.id}/send-login`, {
       method: "POST",
@@ -99,12 +101,17 @@ async function sendLoginPage() {
     } else if (data.failed) {
       setInviteMsg(`გაიგზავნა ${data.sent}, ვერ გაიგზავნა ${data.failed}`);
     } else {
-      setInviteMsg(`გაიგზავნა ${data.sent} მოსწავლეზე ✓`);
+      setInviteOk(true);
     }
   } catch {
     setInviteMsg("ვერ გაიგზავნა");
   }
   setSendingInvite(false);
+  // შეტყობინება/თოლია 5 წამში თავისით ქრება
+  setTimeout(() => {
+    setInviteOk(false);
+    setInviteMsg("");
+  }, 5000);
 }
 
 function handleStudentDragEnd(event: DragEndEvent) {
@@ -157,7 +164,7 @@ const studentRows = group.students.map((student, i) => (
           onClick={() => setEditing(true)}
           className="text-base text-ink-soft hover:text-marker px-1"
         >
-<UiIcon name="edit" />
+          <UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
@@ -165,6 +172,7 @@ const studentRows = group.students.map((student, i) => (
         >
           <UiIcon name="x" />
         </button>
+                {inviteOk && <UiIcon name="check-green" />}
                 <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}

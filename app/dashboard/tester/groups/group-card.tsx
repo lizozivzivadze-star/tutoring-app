@@ -50,6 +50,7 @@ export default function GroupCard({
   const [confirmingInvite, setConfirmingInvite] = useState(false);
 const [sendingInvite, setSendingInvite] = useState(false);
 const [inviteMsg, setInviteMsg] = useState("");
+const [inviteOk, setInviteOk] = useState(false);
   const {
     attributes,
     listeners,
@@ -86,6 +87,7 @@ const [inviteMsg, setInviteMsg] = useState("");
 async function sendLoginPage() {
   setSendingInvite(true);
   setInviteMsg("");
+  setInviteOk(false);
   try {
     const res = await fetch(`/api/tester/groups/${group.id}/send-login`, {
       method: "POST",
@@ -96,12 +98,17 @@ async function sendLoginPage() {
     } else if (data.failed) {
       setInviteMsg(`გაიგზავნა ${data.sent}, ვერ გაიგზავნა ${data.failed}`);
     } else {
-      setInviteMsg(`გაიგზავნა ${data.sent} მოსწავლეზე ✓`);
+      setInviteOk(true);
     }
   } catch {
     setInviteMsg("ვერ გაიგზავნა");
   }
   setSendingInvite(false);
+  // შეტყობინება/თოლია 5 წამში თავისით ქრება
+  setTimeout(() => {
+    setInviteOk(false);
+    setInviteMsg("");
+  }, 5000);
 }
 
   function handleStudentDragEnd(event: DragEndEvent) {
@@ -165,6 +172,7 @@ async function sendLoginPage() {
           <UiIcon name="x" />
         </button>
 
+        {inviteOk && <UiIcon name="check-green" />}
         <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}
