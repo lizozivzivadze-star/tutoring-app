@@ -84,13 +84,13 @@ export default function ThemeCard({
 
         <button
           onClick={() => setEditing(true)}
-          className="text-base text-ink-soft hover:text-marker px-1"
+          className="icon-btn text-ink-soft hover:text-marker"
         >
-          edit
+          <UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
+          className="icon-btn text-ink-soft hover:text-marker-hover"
         >
           <UiIcon name="x" />
         </button>
@@ -118,13 +118,13 @@ export default function ThemeCard({
                 {templateReady ? (
                   <Link
                     href={`/dashboard/tester/tests/new?themeId=${theme.id}&type=${type}`}
-                    className="text-marker font-medium glyph-btn px-2"
+                    className="icon-btn text-marker"
                   >
                     <UiIcon name="plus" />
                   </Link>
                 ) : (
                   <span
-                    className="text-ink-soft/40 cursor-not-allowed glyph-btn px-2"
+                    className="icon-btn text-ink-soft/40 cursor-not-allowed"
                     title="ეს შაბლონი ჯერ არ არის მზად"
                   >
                     <UiIcon name="plus" className="opacity-40" />

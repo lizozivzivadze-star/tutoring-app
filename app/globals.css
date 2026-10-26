@@ -68,6 +68,20 @@ body {
 }
 
 /* × და + სიმბოლოების საერთო ზომა. ერთი რიცხვი ორივესთვის. */
+/* ღილაკი, რომელშიც მხოლოდ ხატულაა: ყოველთვის 28×28, ხატულა ზუსტად შუაში,
+   ამიტომ ერთ სტრიქონზე ყველა ხატულა ერთ სიმაღლეზე დგას (ფონტის ზომისგან დამოუკიდებლად). */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
 .glyph-btn {
   font-size: 2rem;
   line-height: 1;

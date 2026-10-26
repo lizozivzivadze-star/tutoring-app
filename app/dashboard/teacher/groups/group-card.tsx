@@ -18,6 +18,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import UiIcon from "@/components/ui-icon";
+import DragHandleIcon from "@/components/drag-handle-icon";
 import SendUrlIcon from "@/components/send-url-icon";
 
 const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
@@ -165,20 +166,20 @@ const studentRows = group.students.map((student, i) => (
 
         <button
           onClick={() => setEditing(true)}
-          className="text-base text-ink-soft hover:text-marker px-1"
+          className="icon-btn text-ink-soft hover:text-marker"
         >
           <UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
+          className="icon-btn text-ink-soft hover:text-marker-hover"
         >
           <UiIcon name="x" />
         </button>
                 <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}
-          className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
+          className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
         >
           <span className="inline-flex items-center">
             <SendUrlIcon confirmed={false} />
@@ -206,10 +207,10 @@ const studentRows = group.students.map((student, i) => (
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 pl-0 pr-1 -ml-[10px] select-none text-[18px]"
+          className="cursor-grab text-ink-soft/60 pl-0 pr-1 -ml-[10px] select-none inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
-          ⠿
+          <DragHandleIcon />
         </span>
       </div>
 

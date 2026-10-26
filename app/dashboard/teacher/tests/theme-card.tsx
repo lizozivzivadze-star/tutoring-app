@@ -9,6 +9,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import HScrollText from "@/components/h-scroll-text";
 import UiIcon from "@/components/ui-icon";
+import DragHandleIcon from "@/components/drag-handle-icon";
 
 const DEFAULT_DELETE_CONFIRM =
   "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
@@ -89,13 +90,13 @@ const style = {
 
         <button
           onClick={() => setEditing(true)}
-          className="text-base text-ink-soft hover:text-marker px-1"
+          className="icon-btn text-ink-soft hover:text-marker"
         >
-          edit
+          <UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
-          className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
+          className="icon-btn text-ink-soft hover:text-marker-hover"
         >
           <UiIcon name="x" />
         </button>
@@ -103,10 +104,10 @@ const style = {
   {...attributes}
   {...listeners}
   style={{ touchAction: "none" }}
-  className="cursor-grab text-ink-soft/60 select-none px-1 text-[18px]"
+  className="cursor-grab text-ink-soft/60 select-none px-1 inline-flex items-center justify-center h-7"
   title="გადაადგილება"
 >
-  ⠿
+  <DragHandleIcon />
 </span>
       </div>
 
@@ -161,13 +162,13 @@ const style = {
                 {templateReady ? (
                   <Link
                     href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                    className="text-marker font-medium glyph-btn px-2 py-0.5 -ml-2"
+                    className="icon-btn text-marker"
                   >
                     <UiIcon name="plus" />
                   </Link>
                 ) : (
                   <span
-                    className="text-ink-soft/40 cursor-not-allowed glyph-btn px-2 py-0.5 -ml-2"
+                    className="icon-btn text-ink-soft/40 cursor-not-allowed"
                     title="ეს შაბლონი ჯერ არ არის მზად"
                   >
                     <UiIcon name="plus" className="opacity-40" />

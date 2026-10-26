@@ -81,7 +81,7 @@ export default function QuestionEditor({
         {removable && (
           <button
             onClick={onRemove}
-            className="glyph-btn text-ink-soft hover:text-marker-hover px-1 pt-2.5"
+            className="icon-btn text-ink-soft hover:text-marker-hover mt-3"
           >
             <UiIcon name="x" />
           </button>
@@ -115,7 +115,7 @@ export default function QuestionEditor({
             {question.options.length > 2 && (
               <button
                 onClick={() => removeOption(option.clientId)}
-                className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
+                className="icon-btn text-ink-soft hover:text-marker-hover"
               >
                 <UiIcon name="x" />
               </button>

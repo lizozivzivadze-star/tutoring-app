@@ -170,13 +170,13 @@ return (
           <div className="flex items-center gap-3">
             <button
               onClick={() => setEditing(true)}
-              className="text-sm text-marker font-medium"
+              className="icon-btn text-ink-soft hover:text-marker"
             >
-              edit
+              <UiIcon name="edit" />
             </button>
             <button
               onClick={() => setConfirmingDelete(true)}
-              className="glyph-btn text-ink-soft hover:text-marker-hover"
+              className="icon-btn text-ink-soft hover:text-marker-hover"
             >
               <UiIcon name="x" />
             </button>

@@ -7,6 +7,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Modal from "@/components/modal";
 import UiIcon from "@/components/ui-icon";
+import DragHandleIcon from "@/components/drag-handle-icon";
 import SendUrlIcon from "@/components/send-url-icon";
 
 function fullName(student: StudentRecord) {
@@ -76,7 +77,7 @@ export default function StudentRow({
 
 <Link
   href={`/dashboard/teacher/groups/students/${student.id}/history`}
-  className="text-xs text-ink-soft hover:text-ledger px-1 shrink-0"
+  className="icon-btn text-ink-soft hover:text-ledger"
 >
   <UiIcon name="results" />
 </Link>
@@ -84,13 +85,13 @@ export default function StudentRow({
 
 <button
   onClick={onEdit}
-  className="text-base text-ink-soft hover:text-marker px-1 shrink-0"
+  className="icon-btn text-ink-soft hover:text-marker"
 >
   <UiIcon name="edit" />
 </button>
 <button
   onClick={onDelete}
-  className="glyph-btn text-ink-soft hover:text-marker-hover px-1 shrink-0"
+  className="icon-btn text-ink-soft hover:text-marker-hover"
 >
   <UiIcon name="x" />
 </button>
@@ -98,7 +99,7 @@ export default function StudentRow({
 <button
   onClick={sendLogin}
   disabled={sendState === "sending"}
-  className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
+  className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
 >
   {sendState === "sending" ? (
     "..."
@@ -113,10 +114,10 @@ export default function StudentRow({
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 text-[18px]"
+          className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
-          ⠿
+          <DragHandleIcon />
         </span>
       </div>
 

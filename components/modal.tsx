@@ -69,11 +69,11 @@ export default function Modal({
         <div
           className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}
         >
-          <h2 className="font-display text-lg text-ink">{title}</h2>
+          <h2 className="font-display text-lg text-ink min-w-0 flex-1 pr-2">{title}</h2>
           <button
             onClick={onClose}
             aria-label="დახურვა"
-            className="glyph-btn text-ink-soft hover:text-ink"
+            className="icon-btn text-ink-soft hover:text-ink"
           >
             <UiIcon name="x" />
           </button>

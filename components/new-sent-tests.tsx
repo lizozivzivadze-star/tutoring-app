@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "@/components/ui-icon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { revealOnOpen } from "@/lib/reveal-on-open";
 import HScrollText from "@/components/h-scroll-text";
@@ -132,10 +133,10 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
                   <button
                     type="button"
                     onClick={() => setToDelete(item)}
-                    className="glyph-btn shrink-0 px-1 text-ink-soft hover:text-marker-hover"
+                    className="icon-btn text-ink-soft hover:text-marker-hover"
                     aria-label="წაშლა"
                   >
-                    ×
+                    <UiIcon name="x" />
                   </button>
                 </div>
               ))}
