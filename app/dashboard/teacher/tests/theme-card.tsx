@@ -8,6 +8,7 @@ import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import HScrollText from "@/components/h-scroll-text";
+import UiIcon from "@/components/ui-icon";
 
 const DEFAULT_DELETE_CONFIRM =
   "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
@@ -96,7 +97,7 @@ const style = {
           onClick={() => setConfirmingDelete(true)}
           className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
-          ×
+          <UiIcon name="x" />
         </button>
         <span
   {...attributes}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import StudentRow from "./student-row";
 import ConfirmDialog from "@/components/confirm-dialog";
+import UiIcon from "@/components/ui-icon";
 import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -156,20 +157,20 @@ const studentRows = group.students.map((student, i) => (
           onClick={() => setEditing(true)}
           className="text-base text-ink-soft hover:text-marker px-1"
         >
-          edit
+<UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
           className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
-          ×
+          <UiIcon name="x" />
         </button>
                 <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          {sendingInvite ? "..." : "SendURL"}
+          {sendingInvite ? "..." : <UiIcon name="send-url" />}
         </button>
 
         <span
@@ -217,7 +218,7 @@ const studentRows = group.students.map((student, i) => (
     onClick={onAddStudent}
     className="text-sm text-marker font-medium text-left hover:text-marker-hover"
   >
-    <span className="glyph-btn inline-block align-middle">+</span> მოსწავლის დამატება
+    <UiIcon name="plus" /> მოსწავლის დამატება
   </button>
 
 </div>

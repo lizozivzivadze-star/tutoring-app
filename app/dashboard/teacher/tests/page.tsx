@@ -5,6 +5,7 @@ import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
 import LoadingBar from "@/components/loading-bar";
+import UiIcon from "@/components/ui-icon";
 import {
   DndContext,
   closestCenter,
@@ -132,7 +133,7 @@ function handleThemeDragEnd(event: DragEndEvent) {
         onClick={() => setAddThemeOpen(true)}
         className="mt-2 text-base text-marker font-medium text-left hover:text-marker-hover"
       >
-        <span className="glyph-btn inline-block align-middle">+</span> თემა
+        <UiIcon name="plus" /> თემა
       </button>
 
       {addThemeOpen && (

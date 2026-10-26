@@ -7,6 +7,7 @@ import { useInstall } from "@/components/install-provider";
 import IosInstallAnimation from "@/components/ios-install-animation";
 import ProfileModal from "@/components/profile-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
+import UiIcon from "@/components/ui-icon";
 import VScrollBox from "@/components/v-scroll-box";
 import {
   chromeIntentUrl,
@@ -241,8 +242,9 @@ export default function UserMenu({
                 setOpen(false);
                 setShowProfile(true);
               }}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
             >
+            <UiIcon name="profile" />
               პროფილი
             </button>
             {showCancelPending && (
@@ -251,8 +253,9 @@ export default function UserMenu({
                   setOpen(false);
                   setConfirmCancel(true);
                 }}
-                className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap"
+                className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
               >
+                <UiIcon name="red-button" />
                 წითელი ღილაკი
               </button>
             )}
@@ -261,8 +264,9 @@ onClick={() => {
   setOpen(false);
   setConfirmLogout(true);
 }}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line"
+              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
             >
+              <UiIcon name="log-out" />
               გასვლა
             </button>
           </div>

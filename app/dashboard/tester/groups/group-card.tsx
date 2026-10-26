@@ -17,6 +17,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import UiIcon from "@/components/ui-icon";
 
 const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
 
@@ -155,13 +156,13 @@ async function sendLoginPage() {
           onClick={() => setEditing(true)}
           className="text-base text-ink-soft hover:text-marker px-1"
         >
-          edit
+          <UiIcon name="edit" />
         </button>
         <button
           onClick={() => setConfirmingDelete(true)}
           className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
-          ×
+          <UiIcon name="x" />
         </button>
 
         <button
@@ -169,7 +170,7 @@ async function sendLoginPage() {
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          {sendingInvite ? "..." : "SendURL"}
+          {sendingInvite ? "..." : <UiIcon name="send-url" />}
         </button>
         <span
           {...attributes}
@@ -216,7 +217,7 @@ async function sendLoginPage() {
     onClick={onAddStudent}
     className="text-sm text-marker font-medium text-left hover:text-marker-hover"
   >
-    <span className="glyph-btn inline-block align-middle">+</span> მოსწავლის დამატება
+    <UiIcon name="plus" /> მოსწავლის დამატება
   </button>
 </div>
         </div>

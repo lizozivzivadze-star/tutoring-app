@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import UiIcon from "@/components/ui-icon";
 
 export default function Toast({
   message,
@@ -25,7 +26,7 @@ export default function Toast({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pointer-events-none">
       <div className="w-full max-w-sm bg-white border border-marker rounded-md px-4 py-3 text-sm text-ink shadow-md flex items-center justify-center gap-2">
-        <span className="text-green-600 font-bold">✓</span>
+        <UiIcon name="check" />
         <span>{message}</span>
       </div>
     </div>

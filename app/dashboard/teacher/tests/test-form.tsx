@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import QuestionEditor, { newQuestion } from "./question-editor";
 import { QuestionDraft, TestTemplate, TYPE_LABELS } from "./types";
 import DropdownSelect from "@/components/dropdown-select";
+import UiIcon from "@/components/ui-icon";
 
 type ThemeOption = { id: string; name: string };
 
@@ -159,7 +160,7 @@ export default function TestForm({
                       }`}
                     >
                       პ{oi + 1}. {o.text}
-                      {o.isCorrect && " ✓"}
+                      {o.isCorrect && <UiIcon name="check" className="ml-1" />}
                     </p>
                   ))}
                 </div>

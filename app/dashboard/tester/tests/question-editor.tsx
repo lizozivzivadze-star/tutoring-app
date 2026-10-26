@@ -1,6 +1,7 @@
 "use client";
 
 import { QuestionDraft, OptionDraft } from "./types";
+import UiIcon from "@/components/ui-icon";
 
 function makeOption(): OptionDraft {
   return {
@@ -82,7 +83,7 @@ export default function QuestionEditor({
             onClick={onRemove}
             className="glyph-btn text-ink-soft hover:text-marker-hover px-1 pt-2.5"
           >
-            ×
+            <UiIcon name="x" />
           </button>
         )}
       </div>
@@ -116,7 +117,7 @@ export default function QuestionEditor({
                 onClick={() => removeOption(option.clientId)}
                 className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
               >
-                ×
+                <UiIcon name="x" />
               </button>
             )}
           </div>
@@ -127,7 +128,7 @@ export default function QuestionEditor({
             onClick={addOption}
             className="text-xs text-marker font-medium text-left mt-1"
           >
-            <span className="glyph-btn inline-block align-middle">+</span> პასუხის დამატება
+            <UiIcon name="plus" /> პასუხის დამატება
           </button>
         )}
       </div>

@@ -7,6 +7,7 @@ import TestForm from "../test-form";
 import { QuestionDraft, TestDetail, TYPE_LABELS } from "../types";
 import ConfirmDialog from "@/components/confirm-dialog";
 import LoadingBar from "@/components/loading-bar";
+import UiIcon from "@/components/ui-icon";
 
 function toDrafts(test: TestDetail): QuestionDraft[] {
   return test.questions.map((q) => ({
@@ -177,7 +178,7 @@ return (
               onClick={() => setConfirmingDelete(true)}
               className="glyph-btn text-ink-soft hover:text-marker-hover"
             >
-              ×
+              <UiIcon name="x" />
             </button>
           </div>
         )}
@@ -242,7 +243,7 @@ return (
                       }`}
                     >
                       პ{oi + 1}. {o.text}
-                      {o.isCorrect && " ✓"}
+                      {o.isCorrect && <UiIcon name="check" className="ml-1" />}
                     </p>
                   ))}
                 </div>

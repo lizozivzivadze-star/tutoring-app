@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import UiIcon from "@/components/ui-icon";
 
 export default function Modal({
   title,
@@ -10,7 +11,7 @@ export default function Modal({
   topAligned = false,
   onBackdropClick,
 }: {
-  title: string;
+  title: React.ReactNode;
   onClose: () => void;
   children: React.ReactNode;
   // true: popup starts right under the sticky menu (header + tabs)
@@ -74,7 +75,7 @@ export default function Modal({
             aria-label="დახურვა"
             className="glyph-btn text-ink-soft hover:text-ink"
           >
-            ×
+            <UiIcon name="x" />
           </button>
         </div>
         {children}

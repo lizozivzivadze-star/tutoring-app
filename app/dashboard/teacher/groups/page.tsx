@@ -8,6 +8,7 @@ import StudentFormModal from "./student-form-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
 import LoadingBar from "@/components/loading-bar";
 import Toast from "@/components/toast";
+import UiIcon from "@/components/ui-icon";
 
 import {
   DndContext,
@@ -195,7 +196,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
         onClick={() => setAddGroupOpen(true)}
         className="mt-2 text-base text-marker font-medium text-left hover:text-marker-hover"
       >
-        <span className="glyph-btn inline-block align-middle">+</span> ჯგუფის დამატება
+        <UiIcon name="plus" /> ჯგუფის დამატება
       </button>
 
       {addGroupOpen && (

@@ -7,6 +7,7 @@ import { QUESTION_TIME_SECONDS } from "@/lib/test-taking";
 import NewSentTests from "@/components/new-sent-tests";
 import SentTestsArchive from "@/components/sent-tests-archive";
 import CollapsibleSection from "@/components/collapsible-section";
+import UiIcon from "@/components/ui-icon";
 
 type GroupOption = {
   id: string;
@@ -291,7 +292,11 @@ className="mb-5 rounded-full bg-gold text-ink font-body font-medium
           }`}
         >
           {notice.type === "sent"
-            ? "ტესტი წარმატებით გაიგზავნა ✓"
+            ? (
+              <>
+                ტესტი წარმატებით გაიგზავნა <UiIcon name="check" />
+              </>
+            )
             : "ტესტი უკვე გაგზავნილია."}
         </p>
       )}

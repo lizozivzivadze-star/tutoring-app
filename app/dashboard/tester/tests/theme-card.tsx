@@ -6,6 +6,7 @@ import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
 import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
 import HScrollText from "@/components/h-scroll-text";
+import UiIcon from "@/components/ui-icon";
 
 const DEFAULT_DELETE_CONFIRM =
   "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
@@ -91,7 +92,7 @@ export default function ThemeCard({
           onClick={() => setConfirmingDelete(true)}
           className="glyph-btn text-ink-soft hover:text-marker-hover px-1"
         >
-          ×
+          <UiIcon name="x" />
         </button>
       </div>
 

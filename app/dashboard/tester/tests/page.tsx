@@ -6,6 +6,7 @@ import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
 import LoadingBar from "@/components/loading-bar";
 import Link from "next/link";
+import UiIcon from "@/components/ui-icon";
 
 
 export default function ThemesAndTestsTab() {
@@ -82,7 +83,7 @@ export default function ThemesAndTestsTab() {
             href="/dashboard/tester/tests/new"
             className="shrink-0 text-base text-marker font-medium hover:text-marker-hover"
           >
-            <span className="glyph-btn inline-block align-middle">+</span> ტესტი
+            <UiIcon name="plus" /> ტესტი
           </Link>
         </div>
       </div>
@@ -111,7 +112,7 @@ export default function ThemesAndTestsTab() {
         onClick={() => setAddThemeOpen(true)}
         className="mt-2 text-base text-marker font-medium text-left hover:text-marker-hover"
       >
-        <span className="glyph-btn inline-block align-middle">+</span> თემა
+        <UiIcon name="plus" /> თემა
       </button>
 
       {addThemeOpen && (

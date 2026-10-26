@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/modal";
 import { usePathname } from "next/navigation";
+import UiIcon from "@/components/ui-icon";
 
 export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,12 @@ export default function FeedbackButton() {
 
       {open && (
         <Modal
-          title="რის გაუმჯობესებას გვირჩევთ?"
+          title={
+            <span className="inline-flex items-center gap-2">
+              <UiIcon name="feedback" />
+              რის გაუმჯობესებას გვირჩევთ?
+            </span>
+          }
           onClose={close}
           topAligned
           onBackdropClick={() => {
@@ -72,7 +78,7 @@ export default function FeedbackButton() {
           {status === "sent" ? (
             <div className="flex flex-col gap-4">
               <p className="text-sm text-ink text-center">
-                მადლობა! შეტყობინება გაიგზავნა ✓
+                მადლობა! შეტყობინება გაიგზავნა <UiIcon name="check" />
               </p>
               <button
                 onClick={close}
