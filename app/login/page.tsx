@@ -223,12 +223,12 @@ export default function LoginPage() {
 
         {/* ქვედა ტექსტი */}
         <p
-          className="
-            w-full shrink-0 px-10 pb-5
-            text-center text-[11px] leading-4
-            text-ink-soft
-            lg:px-0 lg:pb-4
-          "
+className="
+  w-full shrink-0 pb-5
+  text-center text-[11px] leading-4
+  text-ink-soft
+  lg:pb-4
+"
         >
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება.
           მასალა მომზადებულია განათლების სამინისტროს
