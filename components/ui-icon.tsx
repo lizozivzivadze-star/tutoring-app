@@ -53,9 +53,9 @@ export default function UiIcon({
 style={{
   position: "absolute",
   left: SHIFT_X[name] ?? 0,
-  top: name === "results" ? 0.2 : 0,
-  width: name === "results" ? 20.1 : 20,
-  height: name === "results" ? 20.1 : 20,
+  top: name === "results" ? 0.4 : 0,
+  width: name === "results" ? 20.3 : 20,
+  height: name === "results" ? 20.3 : 20,
   maxWidth: "none",
   display: "block",
 }}
