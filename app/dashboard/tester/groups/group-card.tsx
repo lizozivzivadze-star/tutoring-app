@@ -191,7 +191,7 @@ async function sendLoginPage() {
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 pl-0 pr-1 -ml-[10px] select-none inline-flex items-center justify-center h-7"
+          className="cursor-grab text-ink-soft/60 pl-0 pr-1 select-none inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
           <DragHandleIcon />

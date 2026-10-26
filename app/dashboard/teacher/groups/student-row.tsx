@@ -114,7 +114,7 @@ export default function StudentRow({
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 px-1 select-none shrink-0 inline-flex items-center justify-center h-7"
+          className="cursor-grab text-ink-soft/60 px-1 -ml-[4px] select-none shrink-0 inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
           <DragHandleIcon />
