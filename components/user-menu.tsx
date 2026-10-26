@@ -212,10 +212,10 @@ export default function UserMenu({
 
       {open && (
         <>
-          <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-fit py-1 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-paper-line rounded-md shadow-sm w-max max-w-[calc(100vw-2rem)] py-1 overflow-hidden">
             <button
               onClick={handleAddToHome}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
+              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
             >
               <svg
                 width="16"
@@ -242,7 +242,7 @@ export default function UserMenu({
                 setOpen(false);
                 setShowProfile(true);
               }}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
             >
             <UiIcon name="profile" />
               პროფილი
@@ -253,7 +253,7 @@ export default function UserMenu({
                   setOpen(false);
                   setConfirmCancel(true);
                 }}
-                className="w-full text-left px-4 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+                className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
               >
                 <UiIcon name="red-button" />
                 წითელი ღილაკი
@@ -264,7 +264,7 @@ onClick={() => {
   setOpen(false);
   setConfirmLogout(true);
 }}
-              className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
             >
               <UiIcon name="log-out" />
               გასვლა
