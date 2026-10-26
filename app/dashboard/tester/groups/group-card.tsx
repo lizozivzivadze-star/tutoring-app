@@ -18,6 +18,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import UiIcon from "@/components/ui-icon";
+import SendUrlIcon from "@/components/send-url-icon";
 
 const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
 
@@ -172,13 +173,12 @@ async function sendLoginPage() {
           <UiIcon name="x" />
         </button>
 
-        {inviteOk && <UiIcon name="check-green" />}
         <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          {sendingInvite ? "..." : <UiIcon name="send-url" />}
+          {sendingInvite ? "..." : <SendUrlIcon confirmed={inviteOk} />}
         </button>
         <span
           {...attributes}

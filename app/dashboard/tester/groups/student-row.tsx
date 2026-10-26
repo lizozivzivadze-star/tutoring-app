@@ -7,6 +7,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Modal from "@/components/modal";
 import UiIcon from "@/components/ui-icon";
+import SendUrlIcon from "@/components/send-url-icon";
 
 function fullName(student: StudentRecord) {
   return [student.name, student.surname].filter(Boolean).join(" ") || "—";
@@ -101,12 +102,10 @@ export default function StudentRow({
 >
   {sendState === "sending" ? (
     "..."
-  ) : sendState === "sent" ? (
-    <UiIcon name="check" />
   ) : sendState === "error" ? (
     "!"
   ) : (
-    <UiIcon name="send-url" />
+    <SendUrlIcon confirmed={sendState === "sent"} durationMs={2500} />
   )}
 </button>
         <span

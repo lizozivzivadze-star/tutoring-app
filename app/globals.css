@@ -100,3 +100,38 @@ html,
 body {
   overscroll-behavior-y: none;
 }
+
+/* SendURL ხატულა <-> მწვანე თოლია: ერთ ადგილას, თანაბარი გადასვლით (fade) */
+.sendurl-wrap {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.sendurl-wrap > .sendurl-check {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.sendurl-wrap[data-confirmed="true"] > .sendurl-check {
+  animation: sendurl-check var(--d) ease-in-out forwards;
+}
+.sendurl-wrap[data-confirmed="true"] > .sendurl-icon {
+  animation: sendurl-icon var(--d) ease-in-out forwards;
+}
+@keyframes sendurl-check {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes sendurl-icon {
+  0% { opacity: 1; }
+  8% { opacity: 0; }
+  88% { opacity: 0; }
+  100% { opacity: 1; }
+}

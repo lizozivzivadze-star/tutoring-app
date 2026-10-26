@@ -7,6 +7,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Modal from "@/components/modal";
 import UiIcon from "@/components/ui-icon";
+import SendUrlIcon from "@/components/send-url-icon";
 
 function fullName(student: StudentRecord) {
   return [student.name, student.surname].filter(Boolean).join(" ") || "—";
@@ -77,7 +78,7 @@ export default function StudentRow({
   href={`/dashboard/teacher/groups/students/${student.id}/history`}
   className="text-xs text-ink-soft hover:text-ledger px-1 shrink-0"
 >
-<UiIcon name="results" />
+  <UiIcon name="results" />
 </Link>
 
 
@@ -99,15 +100,13 @@ export default function StudentRow({
   disabled={sendState === "sending"}
   className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
 >
-{sendState === "sending" ? (
-  "..."
-) : sendState === "sent" ? (
-  <UiIcon name="check" />
-) : sendState === "error" ? (
-  "!"
-) : (
-  <UiIcon name="send-url" />
-)}
+  {sendState === "sending" ? (
+    "..."
+  ) : sendState === "error" ? (
+    "!"
+  ) : (
+    <SendUrlIcon confirmed={sendState === "sent"} durationMs={2500} />
+  )}
 </button>
 
         <span
