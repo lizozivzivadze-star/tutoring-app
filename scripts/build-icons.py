@@ -21,7 +21,7 @@ ICONS = {
     "plus":       ("_.ico",          16.5),
     "edit":       ("edit.ico",       17.1),
     "send-url":   ("sendURL.ico",    19.0),
-    "results":    ("results.ico",    19.0),
+    "results":    ("results.ico",    19.5),
     "check":      ("check.ico",      17.5),
     "profile":    ("profile.ico",    17.4),
     "red-button": ("red_button.ico", 19.4),
@@ -37,10 +37,15 @@ def even(v):
 #   dy_css     -> ვერტიკალური გადაწევა CSS პიქსელებში (უარყოფითი = ზემოთ),
 #                 მრგვალდება მთელ მოწყობილობის პიქსელზე
 EXTRA = {
-    "send-url": {"gamma": 0.75, "dy_css": -0.7},
+    # dy_css: ძველი (მთელ მოწყობილობის პიქსელზე დამრგვალებული) გადაწევა;
+    # dy_extra_css: მასზე დამატებული ზუსტი წილადი გადაწევა (დადებითი = ქვემოთ),
+    #               ამიტომ ცვლილება ყველა სიმკვრივეზე (1x/2x/3x) ზუსტად იმდენია, რამდენიც მითითებულია
+    "send-url": {"gamma": 0.75, "dy_css": -0.7, "dy_extra_css": 0.2},
+    "results":  {"dy_extra_css": 0.3},
+    "profile":  {"gamma": 0.8},
 }
 
-def render(src, src_per_css, target_css, k, canvas_css=20, gamma=None, dy_css=0.0):
+def render(src, src_per_css, target_css, k, canvas_css=20, gamma=None, dy_css=0.0, dy_extra_css=0.0):
     """src: RGBA სურათი; src_per_css: რამდენი src-პიქსელია 1 CSS პიქსელზე."""
     a = src.getchannel("A").point(lambda v: 255 if v > 8 else 0)
     bb = a.getbbox()
@@ -56,8 +61,19 @@ def render(src, src_per_css, target_css, k, canvas_css=20, gamma=None, dy_css=0.
         al = al.point(lambda v: int(round(255 * ((v / 255.0) ** gamma))))
         rs = Image.merge("RGBA", (r, g, b, al))
     C = canvas_css * k
+    off = int(round(dy_css * k)) + dy_extra_css * k
+    whole = int(off // 1)
+    frac = off - whole
+    px, py = (C - nw) // 2, (C - nh) // 2 + whole
+    if frac > 1e-6:
+        # წილადი გადაწევა: 1 პიქსელიანი გამჭვირვალე ჩარჩო + ბიკუბური ძვრა (premultiplied)
+        padded = Image.new("RGBA", (nw + 2, nh + 2), (0, 0, 0, 0))
+        padded.alpha_composite(rs, (1, 1))
+        pm2 = padded.convert("RGBa").transform(padded.size, Image.AFFINE, (1, 0, 0, 0, 1, -frac), resample=Image.BICUBIC)
+        rs = pm2.convert("RGBA")
+        px, py = px - 1, py - 1
     canvas = Image.new("RGBA", (C, C), (0, 0, 0, 0))
-    canvas.alpha_composite(rs, ((C - nw) // 2, (C - nh) // 2 + int(round(dy_css * k))))
+    canvas.alpha_composite(rs, (px, py))
     return canvas
 
 for name, (fn, target) in ICONS.items():

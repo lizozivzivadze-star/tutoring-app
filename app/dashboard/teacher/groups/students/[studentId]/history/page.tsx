@@ -78,7 +78,7 @@ export default function StudentHistoryPage() {
                     <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-left whitespace-nowrap border-r border-paper-edge">თარიღი</th>
                     <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-paper-edge">შედეგი</th>
                     <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-paper-edge">დრო</th>
-                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-left whitespace-nowrap">review</th>
+                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap">review</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,10 +105,10 @@ export default function StudentHistoryPage() {
                       <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap border-r border-paper-edge align-middle">
                         {formatDuration(c.durationSeconds)}
                       </td>
-                      <td className="py-2 px-1.5 whitespace-nowrap align-middle">
+                      <td className="py-2 px-1.5 text-center whitespace-nowrap align-middle">
                         <Link
                           href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
-                          className="icon-btn text-ink-soft hover:text-ledger"
+                          className="icon-btn relative text-ink-soft hover:text-ledger after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-[2px] after:h-px after:w-5 after:bg-current"
                         >
                           <UiIcon name="results" />
                         </Link>
