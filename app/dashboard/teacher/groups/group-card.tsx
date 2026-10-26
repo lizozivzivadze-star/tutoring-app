@@ -190,7 +190,7 @@ const studentRows = group.students.map((student, i) => (
               ) : inviteOk ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src="/icons/ui/check-plain-green.png"
+                  src="/icons/ui/check-green.png"
                   alt=""
                   aria-hidden="true"
                   width={11}
