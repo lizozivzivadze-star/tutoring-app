@@ -157,9 +157,8 @@ body {
 
 /* ჯგუფის SendURL: თოლია ხატულას მარჯვნივ, დაცულ ადგილას (fade in/out 5 წმ) */
 .sendurl-slot-check {
-  width: 18px;
-  height: 18px;
-  image-rendering: pixelated;
+  width: 11px;
+  height: 12px;
   opacity: 0;
   animation: sendurl-check-quick 5000ms ease-in-out forwards;
 }

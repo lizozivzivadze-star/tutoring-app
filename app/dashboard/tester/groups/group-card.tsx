@@ -180,20 +180,20 @@ async function sendLoginPage() {
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          <span className="inline-flex items-center gap-1">
+          <span className="inline-flex items-center gap-0.5">
             <SendUrlIcon confirmed={false} />
             {/* ხატულის მარჯვნივ დაცული ადგილი: "..." და თოლია აქ ჩნდება, არაფერი არ იცვლის ადგილს */}
-            <span className="inline-flex items-center justify-center w-[18px] h-5">
+            <span className="inline-flex items-center justify-center w-[11px] h-5">
               {sendingInvite ? (
                 "..."
               ) : inviteOk ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src="/icons/ui/check-green.png"
+                  src="/icons/ui/check-plain-green.png"
                   alt=""
                   aria-hidden="true"
-                  width={18}
-                  height={18}
+                  width={11}
+                  height={12}
                   draggable={false}
                   className="sendurl-slot-check"
                 />
