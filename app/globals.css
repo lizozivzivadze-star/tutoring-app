@@ -123,6 +123,8 @@ body {
   height: 20px;
   flex-shrink: 0;
   vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
 }
 .sendurl-wrap > .sendurl-check {
   position: absolute;
