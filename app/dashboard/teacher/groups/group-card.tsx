@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import StudentRow from "./student-row";
 import ConfirmDialog from "@/components/confirm-dialog";
@@ -55,6 +55,7 @@ export default function GroupCard({
   const [sendingInvite, setSendingInvite] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
   const [inviteOk, setInviteOk] = useState(false);
+  const inviteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
   attributes,
   listeners,
@@ -109,7 +110,8 @@ async function sendLoginPage() {
   }
   setSendingInvite(false);
   // შეტყობინება/თოლია 5 წამში თავისით ქრება
-  setTimeout(() => {
+  if (inviteTimer.current) clearTimeout(inviteTimer.current);
+  inviteTimer.current = setTimeout(() => {
     setInviteOk(false);
     setInviteMsg("");
   }, 5000);
@@ -178,7 +180,25 @@ const studentRows = group.students.map((student, i) => (
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          {sendingInvite ? "..." : <SendUrlIcon confirmed={inviteOk} />}
+          {sendingInvite ? (
+            "..."
+          ) : (
+            <span className="relative inline-block">
+              <SendUrlIcon confirmed={false} />
+              {inviteOk && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/icons/ui/check-green.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={14}
+                  height={14}
+                  draggable={false}
+                  className="sendurl-beside"
+                />
+              )}
+            </span>
+          )}
         </button>
 
         <span
