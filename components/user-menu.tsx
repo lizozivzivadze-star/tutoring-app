@@ -253,7 +253,7 @@ export default function UserMenu({
                   setOpen(false);
                   setConfirmCancel(true);
                 }}
-                className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-marker hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+                className="w-full text-left pl-4 pr-6 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
               >
                 <UiIcon name="red-button" />
                 წითელი ღილაკი
@@ -350,7 +350,7 @@ onClick={() => {
                 <button
                   onClick={handleCancelPending}
                   disabled={cancelling}
-                  className="flex-1 rounded-full bg-gold text-ink text-sm font-medium py-2 disabled:opacity-50"
+                  className="flex-1 rounded-full bg-red-600 text-white text-sm font-medium py-2 disabled:opacity-50"
                 >
                   {cancelling ? "..." : "დიახ"}
                 </button>
