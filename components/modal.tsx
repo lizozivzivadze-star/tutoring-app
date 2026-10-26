@@ -79,7 +79,7 @@ export default function Modal({
         >
           {feedbackLayout ? (
   <>
-    <div className="relative h-12 mb-0">
+    <div className="relative h-[38px] mb-0">
       <button
         onClick={onClose}
         aria-label="დახურვა"
