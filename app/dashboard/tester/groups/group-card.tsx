@@ -180,10 +180,10 @@ async function sendLoginPage() {
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          <span className="inline-flex items-center gap-0.5">
+          <span className="inline-flex items-center">
             <SendUrlIcon confirmed={false} />
             {/* ხატულის მარჯვნივ დაცული ადგილი: "..." და თოლია აქ ჩნდება, არაფერი არ იცვლის ადგილს */}
-            <span className="inline-flex items-center justify-center w-[11px] h-5">
+            <span className="inline-flex items-center justify-center w-[11px] h-5 ml-[5px]">
               {sendingInvite ? (
                 "..."
               ) : inviteOk ? (
@@ -205,7 +205,7 @@ async function sendLoginPage() {
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 px-1 select-none text-[18px]"
+          className="cursor-grab text-ink-soft/60 pl-0 pr-1 -ml-[10px] select-none text-[18px]"
           title="გადაადგილება"
         >
           ⠿
