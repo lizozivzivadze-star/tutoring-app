@@ -151,9 +151,9 @@ export default function LoginPage() {
           გააკეთა {fmt(stats?.attempts)} ტესტი.
         </p>
 
-<div className="flex-1 min-h-0" />
+<div className="flex-1 lg:flex-[2_1_0%] min-h-0" />
 
-<p className="w-full text-[11px] leading-4 text-ink-soft text-center pb-[calc(max(1rem,env(safe-area-inset-bottom))+52px)]">
+<p className="w-full text-[11px] leading-4 text-ink-soft text-center pb-[calc(max(1rem,env(safe-area-inset-bottom))+52px)] lg:pb-4">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
           განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
         </p>
