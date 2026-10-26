@@ -21,7 +21,7 @@ const V = 4;
 const SHIFT_X: Partial<Record<IconName, number>> = {
   profile: -1.4,
   "red-button": -1.4,
-  "log-out": -2,
+  "log-out": -2.2,
 };
 
 const SHIFT_Y: Partial<Record<IconName, number>> = {
