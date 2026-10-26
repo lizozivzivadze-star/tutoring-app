@@ -64,7 +64,7 @@ export default function FeedbackButton() {
       {open && (
         <Modal
           title={
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 whitespace-nowrap">
               <UiIcon name="feedback" />
               რის გაუმჯობესებას გვირჩევთ?
             </span>

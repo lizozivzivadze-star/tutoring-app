@@ -150,8 +150,8 @@ async function sendLoginPage() {
             onChange={(e) => setDraftName(e.target.value)}
             onBlur={saveRename}
             onKeyDown={(e) => e.key === "Enter" && saveRename()}
-            className="flex-1 border border-marker rounded-sm px-2 py-1 text-ink
-                       focus:outline-none"
+className="flex-1 min-w-0 border border-marker rounded-sm px-2 py-1 text-ink
+           focus:outline-none"
           />
         ) : (
           <button
