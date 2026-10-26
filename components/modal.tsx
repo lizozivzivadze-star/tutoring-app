@@ -85,7 +85,7 @@ export default function Modal({
     aria-label="დახურვა"
     className="icon-btn text-ink-soft hover:text-ink"
     style={{
-      transform: "translate(18px, 12px)",
+      transform: "translate(18px, -12px)",
     }}
   >
     <UiIcon name="x" />
