@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -8,12 +9,16 @@ export default function BottomSpace() {
 
   useEffect(() => {
     const body = document.body;
+    const isLoginPage = pathname === "/login" || pathname === "/";
 
     function update() {
-      body.style.paddingBottom = "0px";
+      // Login გვერდზე დამატებითი ქვედა სივრცე არ გვჭირდება
+      if (isLoginPage) {
+        body.style.paddingBottom = "0px";
+        return;
+      }
 
-      // Login გვერდზე დამატებითი 50px არ გვჭირდება
-      if ((pathname === "/login" || pathname === "/")) return;
+      body.style.paddingBottom = "0px";
 
       const overflows =
         document.documentElement.scrollHeight > window.innerHeight + 1;
@@ -22,7 +27,11 @@ export default function BottomSpace() {
     }
 
     function canScrollInside(el: Element | null) {
-      while (el && el !== document.body && el !== document.documentElement) {
+      while (
+        el &&
+        el !== document.body &&
+        el !== document.documentElement
+      ) {
         const s = getComputedStyle(el);
 
         if (
@@ -46,14 +55,10 @@ export default function BottomSpace() {
     }
 
     function onTouchMove(e: TouchEvent) {
-      if (e.touches.length !== 1) return;
+      // Login გვერდზე არ ვბლოკავთ თითით გადაადგილებას
+      if (isLoginPage) return;
 
-      // Login გვერდზე ფონის სქროლი დაიბლოკოს
-      if ((pathname === "/login" || pathname === "/")) {
-        if (canScrollInside(e.target as Element)) return;
-        e.preventDefault();
-        return;
-      }
+      if (e.touches.length !== 1) return;
 
       const fits =
         document.documentElement.scrollHeight <= window.innerHeight + 1;
@@ -70,7 +75,13 @@ export default function BottomSpace() {
     ro.observe(body);
 
     window.addEventListener("resize", update);
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    // Login გვერდზე touchmove ბლოკირების ფუნქციას საერთოდ არ ვრთავთ
+    if (!isLoginPage) {
+      window.addEventListener("touchmove", onTouchMove, {
+        passive: false,
+      });
+    }
 
     return () => {
       ro.disconnect();
