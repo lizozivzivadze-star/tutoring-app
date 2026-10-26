@@ -136,15 +136,16 @@ body {
   100% { opacity: 1; }
 }
 
-/* მწვანე თოლია SendURL ხატულას მარცხნივ, გვერდით (ხატულა რჩება). fade in/out 5 წმ */
-.sendurl-beside {
-  position: absolute;
-  right: calc(100% + 2px);
-  top: 3px;
-  width: 14px;
-  height: 14px;
-  image-rendering: pixelated;
-  pointer-events: none;
+/* მწვანე თოლია ჯგუფის SendURL-ის ადგილას: ... -> თოლია (fade 5 წმ) -> ხატულა */
+.sendurl-ok {
   opacity: 0;
   animation: sendurl-check 5000ms ease-in-out forwards;
+}
+.sendurl-back {
+  display: inline-block;
+  animation: sendurl-back-in 250ms ease-out;
+}
+@keyframes sendurl-back-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
