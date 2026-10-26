@@ -13,7 +13,7 @@ export default function BottomSpace() {
       body.style.paddingBottom = "0px";
 
       // Login გვერდზე დამატებითი 50px არ გვჭირდება
-      if (pathname === "/login") return;
+      if ((pathname === "/login" || pathname === "/")) return;
 
       const overflows =
         document.documentElement.scrollHeight > window.innerHeight + 1;
@@ -49,7 +49,7 @@ export default function BottomSpace() {
       if (e.touches.length !== 1) return;
 
       // Login გვერდზე ფონის სქროლი დაიბლოკოს
-      if (pathname === "/login") {
+      if ((pathname === "/login" || pathname === "/")) {
         if (canScrollInside(e.target as Element)) return;
         e.preventDefault();
         return;
