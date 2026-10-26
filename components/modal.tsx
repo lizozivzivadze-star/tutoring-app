@@ -67,7 +67,7 @@ export default function Modal({
       <div
         ref={cardRef}
         className={`bg-white rounded-md border border-paper-line w-full max-w-sm ${
-  feedbackLayout ? "px-6 pt-3 pb-6" : "px-6 py-6"
+  feedbackLayout ? "px-6 pt-0 pb-6" : "px-6 py-6"
 }`}
       >
         <div
@@ -79,7 +79,7 @@ export default function Modal({
         >
           {feedbackLayout ? (
   <>
-    <div className="relative h-[36px] mb-1">
+    <div className="relative h-12 mb-0">
       <button
         onClick={onClose}
         aria-label="დახურვა"
