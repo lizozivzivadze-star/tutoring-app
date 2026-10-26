@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import StudentRow from "./student-row";
 import ConfirmDialog from "@/components/confirm-dialog";
@@ -52,6 +52,7 @@ export default function GroupCard({
 const [sendingInvite, setSendingInvite] = useState(false);
 const [inviteMsg, setInviteMsg] = useState("");
 const [inviteOk, setInviteOk] = useState(false);
+const inviteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
     attributes,
     listeners,
@@ -106,7 +107,8 @@ async function sendLoginPage() {
   }
   setSendingInvite(false);
   // შეტყობინება/თოლია 5 წამში თავისით ქრება
-  setTimeout(() => {
+  if (inviteTimer.current) clearTimeout(inviteTimer.current);
+  inviteTimer.current = setTimeout(() => {
     setInviteOk(false);
     setInviteMsg("");
   }, 5000);
@@ -178,7 +180,28 @@ async function sendLoginPage() {
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          {sendingInvite ? "..." : <SendUrlIcon confirmed={inviteOk} />}
+          <span className="relative inline-block w-5 h-5">
+            <SendUrlIcon confirmed={false} />
+            {sendingInvite && (
+              <span className="sendurl-beside leading-none text-ink-soft">...</span>
+            )}
+            {!sendingInvite && inviteOk && (
+              <svg
+                viewBox="0 0 20 20"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="#16a34a"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="sendurl-beside sendurl-ok"
+              >
+                <path d="M3.5 10.5l4.5 4.5 8.5-10" />
+              </svg>
+            )}
+          </span>
         </button>
         <span
           {...attributes}
