@@ -206,11 +206,13 @@ useEffect(() => {
           <div className="text-sm text-ink-soft mb-6 text-center flex flex-col gap-4">
   <p>ტესტში {test.questions.length} შეკითხვაა.</p>
   <p>თითოეულს პასუხის 4 ვარიანტი აქვს, რომელთაგან 1 არის სწორი.</p>
-  {test.timerEnabled && (
+  {test.timerEnabled ? (
     <p>
       თითო შეკითხვაზე გაქვთ {QUESTION_TIME_SECONDS} წამი სწორი პასუხის
       მოსანიშნად.
     </p>
+  ) : (
+    <p>შეკითხვებზე პასუხის გაცემისთვის დრო შეზღუდული არ გაქვთ.</p>
   )}
   {test.instruction && (
     <p className="whitespace-pre-line">
