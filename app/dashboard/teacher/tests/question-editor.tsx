@@ -128,7 +128,7 @@ export default function QuestionEditor({
             onClick={addOption}
             className="text-xs text-marker font-medium text-left mt-1"
           >
-            + პასუხის დამატება
+            <UiIcon name="plus" /> პასუხის დამატება
           </button>
         )}
       </div>

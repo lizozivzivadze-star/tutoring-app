@@ -120,14 +120,14 @@ export default function ThemeCard({
                     href={`/dashboard/tester/tests/new?themeId=${theme.id}&type=${type}`}
                     className="text-marker font-medium glyph-btn px-2"
                   >
-                    +
+                    <UiIcon name="plus" />
                   </Link>
                 ) : (
                   <span
                     className="text-ink-soft/40 cursor-not-allowed glyph-btn px-2"
                     title="ეს შაბლონი ჯერ არ არის მზად"
                   >
-                    +
+                    <UiIcon name="plus" className="opacity-40" />
                   </span>
                 )}
               </div>

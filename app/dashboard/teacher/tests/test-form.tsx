@@ -182,7 +182,7 @@ export default function TestForm({
             onClick={() => setQuestions((prev) => [...prev, newQuestion()])}
             className="text-sm text-marker font-medium text-left"
           >
-            + კითხვის დამატება
+            <UiIcon name="plus" /> კითხვის დამატება
           </button>
         )}
       </div>
