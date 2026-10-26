@@ -19,9 +19,9 @@ const V = 4;
 
 // ოპტიკური გასწორება მთელ CSS პიქსელზე (უარყოფითი = მარცხნივ)
 const SHIFT_X: Partial<Record<IconName, number>> = {
-  profile: -1,
-  "red-button": -1,
-  "log-out": -1,
+  profile: -1.2,
+  "red-button": -1.2,
+  "log-out": -1.5,
 };
 
 export default function UiIcon({
