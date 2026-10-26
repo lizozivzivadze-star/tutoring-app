@@ -53,10 +53,10 @@ export default function FeedbackButton() {
       <button
         onClick={() => setOpen(true)}
         aria-label="რის გაუმჯობესებას გვირჩევთ?"
-        className="fixed left-4 z-40 w-9 h-9 rounded-full border border-ink-soft/50
+        className="fixed left-2 z-40 w-9 h-9 rounded-full border border-ink-soft/50
                    bg-white text-ink-soft text-base font-medium shadow-sm
                    hover:text-marker hover:border-marker transition-colors"
-        style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
+        style={{ bottom: "max(0.625rem, env(safe-area-inset-bottom))" }}
       >
         ?
       </button>
