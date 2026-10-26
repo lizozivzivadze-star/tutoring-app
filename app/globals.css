@@ -182,3 +182,12 @@ body {
   pointer-events: none;
   animation: sendurl-check-quick 5000ms ease-in-out forwards;
 }
+
+/* გაგზავნისას Send URL იმალება და პირდაპირ თოლია ჩნდება */
+.sendurl-wrap[data-confirmed="true"] > .sendurl-icon {
+  animation: sendurl-icon-hidden var(--d) ease-in-out forwards;
+}
+
+.sendurl-wrap[data-confirmed="true"] > .sendurl-check {
+  animation: sendurl-check-quick var(--d) ease-in-out forwards;
+}
