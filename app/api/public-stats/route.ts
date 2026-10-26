@@ -17,15 +17,37 @@ export async function GET() {
     theme: { tester: { teacherAccess: { some: {} } } },
   };
 
+  // ითვლება მხოლოდ მასწავლებლების ჯგუფებში მომხდარი აქტივობა.
+  // tester-ის (სატესტო) ანგარიშები სტატისტიკაში არ შედის.
+  const teacherGroup = { teacherId: { not: null } };
+  const sentByTeacher = {
+    OR: [
+      { group: teacherGroup },
+      { student: { group: teacherGroup } },
+    ],
+  };
+  const studentOfTeacher = { student: { group: teacherGroup } };
+
   const [tests, questions, teachers, sentTests, attempts, students] =
     await Promise.all([
       prisma.test.count({ where: visible }),
       prisma.question.count({ where: { test: visible } }),
-      prisma.teacher.count(),
-      prisma.sentTest.count(),
-      prisma.testAttempt.count(),
+      prisma.teacher.count({
+        where: {
+          groups: {
+            some: {
+              OR: [
+                { sentTests: { some: {} } },
+                { students: { some: { sentTests: { some: {} } } } },
+              ],
+            },
+          },
+        },
+      }),
+      prisma.sentTest.count({ where: sentByTeacher }),
+      prisma.testAttempt.count({ where: studentOfTeacher }),
       prisma.testAttempt
-        .groupBy({ by: ["studentId"] })
+        .groupBy({ by: ["studentId"], where: studentOfTeacher })
         .then((rows) => rows.length),
     ]);
 
