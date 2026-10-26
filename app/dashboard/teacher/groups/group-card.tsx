@@ -180,28 +180,26 @@ const studentRows = group.students.map((student, i) => (
           disabled={sendingInvite || group.students.length === 0}
           className="text-xs text-ink-soft hover:text-marker px-1 shrink-0 disabled:opacity-50"
         >
-          <span className="inline-flex items-center justify-center w-5 h-5">
-            {sendingInvite ? (
-              "..."
-            ) : inviteOk ? (
+          <span className="relative inline-block w-5 h-5">
+            <SendUrlIcon confirmed={false} />
+            {sendingInvite && (
+              <span className="sendurl-beside leading-none text-ink-soft">...</span>
+            )}
+            {!sendingInvite && inviteOk && (
               <svg
                 viewBox="0 0 20 20"
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 fill="none"
                 stroke="#16a34a"
-                strokeWidth="2.6"
+                strokeWidth="2.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
-                className="sendurl-ok"
+                className="sendurl-beside sendurl-ok"
               >
-                <path d="M4 10.5l4 4 8-9" />
+                <path d="M3.5 10.5l4.5 4.5 8.5-10" />
               </svg>
-            ) : (
-              <span className="sendurl-back">
-                <SendUrlIcon confirmed={false} />
-              </span>
             )}
           </span>
         </button>
