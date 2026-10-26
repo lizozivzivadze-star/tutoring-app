@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import UiIcon from "@/components/ui-icon";
 import { copyText, detectInstallEnv, getEnvSignals } from "@/lib/install-env";
 
 function ContinueForm() {
@@ -59,7 +60,13 @@ function ContinueForm() {
             onClick={handleCopy}
             className="mt-3 w-full rounded-full border-2 border-paper-line text-ink-soft font-medium py-2"
           >
-            {copied ? "დაკოპირდა ✓" : "ბმულის დაკოპირება"}
+            {copied ? (
+              <span className="inline-flex items-center gap-1">
+                დაკოპირდა <UiIcon name="check" />
+              </span>
+            ) : (
+              "ბმულის დაკოპირება"
+            )}
           </button>
           <p className="text-ink-soft/80 mt-3">
             თუ არ გაიხსნა, დააკოპირეთ ბმული და ჩასვით Safari-ში.
