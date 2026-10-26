@@ -17,11 +17,11 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "public", "icons", "ui")
 # სახელი -> (ico ფაილი, სასურველი ზომა CSS პიქსელში: შიგთავსის უდიდესი გვერდი)
 # ზომები იგივეა, რაც ადრე ხელით იყო მორგებული (ძველი FIT-ის s * შიგთავსი).
 ICONS = {
-    "x":          ("x.ico",          17.1),
+    "x":          ("x.ico",          16.1),
     "plus":       ("_.ico",          16.5),
     "edit":       ("edit.ico",       17.1),
-    "send-url":   ("sendURL.ico",    18.0),
-    "results":    ("results.ico",    18.0),
+    "send-url":   ("sendURL.ico",    19.0),
+    "results":    ("results.ico",    19.0),
     "check":      ("check.ico",      17.5),
     "profile":    ("profile.ico",    17.4),
     "red-button": ("red_button.ico", 19.4),
