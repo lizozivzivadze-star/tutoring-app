@@ -2,8 +2,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect, FormEvent } from "react";
 import Image from "next/image";
+import { useState, useEffect, FormEvent, CSSProperties } from "react";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -27,6 +27,25 @@ export default function LoginPage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   const router = useRouter();
+
+  const [appH, setAppH] = useState<number | null>(null);
+
+useEffect(() => {
+  const measure = () => {
+    const h = Math.min(
+      window.innerHeight,
+      document.documentElement.clientHeight
+    );
+    if (h > 0) setAppH(Math.round(h));
+  };
+  measure();
+  window.addEventListener("resize", measure);
+  window.addEventListener("orientationchange", measure);
+  return () => {
+    window.removeEventListener("resize", measure);
+    window.removeEventListener("orientationchange", measure);
+  };
+}, []);
 
   useEffect(() => {
     fetch("/api/public-stats")
@@ -96,22 +115,25 @@ export default function LoginPage() {
   return (
     <main
       data-no-ptr
+      style={
+        { "--app-h": appH ? `${appH}px` : "100dvh" } as CSSProperties
+      }
       className="
-        flex h-dvh flex-col items-center
-        overflow-hidden px-6
+        flex h-[var(--app-h)] flex-col items-center
+        overflow-y-auto overflow-x-hidden px-6
         lg:h-auto lg:min-h-dvh lg:overflow-visible
       "
     >
       <div
-        className="
-          flex h-full min-h-0 w-full max-w-sm flex-col
-          lg:h-auto lg:flex-1
-        "
+className="
+  flex min-h-full w-full max-w-sm flex-col
+  lg:h-auto lg:flex-1
+"
       >
         {/* ზედა სივრცე */}
         <div
           className="
-            h-[clamp(20px,6.625dvh,53px)]
+            h-[clamp(20px,calc(var(--app-h)*0.06625),53px)]
             shrink-0 lg:h-[53px]
           "
         />
@@ -135,7 +157,7 @@ export default function LoginPage() {
         {/* მეორე ზედა სივრცე */}
         <div
           className="
-            h-[clamp(20px,6.625dvh,53px)]
+            h-[clamp(20px,calc(var(--app-h)*0.06625),53px)]
             shrink-0 lg:h-[53px]
           "
         />
