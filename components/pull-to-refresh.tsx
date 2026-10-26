@@ -73,7 +73,7 @@ export default function PullToRefresh() {
     }
 
     function onStart(e: TouchEvent) {
-      if (pathname === "/login") return;
+      if (((pathname === "/login" || pathname === "/") || pathname === "/")) return;
       if (e.touches.length !== 1 || window.scrollY > 0) return;
       const t = e.target as Element;
       // ველები, ფანჯრები (.fixed) და ელემენტები data-no-ptr-ით გამოვრიცხოთ
@@ -83,7 +83,7 @@ export default function PullToRefresh() {
     }
 
     function onMove(e: TouchEvent) {
-      if (pathname === "/login") return;
+      if (((pathname === "/login" || pathname === "/") || pathname === "/")) return;
       if (startY.current === null) return;
       const dy = e.touches[0].clientY - startY.current;
       if (dy <= 0 || window.scrollY > 0) {
@@ -98,7 +98,7 @@ export default function PullToRefresh() {
     }
 
  function onEnd() {
-  if (pathname === "/login") {
+  if ((pathname === "/login" || pathname === "/")) {
     reset();
     return;
   }
