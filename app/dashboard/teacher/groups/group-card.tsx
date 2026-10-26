@@ -181,26 +181,11 @@ const studentRows = group.students.map((student, i) => (
           disabled={sendingInvite || group.students.length === 0}
           className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
         >
-          <span className="inline-flex items-center">
-            <SendUrlIcon confirmed={false} />
-            {/* ხატულის მარჯვნივ დაცული ადგილი: "..." და თოლია აქ ჩნდება, არაფერი არ იცვლის ადგილს */}
-            <span className="inline-flex items-center justify-center w-[11px] h-5 ml-[5px]">
-              {sendingInvite ? (
-                "..."
-              ) : inviteOk ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src="/icons/ui/check-green.png"
-                  alt=""
-                  aria-hidden="true"
-                  width={11}
-                  height={12}
-                  draggable={false}
-                  className="sendurl-slot-check"
-                />
-              ) : null}
-            </span>
-          </span>
+          {sendingInvite ? (
+            "..."
+          ) : (
+            <SendUrlIcon confirmed={inviteOk} durationMs={2500} />
+          )}
         </button>
 
         <span

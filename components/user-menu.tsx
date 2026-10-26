@@ -219,8 +219,8 @@ export default function UserMenu({
             >
               <span className="inline-flex items-center justify-center shrink-0" style={{ width: 20, height: 20 }}>
               <svg
-                width="17"
-                height="17"
+                width="16.5"
+                height="16.5"
                 viewBox="270 120 1210 1215"
                 fill="none"
                 stroke="currentColor"

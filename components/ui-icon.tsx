@@ -15,16 +15,17 @@ type IconName =
 // ველშია: s = მასშტაბი (ყველას ერთნაირი სიდიდე), ox/oy = გადაწევა (ცენტრში).
 // მნიშვნელობები გამოთვლილია თითოეული სურათის ზუსტი საზღვრებიდან.
 const FIT: Partial<Record<IconName, { s: number; ox: number; oy: number }>> = {
-  x: { s: 1.2, ox: -1.8, oy: -1.8 },
-  plus: { s: 0.944, ox: 0.71, oy: 0.56 },
-  edit: { s: 1.02, ox: -0.2, oy: -0.2 },
-  "send-url": { s: 0.927, ox: 0.88, oy: -0.51 },
-  results: { s: 0.911, ox: 1.5, oy: 0.89 },
-  profile: { s: 1.133, ox: -1.14, oy: -1.52 },
-  "log-out": { s: 0.911, ox: 1.04, oy: 0.89 },
-  "red-button": { s: 1.109, ox: -1.09, oy: -3.12 },
-  feedback: { s: 0.944, ox: 0.87, oy: 0.24 },
-  check: { s: 1.062, ox: -0.09, oy: -0.62 },
+  x: { s: 1.222, ox: -2.02, oy: -2.22 },
+  plus: { s: 0.917, ox: 0.83, oy: 0.83 },
+  edit: { s: 0.952, ox: 0.48, oy: 0.48 },
+  "send-url": { s: 0.946, ox: 0.69, oy: -0.73 },
+  results: { s: 0.901, ox: 1.74, oy: 1.14 },
+  profile: { s: 1.088, ox: -0.88, oy: -1.06 },
+  "log-out": { s: 0.935, ox: 0.65, oy: 0.65 },
+  "red-button": { s: 1.213, ox: -2.33, oy: -4.35 },
+  feedback: { s: 0.925, ox: 1.06, oy: 0.28 },
+  "check-green": { s: 1.031, ox: 0.03, oy: -0.31 },
+  check: { s: 1.031, ox: 0.03, oy: -0.31 },
 };
 
 export default function UiIcon({
@@ -34,6 +35,7 @@ export default function UiIcon({
   name: IconName;
   className?: string;
 }) {
+  // მწვანე თოლიას 1x და @3x ორიგინალი სხვადასხვა ფორმისაა: ყველგან @3x (წრე) ჩანს
   const f = FIT[name] ?? { s: 1, ox: 0, oy: 0 };
   return (
     <span
@@ -43,8 +45,12 @@ export default function UiIcon({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`/icons/ui/${name}.png`}
-        srcSet={`/icons/ui/${name}.png 1x, /icons/ui/${name}@2x.png 2x, /icons/ui/${name}@3x.png 3x`}
+        src={name === "check-green" ? "/icons/ui/check-green@3x.png" : `/icons/ui/${name}.png`}
+        srcSet={
+          name === "check-green"
+            ? undefined
+            : `/icons/ui/${name}.png 1x, /icons/ui/${name}@2x.png 2x, /icons/ui/${name}@3x.png 3x`
+        }
         alt=""
         draggable={false}
         style={{
