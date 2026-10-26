@@ -97,8 +97,12 @@ export default function PullToRefresh() {
       moveShell(pullRef.current, false);
     }
 
-    function onEnd() {
-      if (startY.current === null) return;
+ function onEnd() {
+  if (pathname === "/login") {
+    reset();
+    return;
+  }
+  if (startY.current === null) return;
       const reached = pullRef.current >= THRESHOLD;
       startY.current = null;
       if (reached) {
