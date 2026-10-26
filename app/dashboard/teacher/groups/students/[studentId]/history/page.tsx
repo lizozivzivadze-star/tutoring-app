@@ -6,6 +6,7 @@ import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
 import VScrollBox from "@/components/v-scroll-box";
 import { formatDate, formatDuration } from "@/lib/format-time";
+import UiIcon from "@/components/ui-icon";
 
 type CompletedTest = {
   attemptId: string;
@@ -107,9 +108,9 @@ export default function StudentHistoryPage() {
                       <td className="py-2 px-1.5 whitespace-nowrap align-middle">
                         <Link
                           href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
-                          className="text-marker font-medium"
+                          className="icon-btn text-ink-soft hover:text-ledger"
                         >
-                          review
+                          <UiIcon name="results" />
                         </Link>
                       </td>
                     </tr>
