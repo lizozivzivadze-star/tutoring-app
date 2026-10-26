@@ -32,7 +32,15 @@ ICONS = {
 def even(v):
     return max(2, int(round(v / 2.0)) * 2)
 
-def render(src, src_per_css, target_css, k):
+# დამატებითი პარამეტრები ცალკეული ხატულისთვის:
+#   gamma < 1  -> თხელი ხაზები უფრო მუქი (ალფა-არხი)
+#   dy_css     -> ვერტიკალური გადაწევა CSS პიქსელებში (უარყოფითი = ზემოთ),
+#                 მრგვალდება მთელ მოწყობილობის პიქსელზე
+EXTRA = {
+    "send-url": {"gamma": 0.75, "dy_css": -0.7},
+}
+
+def render(src, src_per_css, target_css, k, canvas_css=20, gamma=None, dy_css=0.0):
     """src: RGBA სურათი; src_per_css: რამდენი src-პიქსელია 1 CSS პიქსელზე."""
     a = src.getchannel("A").point(lambda v: 255 if v > 8 else 0)
     bb = a.getbbox()
@@ -43,19 +51,27 @@ def render(src, src_per_css, target_css, k):
     pm = crop.convert("RGBa")
     pm = pm.resize((nw, nh), Image.LANCZOS) if (nw, nh) != (w, h) else pm
     rs = pm.convert("RGBA")
-    canvas = Image.new("RGBA", (20 * k, 20 * k), (0, 0, 0, 0))
-    canvas.alpha_composite(rs, ((20 * k - nw) // 2, (20 * k - nh) // 2))
+    if gamma:
+        r, g, b, al = rs.split()
+        al = al.point(lambda v: int(round(255 * ((v / 255.0) ** gamma))))
+        rs = Image.merge("RGBA", (r, g, b, al))
+    C = canvas_css * k
+    canvas = Image.new("RGBA", (C, C), (0, 0, 0, 0))
+    canvas.alpha_composite(rs, ((C - nw) // 2, (C - nh) // 2 + int(round(dy_css * k))))
     return canvas
 
 for name, (fn, target) in ICONS.items():
     src = Image.open(os.path.join(SRC, fn)).convert("RGBA")
     assert src.size == (20, 20), (fn, src.size)
     for k, suffix in ((1, ""), (2, "@2x"), (3, "@3x")):
-        render(src, 1, target, k).save(os.path.join(OUT, f"{name}{suffix}.png"))
+        render(src, 1, target, k, **EXTRA.get(name, {})).save(os.path.join(OUT, f"{name}{suffix}.png"))
 
 # მწვანე თოლია: წყარო არის არსებული 60x60 (@3x) ფაილი (ორიგინალი ინახება .orig-ში)
 g_src_path = os.path.join(os.path.dirname(__file__), "icon-sources", "check-green@3x.orig.png")
 g = Image.open(g_src_path).convert("RGBA")
 for k, suffix in ((1, ""), (2, "@2x"), (3, "@3x")):
     render(g, 3, ICONS["check"][1], k).save(os.path.join(OUT, f"check-green{suffix}.png"))
+# პატარა მწვანე თოლია (14x14) ჯგუფის SendURL-ის გვერდით
+for k, suffix in ((1, ""), (2, "@2x"), (3, "@3x")):
+    render(g, 3, 14, k, canvas_css=14).save(os.path.join(OUT, f"check-green-s{suffix}.png"))
 print("ok")

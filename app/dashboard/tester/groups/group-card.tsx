@@ -19,7 +19,6 @@ import {
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import UiIcon from "@/components/ui-icon";
 import DragHandleIcon from "@/components/drag-handle-icon";
-import SendUrlIcon from "@/components/send-url-icon";
 
 const DEFAULT_DELETE_CONFIRM = "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა?";
 
@@ -179,12 +178,24 @@ async function sendLoginPage() {
         <button
           onClick={() => setConfirmingInvite(true)}
           disabled={sendingInvite || group.students.length === 0}
-          className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
+          className="relative inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
         >
           {sendingInvite ? (
             "..."
           ) : (
-            <SendUrlIcon confirmed={inviteOk} durationMs={2500} />
+            <UiIcon name="send-url" />
+          )}
+          {/* დასტური: მწვანე თოლია გლობუსის გვერდით (გვერდით ადგილს არ იკავებს), 5 წამში თავისით ქრება */}
+          {inviteOk && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/icons/ui/check-green-s.png?v=3"
+              srcSet="/icons/ui/check-green-s.png?v=3 1x, /icons/ui/check-green-s@2x.png?v=3 2x, /icons/ui/check-green-s@3x.png?v=3 3x"
+              alt=""
+              width={14}
+              height={14}
+              className="sendurl-slot-check"
+            />
           )}
         </button>
         <span
