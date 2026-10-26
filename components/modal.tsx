@@ -10,6 +10,7 @@ export default function Modal({
   children,
   topAligned = false,
   onBackdropClick,
+  feedbackLayout = false,
 }: {
   title: React.ReactNode;
   onClose: () => void;
@@ -18,6 +19,7 @@ export default function Modal({
   // instead of being vertically centered, so an open keyboard
   // doesn't cover the fields.
   topAligned?: boolean;
+    feedbackLayout?: boolean;
   // გამოიძახება, როცა მომხმარებელი ფანჯრის გარეთ (გამუქებულ ფონზე) დააჭერს
   onBackdropClick?: () => void;
 }) {
@@ -67,16 +69,41 @@ export default function Modal({
         className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm"
       >
         <div
-          className={`flex items-center justify-between ${title ? "mb-5" : "mb-1"}`}
+          className={
+            feedbackLayout
+              ? "flex flex-col mb-5"
+              : `flex items-center justify-between ${title ? "mb-5" : "mb-1"}`
+          }
         >
-          <h2 className="font-display text-lg text-ink min-w-0 flex-1 pr-2">{title}</h2>
-          <button
-            onClick={onClose}
-            aria-label="დახურვა"
-            className="icon-btn text-ink-soft hover:text-ink"
-          >
-            <UiIcon name="x" />
-          </button>
+          {feedbackLayout ? (
+            <>
+              <div className="flex justify-end mb-2">
+                <button
+                  onClick={onClose}
+                  aria-label="დახურვა"
+                  className="icon-btn text-ink-soft hover:text-ink"
+                >
+                  <UiIcon name="x" />
+                </button>
+              </div>
+              <h2 className="font-display text-lg text-ink whitespace-nowrap">
+                {title}
+              </h2>
+            </>
+          ) : (
+            <>
+              <h2 className="font-display text-lg text-ink min-w-0 flex-1 pr-2">
+                {title}
+              </h2>
+              <button
+                onClick={onClose}
+                aria-label="დახურვა"
+                className="icon-btn text-ink-soft hover:text-ink"
+              >
+                <UiIcon name="x" />
+              </button>
+            </>
+          )}
         </div>
         {children}
       </div>
