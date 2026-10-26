@@ -83,7 +83,7 @@ export default function LoginPage() {
   }
 
   return (
-<main className="min-h-dvh flex flex-col items-center px-6">
+<main className="min-h-dvh lg:min-h-dvh flex flex-col items-center px-6">
   <div className="w-full max-w-sm flex-1 flex flex-col">
         <div className="h-[53px] shrink-0" />
 
@@ -153,7 +153,7 @@ export default function LoginPage() {
 
 <div className="flex-1 lg:flex-[2_1_0%] min-h-0" />
 
-<p className="w-full text-[11px] leading-4 text-ink-soft text-center pb-[max(1rem,env(safe-area-inset-bottom))] lg:pb-4">
+<p className="w-full text-[11px] leading-4 text-ink-soft text-center pb-2 lg:pb-4">
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება. მასალა მომზადებულია
           განათლების სამინისტროს მიერ გრიფირებული სახელმძღვანელოების მიხედვით
         </p>
