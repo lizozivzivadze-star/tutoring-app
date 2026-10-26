@@ -79,11 +79,11 @@ export default function Modal({
         >
           {feedbackLayout ? (
   <>
-    <div className="relative h-[38px] mb-0">
+    <div className="relative h-[36px] mb-0">
       <button
         onClick={onClose}
         aria-label="დახურვა"
-        className="icon-btn absolute right-[-18px] top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink"
+        className="icon-btn absolute right-[-14px] top-1/2 -translate-y-1/2 translate-y-[2px] text-ink-soft hover:text-ink"
       >
         <UiIcon name="x" />
       </button>
