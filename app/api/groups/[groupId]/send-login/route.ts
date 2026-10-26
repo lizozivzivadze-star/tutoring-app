@@ -36,6 +36,15 @@ export async function POST(
     )
   );
   const sent = results.filter((r) => r.status === "fulfilled").length;
+  // დიაგნოსტიკა: რეალური მიზეზი სერვერის ლოგში (Vercel -> Logs)
+  results.forEach((r, i) => {
+    if (r.status === "rejected") {
+      console.error(
+        `[send-login] failed for ${group.students[i].email}:`,
+        r.reason instanceof Error ? r.reason.message : r.reason
+      );
+    }
+  });
 
   return NextResponse.json({ sent, failed: results.length - sent });
 }
