@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const THRESHOLD = 70; // რამდენი px-ის გადაწევაა საჭირო refresh-ისთვის
 const MAX_PULL = 110;
 const SHELL_ID = "page-shell"; // layout.tsx-ში children-ს ეს div ახვევია
 
 export default function PullToRefresh() {
+  const pathname = usePathname();
   const [pull, setPull] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const startY = useRef<number | null>(null);
@@ -71,6 +73,7 @@ export default function PullToRefresh() {
     }
 
     function onStart(e: TouchEvent) {
+      if (pathname === "/login") return;
       if (e.touches.length !== 1 || window.scrollY > 0) return;
       const t = e.target as Element;
       // ველები, ფანჯრები (.fixed) და ელემენტები data-no-ptr-ით გამოვრიცხოთ
@@ -80,6 +83,7 @@ export default function PullToRefresh() {
     }
 
     function onMove(e: TouchEvent) {
+      if (pathname === "/login") return;
       if (startY.current === null) return;
       const dy = e.touches[0].clientY - startY.current;
       if (dy <= 0 || window.scrollY > 0) {
@@ -117,7 +121,7 @@ export default function PullToRefresh() {
       window.removeEventListener("touchend", onEnd);
       window.removeEventListener("touchcancel", reset);
     };
-  }, []);
+  }, [pathname]);
 
   if (pull === 0 && !refreshing) return null;
 
