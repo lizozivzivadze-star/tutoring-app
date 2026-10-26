@@ -66,7 +66,9 @@ export default function Modal({
     >
       <div
         ref={cardRef}
-        className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-sm"
+        className={`bg-white rounded-md border border-paper-line w-full max-w-sm ${
+  feedbackLayout ? "px-6 pt-3 pb-6" : "px-6 py-6"
+}`}
       >
         <div
           className={
@@ -83,7 +85,7 @@ export default function Modal({
     aria-label="დახურვა"
     className="icon-btn text-ink-soft hover:text-ink"
     style={{
-      transform: "translate(12px, 12px)",
+      transform: "translate(18px, 12px)",
     }}
   >
     <UiIcon name="x" />
