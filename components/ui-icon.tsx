@@ -50,15 +50,15 @@ export default function UiIcon({
         draggable={false}
         width={20}
         height={20}
-        style={{
-          position: "absolute",
-          left: SHIFT_X[name] ?? 0,
-          top: 0,
-          width: 20,
-          height: 20,
-          maxWidth: "none",
-          display: "block",
-        }}
+style={{
+  position: "absolute",
+  left: SHIFT_X[name] ?? 0,
+  top: name === "results" ? 0.2 : 0,
+  width: name === "results" ? 20.1 : 20,
+  height: name === "results" ? 20.1 : 20,
+  maxWidth: "none",
+  display: "block",
+}}
       />
     </span>
   );
