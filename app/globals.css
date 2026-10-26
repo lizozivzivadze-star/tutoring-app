@@ -136,19 +136,30 @@ body {
   100% { opacity: 1; }
 }
 
-/* ჯგუფის SendURL: ხატულა ყოველთვის რჩება; "..." და მწვანე თოლია მის მარცხნივ, გვერდით ჩნდება */
-.sendurl-beside {
-  position: absolute;
-  right: calc(100% + 2px);
-  top: 3px;
-  width: 14px;
-  height: 14px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  pointer-events: none;
+/* "..."-ის შემდეგ ხატულა ახლად ჩაიდგმება: ციმციმის გარეშე, თოლიით იწყება */
+.sendurl-wrap[data-confirmed="true"][data-from-hidden="true"] > .sendurl-icon {
+  animation-name: sendurl-icon-hidden;
 }
-.sendurl-ok {
+.sendurl-wrap[data-confirmed="true"][data-from-hidden="true"] > .sendurl-check {
+  animation-name: sendurl-check-quick;
+}
+@keyframes sendurl-icon-hidden {
+  0% { opacity: 0; }
+  88% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes sendurl-check-quick {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ჯგუფის SendURL: თოლია ხატულას მარჯვნივ, დაცულ ადგილას (fade in/out 5 წმ) */
+.sendurl-slot-check {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
   opacity: 0;
-  animation: sendurl-check 5000ms ease-in-out forwards;
+  animation: sendurl-check-quick 5000ms ease-in-out forwards;
 }
