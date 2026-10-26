@@ -77,15 +77,18 @@ export default function Modal({
         >
           {feedbackLayout ? (
             <>
-              <div className="flex justify-end mb-2">
-                <button
-                  onClick={onClose}
-                  aria-label="დახურვა"
-                  className="icon-btn text-ink-soft hover:text-ink"
-                >
-                  <UiIcon name="x" />
-                </button>
-              </div>
+              <div className="flex justify-end mb-1">
+  <button
+    onClick={onClose}
+    aria-label="დახურვა"
+    className="icon-btn text-ink-soft hover:text-ink"
+    style={{
+      transform: "translate(12px, 12px)",
+    }}
+  >
+    <UiIcon name="x" />
+  </button>
+</div>
               <h2 className="font-display text-lg text-ink whitespace-nowrap">
                 {title}
               </h2>
