@@ -96,7 +96,8 @@ export default function TestForm({
     setError("");
 
     // Save და Activate გამოქვეყნების სტატუსს არ ცვლის, მხოლოდ Publish ცვლის.
-    const nextPublished = action === "publish" ? true : published;
+    // Save გამოქვეყნების სტატუსს არ ცვლის; Publish და Activate ტესტს აქვეყნებს.
+    const nextPublished = action === "save" ? published : true;
     const fn =
       action === "save" ? onSave : action === "publish" ? onPublish : onActivate;
     const result = fn
@@ -252,7 +253,7 @@ export default function TestForm({
         >
           {saving === "publish" ? "ქვეყნდება..." : "Publish"}
         </button>
-        {published && !activated && onActivate && (
+        {!activated && onActivate && (
           <button
             onClick={() => run("activate")}
             disabled={saving !== null}

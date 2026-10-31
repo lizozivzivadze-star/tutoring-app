@@ -200,7 +200,10 @@ return (
             save({ ...v, published: true }, { exitEditing: true, republish: true })
           }
           onActivate={(v) =>
-            save({ ...v, published: true }, { exitEditing: true, activate: true })
+            save(
+              { ...v, published: true },
+              { exitEditing: true, activate: true, republish: !test.published }
+            )
           }
         />
       ) : (

@@ -108,6 +108,31 @@ async function persist(
   if ("error" in result) return result.error;
   router.push(`/dashboard/tester/tests/${result.id}`);
 }
+  // Activate: ტესტს ერთდროულად აქვეყნებს და ააქტიურებს, მერე ტესტის გვერდზე გადადის.
+  async function handleActivate(values: FormValues) {
+    const result = await persist(
+      { ...values, published: true },
+      { republish: true }
+    );
+    if ("error" in result) return result.error;
+
+    const res = await fetch(`/api/tests/${result.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        themeId: values.themeId,
+        title: values.title,
+        instruction: values.instruction,
+        published: true,
+        activated: true,
+      }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      return data?.error ?? "ვერ გააქტიურდა";
+    }
+    router.push(`/dashboard/tester/tests/${result.id}`);
+  }
 
 
   return (
@@ -131,6 +156,7 @@ async function persist(
           onTypeChange={!typeParam && !savedTestId ? setType : undefined}
           onSave={handleSave}
           onPublish={handlePublish}
+          onActivate={handleActivate}
         />
       )}
     </div>
