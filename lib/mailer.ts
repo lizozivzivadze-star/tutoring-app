@@ -69,7 +69,7 @@ export async function sendMagicLinkEmail({
     .split("\n\n")
     .map((para) =>
       para.includes(url)
-        ? `<p><a href="${url}">${url}</a></p>`
+        ? linkHtml(url)
         : `<p>${para.replace(/\n/g, "<br/>")}</p>`
     )
     .join("\n");
@@ -84,6 +84,11 @@ export async function sendMagicLinkEmail({
   const from = getFrom();
 
   await t.sendMail({ from, to, subject, text, html });
+}
+
+// ბმულს ფერს პირდაპირ ვაძლევთ, რომ მეილის კლიენტებმა თავისით არ შეუცვალონ
+function linkHtml(url: string) {
+  return `<p><a href="${url}" style="color:#564cbf;text-decoration:underline;word-break:break-all;">${url}</a></p>`;
 }
 
 function escapeHtml(s: string) {
@@ -111,7 +116,7 @@ export async function sendLoginInviteEmail({
     `<p>${escapeHtml(greeting)}</p>` +
     `<p>პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (<b>${escapeHtml(to)}</b>). ` +
     `თქვენ მიიღებთ შესვლის ბმულს, პაროლი არ გჭირდებათ.</p>` +
-    `<p><a href="${url}">${url}</a></p>`;
+    linkHtml(url);
 
   if (!t) {
     console.log(`[login-invite] SMTP not configured, would send to ${to}: ${url}`);
