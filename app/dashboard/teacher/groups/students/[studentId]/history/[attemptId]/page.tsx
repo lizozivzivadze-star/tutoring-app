@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import LoadingBar from "@/components/loading-bar";
 import { formatDateTime, formatDuration } from "@/lib/format-time";
 
@@ -25,6 +24,7 @@ export default function TeacherAttemptReviewPage() {
     studentId: string;
     attemptId: string;
   }>();
+    const router = useRouter();
   const [data, setData] = useState<ReviewData | null>(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -54,12 +54,16 @@ export default function TeacherAttemptReviewPage() {
   return (
     <main className="min-h-screen py-8">
       <div className="w-full">
-        <Link
-          href={`/dashboard/teacher/groups/students/${studentId}/history`}
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) router.back();
+            else router.push(`/dashboard/teacher/groups/students/${studentId}/history`);
+          }}
           className="text-sm text-marker font-medium"
         >
           ← უკან
-        </Link>
+        </button>
 
         <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mt-4 mb-4">
           შედეგის განხილვა

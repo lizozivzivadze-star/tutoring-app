@@ -1,13 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CollapsibleSection({
   children,
+  openKey,
 }: {
   children: React.ReactNode;
+  openKey?: string;
 }) {
   const [open, setOpen] = useState(false);
+
+  // თუ არქივიდან შედეგზე გადასვლისას მდგომარეობა შევინახეთ, ბლოკი ღია დახვდეს
+  useEffect(() => {
+    try {
+      if (openKey && sessionStorage.getItem(openKey)) setOpen(true);
+    } catch {}
+  }, [openKey]);
 
 
 

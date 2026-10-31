@@ -39,6 +39,8 @@ type TestBlock = { key: string; sentAt: string; title: string; groups: GroupLine
 type EventBlock = { key: string; sentAt: string; title: string; students: StudentLine[] };
 
 const PAGE = 10;
+const RETURN_KEY = "archiveReturn";
+const RETURN_MAX_AGE = 60 * 60 * 1000; // 1 საათი
 
 const VIEWS = [
   { value: "chronological", label: "ქრონოლოგიური" },
@@ -372,6 +374,7 @@ export default function SentTestsArchive({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(PAGE);
+  const restoreScrollRef = useRef<number | null>(null);
   const base = endpoint.includes("/tester/")
     ? "/dashboard/tester/groups/students"
     : "/dashboard/teacher/groups/students";
@@ -442,6 +445,54 @@ export default function SentTestsArchive({
     setShown(true);
     setVisible(PAGE);
   }
+
+  // შედეგის გვერდზე გადასვლისას ვინახავთ არქივის მდგომარეობას
+  function saveReturn(e: React.MouseEvent) {
+    if (studentMode) return;
+    if (!(e.target as HTMLElement).closest("a")) return;
+    try {
+      sessionStorage.setItem(
+        RETURN_KEY,
+        JSON.stringify({
+          view,
+          selectedId,
+          visible,
+          shown,
+          scrollY: window.scrollY,
+          savedAt: Date.now(),
+        })
+      );
+    } catch {}
+  }
+
+  // უკან დაბრუნებისას მდგომარეობას ვაბრუნებთ (ერთჯერადად)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(RETURN_KEY);
+      if (!raw) return;
+      sessionStorage.removeItem(RETURN_KEY);
+      const s = JSON.parse(raw);
+      if (studentMode || Date.now() - s.savedAt > RETURN_MAX_AGE) return;
+      setOpen(true);
+      setView(s.view);
+      viewRef.current = s.view;
+      setSelectedId(s.selectedId);
+      setVisible(s.visible);
+      restoreScrollRef.current = s.scrollY;
+      loadRows(true).then((ok) => {
+        if (ok) setShown(s.shown);
+      });
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // სია რომ გამოჩნდება, იმავე ადგილზე გადავსქროლოთ
+  useEffect(() => {
+    if (restoreScrollRef.current == null || !shown || !rows) return;
+    const y = restoreScrollRef.current;
+    restoreScrollRef.current = null;
+    requestAnimationFrame(() => window.scrollTo(0, y));
+  }, [shown, rows]);  
 
   const tests = useMemo(() => {
     const seen = new Map<string, string>();
@@ -538,7 +589,7 @@ export default function SentTestsArchive({
   );
 
   return (
-    <div ref={wrapRef} className="w-full flex flex-col gap-2">
+    <div ref={wrapRef} onClickCapture={saveReturn} className="w-full flex flex-col gap-2">
       <button
         type="button"
         onClick={() => {

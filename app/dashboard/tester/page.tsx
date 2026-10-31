@@ -300,7 +300,7 @@ className="mb-5 rounded-full bg-gold text-ink font-body font-medium
             : "ტესტი უკვე გაგზავნილია."}
         </p>
       )}
-      <CollapsibleSection>
+      <CollapsibleSection openKey="archiveReturn">
         <NewSentTests endpoint="/api/tester/sent-tests" refreshKey={sentCount} />
         <SentTestsArchive endpoint="/api/tester/archive" />
       </CollapsibleSection>

@@ -301,7 +301,7 @@ className="mb-5 rounded-full bg-gold text-ink font-body font-medium
         </p>
       )}
 
-      <CollapsibleSection>
+      <CollapsibleSection openKey="archiveReturn">
         <NewSentTests endpoint="/api/teacher/sent-tests" refreshKey={sentCount} />
         <SentTestsArchive endpoint="/api/teacher/archive" />
       </CollapsibleSection>
