@@ -18,7 +18,7 @@ import {
 } from "@/lib/install-env";
 
 type Guide = {
-  title: string;
+  title?: string;
   steps: string[];
   note?: string;
   actions?: ("copy" | "chrome")[];
@@ -99,9 +99,8 @@ const GUIDES: Record<InstallEnv, Guide> = {
 // ღილაკი ახლა ყოველთვის ჩანს. თუ საიტი უკვე ხატულადანაა გახსნილი
 // (standalone), დაჭერისას ამას ვეუბნებით და ვუხსნით, როგორ დაამატოს ხელახლა.
 const INSTALLED_GUIDE: Guide = {
-  title: "აპი უკვე დაინსტალირებულია",
   steps: [
-    "ხატულა უკვე დამატებულია. მოძებნეთ Windows-ზე Start მენიუში, Mac-ზე Launchpad-ში, ტელეფონზე მთავარ ეკრანზე.",
+    "ხატულა უკვე დამატებულია: ტელეფონში მთავარ ეკრანზე იქნება, Windows-ზე Start მენიუში, Mac-ზე კი Launchpad-ში.",
   ],
 };
 
@@ -286,11 +285,13 @@ onClick={() => {
 
             <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm max-h-[80dvh] flex flex-col overflow-hidden">
   <VScrollBox drag={false} className="p-4 min-h-0">
-              <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
+              {guide.title && (
+                <p className="text-sm text-ink mb-3 font-medium">{guide.title}</p>
+              )}
               {guide.animation === "ios" && <IosInstallAnimation />}
 
               {!guide.animation && (
-                <ol className={`text-sm text-ink-soft flex flex-col gap-2 ${guide.steps.length > 1 ? "list-decimal pl-5" : "list-none"}`}>
+                <ol className={`text-sm text-ink-soft flex flex-col gap-2 ${guide.steps.length > 1 ? "list-decimal pl-5" : "list-none text-center"}`}>
                   {guide.steps.map((s) => (
                     <li key={s}>{s}</li>
                   ))}
