@@ -11,48 +11,44 @@ export async function GET() {
   const subjects = 1;
 
   // ვითვლით მხოლოდ იმ გამოქვეყნებულ ტესტებს, რომლებსაც მასწავლებლები ხედავენ
-  // (ტესტერს აქვს მასწავლებლებთან წვდომა). სატესტო ანგარიშები არ ითვლება.
+  // (ტესტერს აქვს მასწავლებლებთან წვდომა).
   const visible = {
     published: true,
     theme: { tester: { teacherAccess: { some: {} } } },
   };
 
-  // ითვლება მხოლოდ მასწავლებლების ჯგუფებში მომხდარი აქტივობა.
-  // tester-ის (სატესტო) ანგარიშები სტატისტიკაში არ შედის.
-  const teacherGroup = { teacherId: { not: null } };
-  const sentByTeacher = {
+  // ითვლება ყველა გაგზავნილი და გაკეთებული ტესტი, მიუხედავად იმისა,
+  // მასწავლებლის ჯგუფიდანაა თუ ტესტერის (ტესტერიც მასწავლებლის როლს ასრულებს).
+  const hasSent = {
     OR: [
-      { group: teacherGroup },
-      { student: { group: teacherGroup } },
+      { sentTests: { some: {} } },
+      { students: { some: { sentTests: { some: {} } } } },
     ],
   };
-  const studentOfTeacher = { student: { group: teacherGroup } };
 
-  const [tests, questions, teachers, sentTests, attempts, students] =
+  const [tests, questions, teachers, testers, sentTests, attempts, students] =
     await Promise.all([
       prisma.test.count({ where: visible }),
       prisma.question.count({ where: { test: visible } }),
-      prisma.teacher.count({
-        where: {
-          groups: {
-            some: {
-              OR: [
-                { sentTests: { some: {} } },
-                { students: { some: { sentTests: { some: {} } } } },
-              ],
-            },
-          },
-        },
-      }),
-      prisma.sentTest.count({ where: sentByTeacher }),
-      prisma.testAttempt.count({ where: studentOfTeacher }),
+      prisma.teacher.count({ where: { groups: { some: hasSent } } }),
+      prisma.tester.count({ where: { groups: { some: hasSent } } }),
+      prisma.sentTest.count(),
+      prisma.testAttempt.count(),
       prisma.testAttempt
-        .groupBy({ by: ["studentId"], where: studentOfTeacher })
+        .groupBy({ by: ["studentId"] })
         .then((rows) => rows.length),
     ]);
 
   return NextResponse.json(
-    { subjects, tests, questions, teachers, sentTests, attempts, students },
+    {
+      subjects,
+      tests,
+      questions,
+      teachers: teachers + testers,
+      sentTests,
+      attempts,
+      students,
+    },
     {
       headers: {
         "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30",
