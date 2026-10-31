@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ConfirmDialog from "@/components/confirm-dialog";
+import { parseTestText, type ParsedTest } from "./parse-test-file";
 import QuestionEditor, { newQuestion } from "./question-editor";
 import { QuestionDraft, TestTemplate, TYPE_LABELS, TYPES } from "./types";
 import DropdownSelect from "@/components/dropdown-select";
@@ -71,6 +73,11 @@ export default function TestForm({
   const [activated, setActivated] = useState(initialActivated);
   const [saving, setSaving] = useState<"save" | "publish" | "activate" | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
+    const fileRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [importNotice, setImportNotice] = useState("");
+  const [pendingImport, setPendingImport] = useState<ParsedTest | null>(null);
 
   useEffect(() => {
     fetch("/api/themes")
@@ -89,6 +96,35 @@ export default function TestForm({
 
   function removeQuestion(clientId: string) {
     setQuestions((prev) => prev.filter((p) => p.clientId !== clientId));
+  }
+    function applyImport(test: ParsedTest) {
+    setTitle(test.title);
+    setQuestions(test.questions);
+    setImportErrors([]);
+    setImportNotice(`ჩაიტვირთა ${test.questions.length} შეკითხვა`);
+  }
+
+  async function handlePopulate() {
+    if (!file) return;
+    setImportErrors([]);
+    setImportNotice("");
+    let text: string;
+    try {
+      text = await file.text();
+    } catch {
+      setImportErrors(["ფაილის წაკითხვა ვერ მოხერხდა, აირჩიეთ ხელახლა"]);
+      return;
+    }
+    const result = parseTestText(text);
+    if (!result.ok) {
+      setImportErrors(result.errors);
+      return;
+    }
+    const hasContent = questions.some(
+      (q) => q.prompt.trim() || q.options.some((o) => o.text.trim())
+    );
+    if (hasContent) setPendingImport(result.test);
+    else applyImport(result.test);
   }
 
   async function run(action: "save" | "publish" | "activate") {
@@ -184,6 +220,60 @@ export default function TestForm({
         />
       </div>
 
+            {!locked && (
+        <div className="border border-paper-line rounded-sm bg-paper p-3 flex flex-col gap-3">
+          <p className="text-sm text-ink-soft text-center">
+            ტესტის ატვირთვა ფაილიდან (.txt)
+          </p>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".txt,text/plain"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0] ?? null;
+              setFile(f);
+              setImportErrors([]);
+              setImportNotice("");
+              e.target.value = "";
+            }}
+          />
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="flex-1 rounded-full border-2 border-marker text-marker
+                         font-medium py-2.5 hover:bg-marker hover:text-white
+                         transition-colors"
+            >
+              Browse
+            </button>
+            <button
+              type="button"
+              onClick={handlePopulate}
+              disabled={!file}
+              className="flex-1 rounded-full bg-gold text-ink font-medium py-2.5
+                         hover:bg-gold-hover transition-colors disabled:opacity-50"
+            >
+              Populate
+            </button>
+          </div>
+          {file && (
+            <p className="text-xs text-ink-soft text-center truncate">{file.name}</p>
+          )}
+          {importErrors.length > 0 && (
+            <ul className="text-sm text-danger flex flex-col gap-1">
+              {importErrors.map((e, i) => (
+                <li key={i}>{e}</li>
+              ))}
+            </ul>
+          )}
+          {importNotice && (
+            <p className="text-sm text-ledger text-center">{importNotice}</p>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
         {locked
           ? questions.map((q, i) => (
@@ -230,9 +320,9 @@ export default function TestForm({
         )}
       </div>
 
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p className="text-sm text-danger text-center">{error}</p>}
       {!error && savedNotice && (
-        <p className="text-sm text-ledger">შენახულია</p>
+        <p className="text-sm text-ledger text-center">შენახულია</p>
       )}
 
       <div className="flex gap-3 border-t border-paper-line pt-4">
@@ -264,6 +354,16 @@ export default function TestForm({
           </button>
         )}
       </div>
+            {pendingImport && (
+        <ConfirmDialog
+          message="ახლანდელი სათაური და შეკითხვები ჩანაცვლდება ფაილის შიგთავსით"
+          onConfirm={() => {
+            applyImport(pendingImport);
+            setPendingImport(null);
+          }}
+          onCancel={() => setPendingImport(null)}
+        />
+      )}
     </div>
   );
 }
