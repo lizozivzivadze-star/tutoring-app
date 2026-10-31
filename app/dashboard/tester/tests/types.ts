@@ -6,6 +6,7 @@ export type TestSummary = {
   order: number;
   title: string;
   published: boolean;
+  activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
 };
@@ -47,6 +48,7 @@ export type TestDetail = {
   title: string;
   instruction: string | null;
   published: boolean;
+  activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
   publishedSnapshot: PublishedSnapshot | null;

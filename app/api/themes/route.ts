@@ -24,6 +24,7 @@ export async function GET() {
           order: true,
           title: true,
           published: true,
+          activated: true,
           updatedAt: true,
           publishedAt: true,
           _count: { select: { questions: true } },

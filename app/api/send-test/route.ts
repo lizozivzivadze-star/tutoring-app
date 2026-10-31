@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
   if (!hasAccess) {
     return NextResponse.json({ error: "ტესტი ვერ მოიძებნა" }, { status: 404 });
   }
-  if (!test.published) {
+  if (!test.published || !test.activated) {
     return NextResponse.json(
-      { error: "გამოუქვეყნებელი ტესტის გაგზავნა არ შეიძლება" },
+      { error: "გაუააქტიურებელი ტესტის გაგზავნა არ შეიძლება" },
       { status: 400 }
     );
   }

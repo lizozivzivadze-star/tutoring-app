@@ -19,6 +19,7 @@ type TestOption = {
   label: string;
   disabled?: boolean;
   indent?: boolean;
+  dot?: "green" | "grey";
 };
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -95,6 +96,7 @@ export default function TesterStartTab() {
             type: TestTemplate;
             title: string;
             published: boolean;
+            activated: boolean;
             _count: { questions: number };
           }[];
         };
@@ -121,6 +123,8 @@ export default function TesterStartTab() {
                 byTheme[theme.id].push({
                   value: t.id,
                   label: `${t.title} · ${TYPE_LABELS[type]}`,
+                  disabled: !t.activated,
+                  dot: t.activated ? "green" : "grey",
                 });
               });
           });

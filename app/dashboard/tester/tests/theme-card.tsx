@@ -138,7 +138,7 @@ export default function ThemeCard({
                     test.published &&
                     !!test.publishedAt &&
                     new Date(test.updatedAt) > new Date(test.publishedAt);
-                  const dimmed = !test.published || hasUnpublishedEdits;
+                  const dimmed = !test.published || hasUnpublishedEdits || !test.activated;
 
                   return (
                     <Link
@@ -152,12 +152,17 @@ export default function ThemeCard({
                       title={
                         !test.published
                           ? "გამოუქვეყნებელი"
+                          : !test.activated
+                          ? "გამოქვეყნებულია, მაგრამ ჯერ არ არის გააქტიურებული"
                           : hasUnpublishedEdits
                           ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული"
                           : ""
                       }
                     >
                       <HScrollText>
+    {test.published && (
+      <span className={test.activated ? "text-ledger" : "text-ink-soft/50"}>• </span>
+    )}
     {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
   </HScrollText>
                     </Link>

@@ -52,7 +52,7 @@ export async function PATCH(
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  const { themeId, title, instruction, published, questions, republish } =
+  const { themeId, title, instruction, published, questions, republish, activated } =
     await req.json();
 
   const locked = existing._count.sentTests > 0;
@@ -80,6 +80,12 @@ export async function PATCH(
 
   if (!title?.trim()) {
     return NextResponse.json({ error: "სათაური აუცილებელია" }, { status: 400 });
+  }
+    if (activated === true && !(published ?? existing.published)) {
+    return NextResponse.json(
+      { error: "გასააქტიურებლად ჯერ გამოაქვეყნეთ ტესტი" },
+      { status: 400 }
+    );
   }
 
   if (questions) {
@@ -162,6 +168,7 @@ export async function PATCH(
         title: finalTitle,
         instruction: finalInstruction,
         published: published ?? existing.published,
+        ...(activated === true && { activated: true }),
         ...(republish && {
           publishedAt: now,
           updatedAt: now,

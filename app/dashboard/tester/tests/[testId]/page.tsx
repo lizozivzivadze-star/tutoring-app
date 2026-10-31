@@ -66,7 +66,7 @@ export default function TestDetailPage() {
       questions: QuestionDraft[];
       published: boolean;
     },
-    options?: { exitEditing?: boolean; republish?: boolean }
+    options?: { exitEditing?: boolean; republish?: boolean; activate?: boolean }
   ) {
     const res = await fetch(`/api/tests/${testId}`, {
       method: "PATCH",
@@ -77,6 +77,7 @@ export default function TestDetailPage() {
         instruction: values.instruction,
         published: values.published,
         republish: options?.republish ?? false,
+        ...(options?.activate ? { activated: true } : {}),
         // Locked tests keep their questions server-side no matter
         // what — but we still avoid sending a payload that would be
         // rejected outright, so the rest of the save (title etc.)
@@ -191,11 +192,15 @@ return (
           initialTitle={test.title}
           initialInstruction={test.instruction ?? ""}
           initialPublished={test.published}
+          initialActivated={test.activated}          
           initialQuestions={toDrafts(test)}
           locked={test.locked}
           onSave={(v) => save(v)}
           onPublish={(v) =>
             save({ ...v, published: true }, { exitEditing: true, republish: true })
+          }
+          onActivate={(v) =>
+            save({ ...v, published: true }, { exitEditing: true, activate: true })
           }
         />
       ) : (
@@ -209,12 +214,12 @@ return (
                   have unpublished edits" nudge, not an unpublish. */}
               <span
                 className={`text-xs px-2 py-0.5 rounded-full ${
-                  test.published && !hasUnpublishedEdits
+                  test.activated && !hasUnpublishedEdits
                     ? "bg-ledger-soft text-ledger"
                     : "bg-paper-line/60 text-ink-soft"
                 }`}
               >
-                {!test.published ? "unpublished" : hasUnpublishedEdits ? "draft" : "published"}
+                {!test.published ? "unpublished" : hasUnpublishedEdits ? "draft" : test.activated ? "active" : "published"}
               </span>
               {test.locked && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-paper-line/60 text-ink-soft">

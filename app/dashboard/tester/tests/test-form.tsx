@@ -18,10 +18,12 @@ export default function TestForm({
   initialTitle = "",
   initialInstruction = "",
   initialPublished = false,
+  initialActivated = false,   // ← ახალი
   initialQuestions,
   locked = false,
   onSave,
   onPublish,
+  onActivate,                 // ← ახალი
   saveLabel = "Save",
   onTypeChange,
 }: {
@@ -30,6 +32,7 @@ export default function TestForm({
   initialTitle?: string;
   initialInstruction?: string;
   initialPublished?: boolean;
+  initialActivated?: boolean;
   initialQuestions?: QuestionDraft[];
   locked?: boolean;
   onSave: (values: {
@@ -40,6 +43,13 @@ export default function TestForm({
     published: boolean;
   }) => Promise<string | void>;
   onPublish: (values: {
+    themeId: string;
+    title: string;
+    instruction: string;
+    questions: QuestionDraft[];
+    published: boolean;
+  }) => Promise<string | void>;
+  onActivate?: (values: {
     themeId: string;
     title: string;
     instruction: string;
@@ -58,7 +68,8 @@ export default function TestForm({
     initialQuestions?.length ? initialQuestions : [newQuestion()]
   );
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState<"save" | "publish" | null>(null);
+  const [activated, setActivated] = useState(initialActivated);
+  const [saving, setSaving] = useState<"save" | "publish" | "activate" | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
 
   useEffect(() => {
@@ -80,27 +91,28 @@ export default function TestForm({
     setQuestions((prev) => prev.filter((p) => p.clientId !== clientId));
   }
 
-  async function run(action: "save" | "publish") {
+  async function run(action: "save" | "publish" | "activate") {
     setSaving(action);
     setError("");
 
-    // Save never silently changes publish state — only the Publish
-    // button does. This used to force published:false on every Save,
-    // which would quietly unpublish an already-live test the moment
-    // a teacher fixed a typo in the instructions.
+    // Save და Activate გამოქვეყნების სტატუსს არ ცვლის, მხოლოდ Publish ცვლის.
     const nextPublished = action === "publish" ? true : published;
-    const fn = action === "save" ? onSave : onPublish;
-    const result = await fn({
-      themeId,
-      title,
-      instruction,
-      questions,
-      published: nextPublished,
-    });
+    const fn =
+      action === "save" ? onSave : action === "publish" ? onPublish : onActivate;
+    const result = fn
+      ? await fn({
+          themeId,
+          title,
+          instruction,
+          questions,
+          published: nextPublished,
+        })
+      : undefined;
     if (result) {
       setError(result);
     } else {
       setPublished(nextPublished);
+      if (action === "activate") setActivated(true);
       if (action === "save") {
         setSavedNotice(true);
       }
@@ -240,6 +252,16 @@ export default function TestForm({
         >
           {saving === "publish" ? "ქვეყნდება..." : "Publish"}
         </button>
+        {published && !activated && onActivate && (
+          <button
+            onClick={() => run("activate")}
+            disabled={saving !== null}
+            className="flex-1 rounded-full bg-gold text-ink font-medium py-2.5
+                       hover:bg-gold-hover transition-colors disabled:opacity-50"
+          >
+            {saving === "activate" ? "აქტიურდება..." : "Activate"}
+          </button>
+        )}
       </div>
     </div>
   );

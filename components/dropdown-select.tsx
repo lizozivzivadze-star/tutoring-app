@@ -9,7 +9,23 @@ export type DropdownOption = {
   label: string;
   disabled?: boolean; // dimmed, non-selectable row
   indent?: boolean;   // shifted right, e.g. a student under its group
+    dot?: "green" | "grey"; // • წერტილი ტექსტის წინ
 };
+
+function OptionLabel({ label, dot }: { label: string; dot?: "green" | "grey" }) {
+  if (!dot) return <HScrollText>{label}</HScrollText>;
+  return (
+    <div className="flex items-center gap-1.5">
+      <span
+        aria-hidden
+        className={`shrink-0 ${dot === "green" ? "text-ledger" : "text-ink-soft/50"}`}
+      >
+        •
+      </span>
+      <HScrollText className="min-w-0 flex-1">{label}</HScrollText>
+    </div>
+  );
+}
 
 export default function DropdownSelect({
   value,
@@ -98,7 +114,7 @@ export default function DropdownSelect({
       >
        <span className={`min-w-0 flex-1 ${centered ? "text-center" : "text-left"} ${selected ? "text-ink" : "text-ink-soft"}`}>
           {selected ? (
-            <HScrollText>{selected.label}</HScrollText>
+            <OptionLabel label={selected.label} dot={selected.dot} />
           ) : (
             placeholderInList && open ? "\u00A0" : placeholder
           )}
@@ -129,9 +145,9 @@ export default function DropdownSelect({
     <li
       key={o.value}
       aria-disabled="true"
-      className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm text-ink-soft cursor-default select-none`}
+      className={`${o.indent ? "pl-[10px] pr-3" : "px-3"} py-2.5 font-body text-sm ${o.dot === "grey" ? "text-ink-soft/50" : "text-ink-soft"} cursor-default select-none`}
     >
-      <HScrollText>{o.label}</HScrollText>
+      <OptionLabel label={o.label} dot={o.dot} />
     </li>
   ) : (
     <li key={o.value}>
@@ -145,7 +161,7 @@ className={`w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[2
           o.value === value ? "bg-paper text-marker" : "text-ink"
         }`}
       >
-        <HScrollText>{o.label}</HScrollText>
+        <OptionLabel label={o.label} dot={o.dot} />
       </button>
     </li>
   )
