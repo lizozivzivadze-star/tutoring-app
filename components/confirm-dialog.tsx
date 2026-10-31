@@ -34,7 +34,7 @@ export default function ConfirmDialog({
             className="flex-1 rounded-full bg-gold text-ink py-2 text-sm
                        font-medium hover:bg-gold-hover transition-colors"
           >
-            დადასტურება
+            დასტური
           </button>
         </div>
       </div>
