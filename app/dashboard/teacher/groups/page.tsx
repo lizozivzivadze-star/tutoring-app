@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 import { GroupRecord, StudentRecord } from "./types";
 import GroupCard from "./group-card";
 import AddGroupModal from "./add-group-modal";
@@ -24,9 +24,20 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 
+const EXP_KEY = "teacherGroupsExpanded";
+const SCROLL_KEY = "teacherGroupsScroll";
+const SCROLL_MAX_AGE = 30 * 60 * 1000; // 30 წუთი
+
 export default function GroupsTab() {
   const [groups, setGroups] = useState<GroupRecord[] | null>(null);
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
+    try {
+      const raw = sessionStorage.getItem(EXP_KEY);
+      if (raw) return new Set<string>(JSON.parse(raw));
+    } catch {}
+    return new Set<string>();
+  });
+  const restoreScrollRef = useRef<number | null>(null);
   const [addGroupOpen, setAddGroupOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [addStudentGroupId, setAddStudentGroupId] = useState<string | null>(
@@ -43,6 +54,45 @@ export default function GroupsTab() {
   const [studentDeleteConfirmText, setStudentDeleteConfirmText] = useState(
     "დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?"
   );
+    // გახსნილი ჯგუფები ყოველთვის ინახება
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(EXP_KEY, JSON.stringify(Array.from(expandedIds)));
+    } catch {}
+  }, [expandedIds]);
+
+  // უკან დაბრუნებისას სქროლის პოზიცია
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(SCROLL_KEY);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (Date.now() - s.t < SCROLL_MAX_AGE) restoreScrollRef.current = s.y;
+      else sessionStorage.removeItem(SCROLL_KEY);
+    } catch {}
+  }, []);
+
+  // ჯგუფები რომ ჩაიტვირთება და გამოჩნდება, წინასწარ გამოჩენამდე ვსქროლავთ
+  useLayoutEffect(() => {
+    if (!groups || restoreScrollRef.current == null) return;
+    const y = restoreScrollRef.current;
+    restoreScrollRef.current = null;
+    try {
+      sessionStorage.removeItem(SCROLL_KEY);
+    } catch {}
+    window.scrollTo({ top: y, behavior: "instant" });
+  }, [groups]);
+
+  // ბმულზე (შედეგების პიქტოგრამა) დაჭერისას ვიმახსოვრებთ სქროლს
+  function rememberScroll(e: React.MouseEvent) {
+    if (!(e.target as HTMLElement).closest("a")) return;
+    try {
+      sessionStorage.setItem(
+        SCROLL_KEY,
+        JSON.stringify({ y: window.scrollY, t: Date.now() })
+      );
+    } catch {}
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -156,7 +206,7 @@ function handleGroupDragEnd(event: DragEndEvent) {
   }
 
   return (
-    <div>
+    <div onClickCapture={rememberScroll}>
     {toast && <Toast message={toast} onClose={() => setToast("")} />}
     <div className="flex flex-col gap-3">
       {groups.length === 0 && (

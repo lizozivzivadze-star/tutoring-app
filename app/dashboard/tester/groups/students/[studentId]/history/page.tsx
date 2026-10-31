@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
 import VScrollBox from "@/components/v-scroll-box";
@@ -22,6 +22,7 @@ type StudentInfo = { name: string | null; surname: string | null };
 
 export default function TesterStudentHistoryPage() {
   const { studentId } = useParams<{ studentId: string }>();
+    const router = useRouter();
   const [student, setStudent] = useState<StudentInfo | null>(null);
   const [completed, setCompleted] = useState<CompletedTest[] | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -41,12 +42,16 @@ export default function TesterStudentHistoryPage() {
   return (
 <main className="min-h-screen py-8">
   <div>
-        <Link
-          href="/dashboard/tester/groups"
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) router.back();
+            else router.push("/dashboard/tester/groups");
+          }}
           className="text-sm text-marker font-medium"
         >
           ← უკან
-        </Link>
+        </button>
 
         {notFound ? (
           <p className="text-sm text-danger text-center py-12">
