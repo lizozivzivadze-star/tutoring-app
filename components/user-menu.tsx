@@ -346,7 +346,7 @@ onClick={() => {
           <div className="fixed inset-0 z-50 flex flex-col px-4 pointer-events-none">
             <div className="flex-1" />
             <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm p-4">
-              <p className="text-sm text-ink mb-4">
+              <p className="text-sm text-ink mb-4 text-center">
                 გსურთ გააუქმოთ ყველა გაგზავნილი და ამ მომენტისთვის შეუსრულებელი ტესტი?
               </p>
               <div className="flex gap-3">
@@ -386,13 +386,13 @@ message="გსურთ აპლიკაციიდან გასვლა
             <div className="flex-1" />
             <div className="pointer-events-auto w-full max-w-sm mx-auto bg-white border border-paper-line rounded-md shadow-sm max-h-[70dvh] flex flex-col overflow-hidden">
               <VScrollBox drag={false} className="p-4 min-h-0">
-                <p className="text-sm text-ink mb-3 font-medium">
+                <p className="text-sm text-ink mb-3 font-medium text-center">
                   {cancelResult.length === 0
                     ? "გასაუქმებელი ტესტი არ მოიძებნა"
                     : `გაუქმდა ${cancelResult.length} ტესტი:`}
                 </p>
                 {cancelResult.length > 0 && (
-                  <ul className="text-sm text-ink-soft flex flex-col gap-2 mb-3">
+                  <ul className="text-sm text-ink-soft flex flex-col gap-2 mb-3 text-center">
                     {cancelResult.map((r, i) => (
                       <li key={i} className="border-b border-paper-line pb-2">
                         <span className="text-ink font-medium">{r.testTitle}</span>
