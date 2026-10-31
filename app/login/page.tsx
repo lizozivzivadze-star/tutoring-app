@@ -164,7 +164,7 @@ className="
 
         {/* სტატისტიკა */}
         <p className="shrink-0 text-center text-sm text-ink-soft">
-          {fmt(stats?.subjects)} საგანი,{" "}
+          {fmt(stats?.subjects)} საგანი (ისტორია),{" "}
           {fmt(stats?.tests)} ტესტი,{" "}
           {fmt(stats?.questions)} შეკითხვა
         </p>
