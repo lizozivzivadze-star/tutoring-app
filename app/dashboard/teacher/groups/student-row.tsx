@@ -8,7 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import Modal from "@/components/modal";
 import UiIcon from "@/components/ui-icon";
 import DragHandleIcon from "@/components/drag-handle-icon";
-import SendUrlIcon from "@/components/send-url-icon";
+import SendLoginButton from "@/components/send-login-button";
 
 function fullName(student: StudentRecord) {
   return [student.name, student.surname].filter(Boolean).join(" ") || "—";
@@ -26,24 +26,6 @@ export default function StudentRow({
   onDelete: () => void;
 }) {
   const [viewing, setViewing] = useState(false);
-  const [sendState, setSendState] = useState<
-    "idle" | "sending" | "sent" | "error"
-  >("idle");
-
-  async function sendLogin() {
-    if (sendState === "sending") return;
-    setSendState("sending");
-    try {
-      const res = await fetch(`/api/students/${student.id}/send-login`, {
-        method: "POST",
-      });
-      setSendState(res.ok ? "sent" : "error");
-    } catch {
-      setSendState("error");
-    }
-    setTimeout(() => setSendState("idle"), 2500);
-  }
-
   const {
     attributes,
     listeners,
@@ -96,19 +78,10 @@ export default function StudentRow({
   <UiIcon name="x" />
 </button>
 
-<button
-  onClick={sendLogin}
-  disabled={sendState === "sending"}
-  className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
->
-  {sendState === "sending" ? (
-    "..."
-  ) : sendState === "error" ? (
-    "!"
-  ) : (
-    <SendUrlIcon confirmed={sendState === "sent"} durationMs={2500} />
-  )}
-</button>
+<SendLoginButton
+  endpoint={`/api/students/${student.id}/send-login`}
+  count={1}
+/>
 
         <span
           {...attributes}

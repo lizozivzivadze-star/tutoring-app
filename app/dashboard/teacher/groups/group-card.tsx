@@ -7,6 +7,7 @@ import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import SendLoginButton from "@/components/send-login-button";
 import VScrollBox from "@/components/v-scroll-box";
 import {
   DndContext,
@@ -51,11 +52,7 @@ export default function GroupCard({
   const [draftName, setDraftName] = useState(group.name);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [renameError, setRenameError] = useState("");
-  const [confirmingInvite, setConfirmingInvite] = useState(false);
-  const [sendingInvite, setSendingInvite] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
-  const [inviteOk, setInviteOk] = useState(false);
-  const inviteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
   attributes,
   listeners,
@@ -88,34 +85,6 @@ const studentSensors = useSensors(
     }
     setEditing(false);
   }
-
-async function sendLoginPage() {
-  setSendingInvite(true);
-  setInviteMsg("");
-  setInviteOk(false);
-  try {
-    const res = await fetch(`/api/groups/${group.id}/send-login`, {
-      method: "POST",
-    });
-    const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      setInviteMsg(data?.error ?? "ვერ გაიგზავნა");
-    } else if (data.failed) {
-      setInviteMsg(`გაიგზავნა ${data.sent}, ვერ გაიგზავნა ${data.failed}`);
-    } else {
-      setInviteOk(true);
-    }
-  } catch {
-    setInviteMsg("ვერ გაიგზავნა");
-  }
-  setSendingInvite(false);
-  // შეტყობინება/თოლია 5 წამში თავისით ქრება
-  if (inviteTimer.current) clearTimeout(inviteTimer.current);
-  inviteTimer.current = setTimeout(() => {
-    setInviteOk(false);
-    setInviteMsg("");
-  }, 5000);
-}
 
 function handleStudentDragEnd(event: DragEndEvent) {
   const { active, over } = event;
@@ -175,29 +144,12 @@ const studentRows = group.students.map((student, i) => (
         >
           <UiIcon name="x" />
         </button>
-                <button
-          onClick={() => setConfirmingInvite(true)}
-          disabled={sendingInvite || group.students.length === 0}
-          className="relative inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
-        >
-          {sendingInvite ? (
-            "..."
-          ) : (
-            <UiIcon name="send-url" />
-          )}
-          {/* დასტური: მწვანე თოლია გლობუსის გვერდით (გვერდით ადგილს არ იკავებს), 5 წამში თავისით ქრება */}
-          {inviteOk && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/icons/ui/check-green-s.png?v=3"
-              srcSet="/icons/ui/check-green-s.png?v=3 1x, /icons/ui/check-green-s@2x.png?v=3 2x, /icons/ui/check-green-s@3x.png?v=3 3x"
-              alt=""
-              width={14}
-              height={14}
-              className="sendurl-slot-check"
-            />
-          )}
-        </button>
+        <SendLoginButton
+          endpoint={`/api/groups/${group.id}/send-login`}
+          count={group.students.length}
+          disabled={group.students.length === 0}
+          onMessage={setInviteMsg}
+        />
 
         <span
           {...attributes}
@@ -258,16 +210,6 @@ const studentRows = group.students.map((student, i) => (
       onDelete();
     }}
     onCancel={() => setConfirmingDelete(false)}
-  />
-)}
-{confirmingInvite && (
-  <ConfirmDialog
-    message={`Log in URL გაეგზავნება ${group.students.length} მოსწავლეს. გავაგზავნო?`}
-    onConfirm={() => {
-      setConfirmingInvite(false);
-      sendLoginPage();
-    }}
-    onCancel={() => setConfirmingInvite(false)}
   />
 )}
     </div>
