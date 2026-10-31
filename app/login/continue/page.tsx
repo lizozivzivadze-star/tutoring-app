@@ -77,8 +77,8 @@ function ContinueForm() {
       <button
         onClick={handleContinue}
         disabled={status === "working" || !token}
-        className="w-full rounded-full border-2 border-marker text-marker font-medium py-2.5
-                   hover:bg-marker hover:text-white transition-colors disabled:opacity-50"
+        className="w-full rounded-full bg-gold text-ink font-medium py-3
+                   hover:bg-gold-hover transition-colors disabled:opacity-50"
       >
         {status === "working" ? "შემოწმდება..." : "შესვლა"}
       </button>
