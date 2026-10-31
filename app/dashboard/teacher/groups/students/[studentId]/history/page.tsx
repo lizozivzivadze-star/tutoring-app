@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "@/components/loading-bar";
-import VScrollBox from "@/components/v-scroll-box";
-import { formatDate, formatDuration } from "@/lib/format-time";
+import HScrollText from "@/components/h-scroll-text";
+import { formatDuration } from "@/lib/format-time";
 import UiIcon from "@/components/ui-icon";
+
+function ymd(iso: string) {
+  const d = new Date(iso);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
 
 type CompletedTest = {
   attemptId: string;
@@ -75,53 +81,50 @@ export default function StudentHistoryPage() {
                 ჯერ არაფერი აქვს გაკეთებული.
               </p>
             )}
-            {completed && completed.length > 0 && (
-              <table className="w-full text-sm border-collapse border border-paper-edge">
-                <thead>
-                  <tr className="text-ink-soft border-b border-paper-edge">
-                    <th className="py-2 px-1.5 font-medium text-left whitespace-nowrap overflow-hidden border-r border-paper-edge">ტესტი</th>
-                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-left whitespace-nowrap border-r border-paper-edge">თარიღი</th>
-                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-paper-edge">შედეგი</th>
-                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap border-r border-paper-edge">დრო</th>
-                    <th className="w-[1%] py-2 px-1.5 font-medium text-xs text-center whitespace-nowrap">review</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {completed.map((c) => (
-                    <tr key={c.attemptId} className="border-b border-paper-edge last:border-b-0">
-                      <td className="py-2 px-1.5 text-ink border-r border-paper-edge overflow-hidden align-middle">
-<VScrollBox className="h-[3.75rem] leading-5 [overflow-wrap:anywhere]">
-  <div className="min-h-full flex items-center">
-                            <div>
-                              {c.testTitle}{" "}
-                              <span className="text-ink-soft text-xs">
-                                ({c.themeName})
-                              </span>
-                            </div>
-                          </div>
-                        </VScrollBox>
-                      </td>
-                      <td className="py-2 px-1.5 text-xs text-ink-soft whitespace-nowrap border-r border-paper-edge align-middle">
-                        {formatDate(c.completedAt)}
-                      </td>
-                      <td className="py-2 px-1.5 text-center text-ink whitespace-nowrap border-r border-paper-edge align-middle">
-                        {c.score}/{c.totalQuestions}
-                      </td>
-                      <td className="py-2 px-1.5 text-center text-xs text-ink-soft whitespace-nowrap border-r border-paper-edge align-middle">
-                        {formatDuration(c.durationSeconds)}
-                      </td>
-                      <td className="py-2 px-1.5 text-center whitespace-nowrap align-middle">
-                        <Link
-                          href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
-                          className="icon-btn relative text-ink-soft hover:text-ledger after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-[2px] after:h-px after:w-5 after:bg-current"
-                        >
-                          <UiIcon name="results" />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        {completed && completed.length > 0 && (
+              <div
+                className="grid w-full gap-y-[3px]"
+                style={{ gridTemplateColumns: "max-content minmax(0,1fr) max-content max-content" }}
+              >
+                {/* სათაური */}
+                <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 border border-transparent px-2 font-body text-ink-soft">
+                  <div className="min-w-0 [contain:inline-size]">
+                    <HScrollText>თარიღი</HScrollText>
+                  </div>
+                  <HScrollText className="min-w-0">ტესტი</HScrollText>
+                  <div className="min-w-0 [contain:inline-size]">
+                    <HScrollText>დრო</HScrollText>
+                  </div>
+                  {/* სვეტის სიგანე = სიტყვა „შედეგი“; ხილულია მხოლოდ პიქტოგრამა */}
+                  <div className="relative flex justify-center">
+                    <span className="invisible">შედეგი</span>
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <UiIcon name="results" />
+                    </span>
+                  </div>
+                </div>
+
+                {completed.map((c) => (
+                  <div
+                    key={c.attemptId}
+                    className="col-span-full grid grid-cols-subgrid items-center gap-x-2 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink"
+                  >
+                    <span className="whitespace-nowrap text-ink-soft">
+                      {ymd(c.completedAt)}
+                    </span>
+                    <HScrollText className="min-w-0">{c.testTitle}</HScrollText>
+                    <span className="whitespace-nowrap">
+                      {formatDuration(c.durationSeconds)}
+                    </span>
+                    <Link
+                      href={`/dashboard/teacher/groups/students/${studentId}/history/${c.attemptId}`}
+                      className="whitespace-nowrap text-center text-marker underline underline-offset-2"
+                    >
+                      {c.score}/{c.totalQuestions}
+                    </Link>
+                  </div>
+                ))}
+              </div>
             )}
           </>
         )}
