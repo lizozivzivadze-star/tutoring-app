@@ -365,6 +365,7 @@ export default function SentTestsArchive({
 
   useEffect(() => {
     if (!open || !wrapRef.current) return;
+    if (restoreScrollRef.current != null) return; // აღდგენისას ავტო-სქროლი არ გვჭირდება
     return revealOnOpen(wrapRef.current);
   }, [open]);
   const [view, setView] = useState("");
@@ -472,7 +473,10 @@ export default function SentTestsArchive({
       if (!raw) return;
       sessionStorage.removeItem(RETURN_KEY);
       const s = JSON.parse(raw);
-      if (studentMode || Date.now() - s.savedAt > RETURN_MAX_AGE) return;
+      if (studentMode || Date.now() - s.savedAt > RETURN_MAX_AGE) {
+        window.dispatchEvent(new Event("archive-restored"));
+        return;
+      }
       setOpen(true);
       setView(s.view);
       viewRef.current = s.view;
@@ -481,19 +485,21 @@ export default function SentTestsArchive({
       restoreScrollRef.current = s.scrollY;
       loadRows(true).then((ok) => {
         if (ok) setShown(s.shown);
+        else window.dispatchEvent(new Event("archive-restored"));
       });
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // სია რომ გამოჩნდება, იმავე ადგილზე გადავსქროლოთ
-  useEffect(() => {
+   useEffect(() => {
     if (restoreScrollRef.current == null || !shown || !rows) return;
     const y = restoreScrollRef.current;
     restoreScrollRef.current = null;
-    requestAnimationFrame(() => window.scrollTo(0, y));
-  }, [shown, rows]);  
-
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: y, behavior: "instant" });
+      window.dispatchEvent(new Event("archive-restored"));
+    });
+  }, [shown, rows]);
   const tests = useMemo(() => {
     const seen = new Map<string, string>();
     (rows ?? []).forEach((r) => {

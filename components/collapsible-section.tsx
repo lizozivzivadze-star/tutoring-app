@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import LoadingBar from "@/components/loading-bar";
 
 export default function CollapsibleSection({
   children,
@@ -10,15 +12,29 @@ export default function CollapsibleSection({
   openKey?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [restoring, setRestoring] = useState(false);
 
-  // თუ არქივიდან შედეგზე გადასვლისას მდგომარეობა შევინახეთ, ბლოკი ღია დახვდეს
-  useEffect(() => {
+  // არქივიდან დაბრუნებისას: ბლოკს ვხსნით და გამოჩენამდე ეკრანს loading bar-ით ვფარავთ
+  useLayoutEffect(() => {
     try {
-      if (openKey && sessionStorage.getItem(openKey)) setOpen(true);
+      if (openKey && sessionStorage.getItem(openKey)) {
+        setOpen(true);
+        setRestoring(true);
+      }
     } catch {}
   }, [openKey]);
 
-
+  // არქივი აცხადებს, რომ მზადაა (ან 3 წამში მაინც ვხსნით)
+  useEffect(() => {
+    if (!restoring) return;
+    const done = () => setRestoring(false);
+    window.addEventListener("archive-restored", done);
+    const t = setTimeout(done, 3000);
+    return () => {
+      window.removeEventListener("archive-restored", done);
+      clearTimeout(t);
+    };
+  }, [restoring]);
 
   function toggle() {
     setOpen((v) => !v);
@@ -40,6 +56,14 @@ export default function CollapsibleSection({
       </button>
 
       {open && <div className="flex flex-col gap-5">{children}</div>}
+
+      {restoring &&
+        createPortal(
+          <div className="fixed inset-0 z-40 bg-paper flex items-center justify-center">
+            <LoadingBar />
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
