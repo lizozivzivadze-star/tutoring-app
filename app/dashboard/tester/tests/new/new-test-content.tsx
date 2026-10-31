@@ -125,6 +125,7 @@ async function persist(
         instruction: values.instruction,
         published: true,
         activated: true,
+                republish: true,
       }),
     });
     if (!res.ok) {

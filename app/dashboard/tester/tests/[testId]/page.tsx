@@ -202,7 +202,7 @@ return (
           onActivate={(v) =>
             save(
               { ...v, published: true },
-              { exitEditing: true, activate: true, republish: !test.published }
+              { exitEditing: true, activate: true, republish: true }
             )
           }
         />
