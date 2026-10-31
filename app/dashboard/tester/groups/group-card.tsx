@@ -111,7 +111,7 @@ const [inviteMsg, setInviteMsg] = useState("");
   expanded ? "border-marker" : "border-paper-line"
 }`}
     >
-      <div className="flex items-center gap-3 px-4 py-3">
+      <div className="flex items-center gap-3 pl-4 pr-3.5 py-3">
 
         {editing ? (
           <input
@@ -155,7 +155,7 @@ className="flex-1 min-w-0 border border-marker rounded-sm px-2 py-1 text-ink
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 pl-0 pr-1 select-none inline-flex items-center justify-center h-7"
+          className="cursor-grab text-ink-soft/60 pl-0 pr-0.5 select-none inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
           <DragHandleIcon />

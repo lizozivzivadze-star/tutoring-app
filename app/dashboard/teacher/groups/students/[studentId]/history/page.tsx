@@ -88,12 +88,12 @@ export default function StudentHistoryPage() {
               >
                 {/* სათაური */}
                 <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 border border-transparent px-2 font-body text-ink-soft">
-                  <div className="min-w-0 [contain:inline-size]">
-                    <HScrollText>თარიღი</HScrollText>
+                  <div className="min-w-0 text-center [contain:inline-size]">
+                    <HScrollText className="text-center">თარიღი</HScrollText>
                   </div>
-                  <HScrollText className="min-w-0">ტესტი</HScrollText>
-                  <div className="min-w-0 [contain:inline-size]">
-                    <HScrollText>დრო</HScrollText>
+                  <HScrollText className="min-w-0 text-center">ტესტი</HScrollText>
+                  <div className="min-w-0 text-center [contain:inline-size]">
+                    <HScrollText className="text-center">დრო</HScrollText>
                   </div>
                   {/* სვეტის სიგანე = სიტყვა „შედეგი“; ხილულია მხოლოდ პიქტოგრამა */}
                   <div className="relative flex justify-center">

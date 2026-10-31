@@ -61,7 +61,7 @@ export default function SendLoginButton({
           if (state === "idle" || state === "error") setConfirming(true);
         }}
         disabled={disabled || state === "sending"}
-        className="inline-flex items-center justify-center h-7 px-1 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
+        className="inline-flex items-center justify-center h-7 px-0.5 shrink-0 leading-none text-xs text-ink-soft hover:text-marker disabled:opacity-50"
       >
         {state === "sending" ? (
           "..."

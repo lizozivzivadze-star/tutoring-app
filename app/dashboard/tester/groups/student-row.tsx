@@ -47,7 +47,7 @@ export default function StudentRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="border border-paper-line rounded-sm bg-paper px-3 py-[8px]"
+      className="border border-paper-line rounded-sm bg-paper pl-3 pr-2.5 py-[8px]"
     >
       <div className="flex items-center gap-2 text-sm">
         <span className="text-ink-soft shrink-0">{index + 1}</span>
@@ -87,7 +87,7 @@ export default function StudentRow({
           {...attributes}
           {...listeners}
           style={{ touchAction: "none" }}
-          className="cursor-grab text-ink-soft/60 px-1 -ml-[4px] select-none shrink-0 inline-flex items-center justify-center h-7"
+          className="cursor-grab text-ink-soft/60 px-0.5 -ml-[2px] select-none shrink-0 inline-flex items-center justify-center h-7"
           title="გადაადგილება"
         >
           <DragHandleIcon />
