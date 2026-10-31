@@ -210,18 +210,17 @@ className="
             type="submit"
             disabled={status === "sending"}
             className="
-              w-full rounded-full border-2
-              border-marker py-2.5
-              font-body font-medium text-marker
+              w-full rounded-full bg-gold text-ink
+              font-medium py-3
               transition-colors
-              hover:bg-marker hover:text-white
+              hover:bg-gold-hover
               disabled:cursor-not-allowed
               disabled:opacity-50
             "
           >
             {status === "sending"
               ? "იგზავნება..."
-              : "გამომიგზავნე URL"}
+              : "გამომიგზავნე შესვლის ბმული"}
           </button>
 
           {status === "error" && (
