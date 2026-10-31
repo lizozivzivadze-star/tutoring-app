@@ -38,7 +38,6 @@ export default function CheckEmailContent({ template }: { template: string }) {
   const params = useSearchParams();
   const email = params.get("email") ?? "";
   const pollId = params.get("poll");
-  const [before, after] = template.split("{email}");
   const [finished, setFinished] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [returning, setReturning] = useState(false);
@@ -163,16 +162,17 @@ export default function CheckEmailContent({ template }: { template: string }) {
   return (
     <main className="min-h-dvh flex items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <div className="index-card px-6 py-8">
-          <h1 className="font-display text-lg text-ink mb-3">
-            URL გამოგზავნილია
+        <div className="index-card px-6 py-6">
+          <h1 className="font-display text-lg text-ink mb-2">
+            შესვლის ბმული გამოიგზავნა
           </h1>
-          <p className="text-ink-soft text-sm leading-relaxed">
-            {before}
-            <span className="text-ink font-medium">{email}</span>
-            {after}
+          <p className="text-ink-soft text-sm leading-snug">
+            <span className="text-marker font-medium break-all">{email}</span>-ზე
           </p>
-                   <div className="flex justify-center gap-4 mt-6">
+          <p className="text-ink-soft text-sm leading-snug mt-1">
+            გახსენით და დააწკაპუნეთ
+          </p>
+          <div className="flex justify-center gap-4 mt-3">
             {MAIL_APPS.map((app) => (
               <a
                 key={app.name}
@@ -192,7 +192,10 @@ export default function CheckEmailContent({ template }: { template: string }) {
                 {app.name}
               </a>
             ))}
-          </div> 
+          </div>
+          <p className="text-ink-soft text-sm leading-snug mt-3">
+            ან გახსენით თქვენი მეილბოქსი
+          </p>
         </div>
       </div>
     </main>
