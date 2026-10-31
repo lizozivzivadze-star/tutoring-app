@@ -119,7 +119,7 @@ export default function DropdownSelect({
           {placeholderInList && (
         <li
           aria-disabled="true"
-          className={`${centered ? "text-center" : "text-left"} px-3 py-2.5 font-body text-sm text-ink-soft cursor-default select-none`}
+          className={`${centered ? "text-center" : "text-left"} px-3 py-2.5 font-body text-sm text-ink-soft italic cursor-default select-none`}
         >
           {placeholder}
         </li>
