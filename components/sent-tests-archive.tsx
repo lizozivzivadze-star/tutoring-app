@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { revealOnOpen } from "@/lib/reveal-on-open";
 import DropdownSelect from "@/components/dropdown-select";
 import HScrollText from "@/components/h-scroll-text";
 import Link from "next/link";
 import { formatDuration } from "@/lib/format-time";
+import UiIcon from "@/components/ui-icon";
 
 type Row = {
   eventKey: string;
@@ -215,6 +216,51 @@ function StudentFrame({ row }: { row: Row }) {
 }
 
 const pctOf = (r: Row) => (r.total > 0 ? Math.round((r.score / r.total) * 100) : 0);
+
+// ქრონოლოგიური ცხრილი: თარიღი | ჯგუფი | მოსწავლე | ტესტი | დრო | შედეგი
+// თარიღი, დრო და შედეგი ზუსტად თავიანთი მნიშვნელობის სიგანისაა (max-content),
+// დარჩენილ სივრცეს ჯგუფი, მოსწავლე და ტესტი თანაბრად იყოფს.
+const chronoCols = (studentMode: boolean) =>
+  studentMode
+    ? "max-content minmax(0,1fr) minmax(0,1fr) max-content max-content"
+    : "max-content minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) max-content max-content";
+
+function ChronoHeader({ studentMode }: { studentMode: boolean }) {
+  return (
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 border border-transparent px-2 font-body text-ink-soft">
+      <div className="min-w-0 [contain:inline-size]">
+        <HScrollText>თარიღი</HScrollText>
+      </div>
+      <HScrollText className="min-w-0">ჯგუფი</HScrollText>
+      {!studentMode && <HScrollText className="min-w-0">მოსწავლე</HScrollText>}
+      <HScrollText className="min-w-0">ტესტი</HScrollText>
+      <div className="min-w-0 [contain:inline-size]">
+        <HScrollText>დრო</HScrollText>
+      </div>
+      <div className="flex justify-center">
+        <UiIcon name="results" />
+      </div>
+    </div>
+  );
+}
+
+function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
+  return (
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
+      <span className="whitespace-nowrap text-ink-soft">{ymd(row.sentAt)}</span>
+      <HScrollText className="min-w-0">{row.groupName}</HScrollText>
+      {!studentMode && <HScrollText className="min-w-0">{row.studentName}</HScrollText>}
+      <HScrollText className="min-w-0">{row.testTitle}</HScrollText>
+      <span className="whitespace-nowrap">{formatDuration(row.durationSeconds)}</span>
+      <Link
+        href={row.href}
+        className="whitespace-nowrap text-marker underline underline-offset-2"
+      >
+        {row.score}/{row.total}
+      </Link>
+    </div>
+  );
+}
 
 // „შედეგების მიხედვით": მოსწავლე / ტესტი / თარიღი / შედეგი, 4 ხაზად
 function ResultFrame({ row }: { row: Row }) {
@@ -540,6 +586,12 @@ export default function SentTestsArchive({
 
   const list = useMemo(() => {
     if (!rows || !shown) return [];
+        if (view === "chronological") {
+      return rows.map((r) => ({
+        key: `${r.eventKey}:${r.studentId}`,
+        node: <ChronoRow row={r} studentMode={studentMode} />,
+      }));
+    }
     if (view === "by-result") {
       return rows
         .filter((r) => pctOf(r) === Number(selectedId))
@@ -564,7 +616,7 @@ export default function SentTestsArchive({
     return buildBlocks(
       view === "by-test" ? rows.filter((r) => r.testId === selectedId) : rows
     ).map((b) => ({ key: b.key, node: <TestFrame block={b} /> }));
-  }, [rows, shown, view, selectedId]);
+  }, [rows, shown, view, selectedId, studentMode]);
 
   const results = shown && (
     <>
@@ -578,9 +630,23 @@ export default function SentTestsArchive({
         </p>
       )}
 
-      {list.slice(0, visible).map((item) => (
-        <div key={item.key}>{item.node}</div>
-      ))}
+      {view === "chronological" ? (
+        list.length > 0 && (
+          <div
+            className="grid w-full gap-y-[3px]"
+            style={{ gridTemplateColumns: chronoCols(studentMode) }}
+          >
+            <ChronoHeader studentMode={studentMode} />
+            {list.slice(0, visible).map((item) => (
+              <Fragment key={item.key}>{item.node}</Fragment>
+            ))}
+          </div>
+        )
+      ) : (
+        list.slice(0, visible).map((item) => (
+          <div key={item.key}>{item.node}</div>
+        ))
+      )}
 
       {list.length > visible && (
         <button
