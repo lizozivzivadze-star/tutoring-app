@@ -253,7 +253,7 @@ export default function TestForm({
         >
           {saving === "publish" ? "ქვეყნდება..." : "Publish"}
         </button>
-        {!activated && onActivate && (
+        {onActivate && (
           <button
             onClick={() => run("activate")}
             disabled={saving !== null}
