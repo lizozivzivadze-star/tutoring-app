@@ -228,12 +228,12 @@ const chronoCols = (studentMode: boolean) =>
 
 const chronoColsDesktop = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,13fr) minmax(0,7fr) max-content max-content"
-    : "max-content minmax(0,23fr) minmax(0,23fr) minmax(0,14fr) max-content max-content";
-
+    ? "max-content minmax(0,23fr) minmax(0,17fr) max-content max-content"
+    : "max-content minmax(0,43fr) minmax(0,43fr) minmax(0,34fr) max-content max-content";
+    
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
   return (
-    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 md:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
       <div className="min-w-0 text-center [contain:inline-size]">
         <HScrollText className="text-center">თარიღი</HScrollText>
       </div>
@@ -254,11 +254,11 @@ function ChronoHeader({ studentMode }: { studentMode: boolean }) {
 
 function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
   return (
-    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 md:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
       <span className="whitespace-nowrap text-ink-soft">{ymd(row.sentAt)}</span>
-      <HScrollText className="min-w-0 md:text-center">{row.groupName}</HScrollText>
-      {!studentMode && <HScrollText className="min-w-0 md:text-center">{row.studentName}</HScrollText>}
-      <HScrollText className="min-w-0 md:text-center">{row.testTitle}</HScrollText>
+      <HScrollText className="min-w-0 sm:text-center">{row.groupName}</HScrollText>
+      {!studentMode && <HScrollText className="min-w-0 sm:text-center">{row.studentName}</HScrollText>}
+      <HScrollText className="min-w-0 sm:text-center">{row.testTitle}</HScrollText>
       <span className="whitespace-nowrap">{formatDuration(row.durationSeconds)}</span>
       <Link
         href={row.href}
@@ -641,7 +641,7 @@ export default function SentTestsArchive({
       {view === "chronological" ? (
         list.length > 0 && (
           <div
-            className="grid w-full gap-y-[3px] [grid-template-columns:var(--cols)] md:[grid-template-columns:var(--cols-md)]"
+            className="grid w-full gap-y-[3px] [grid-template-columns:var(--cols)] sm:[grid-template-columns:var(--cols-md)]"
             style={
               {
                 "--cols": chronoCols(studentMode),
