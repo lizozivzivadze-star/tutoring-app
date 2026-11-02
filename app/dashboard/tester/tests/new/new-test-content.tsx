@@ -108,6 +108,13 @@ async function persist(
   if ("error" in result) return result.error;
   router.push(`/dashboard/tester/tests/${result.id}`);
 }
+  // Deactivate: ტესტს ინახავს გამოუქვეყნებლად და გამორთულად, მერე ტესტის გვერდზე გადადის.
+  async function handleDeactivate(values: FormValues) {
+    const result = await persist(values);
+    if ("error" in result) return result.error;
+    router.push(`/dashboard/tester/tests/${result.id}`);
+  }
+
   // Activate: ტესტს ერთდროულად აქვეყნებს და ააქტიურებს, მერე ტესტის გვერდზე გადადის.
   async function handleActivate(values: FormValues) {
     const result = await persist(
@@ -158,6 +165,7 @@ async function persist(
           onSave={handleSave}
           onPublish={handlePublish}
           onActivate={handleActivate}
+          onDeactivate={handleDeactivate}
         />
       )}
     </div>
