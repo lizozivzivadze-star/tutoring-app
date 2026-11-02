@@ -274,6 +274,10 @@ onClick={() => {
         </>
       )}
 
+      {showProfile && (
+        <ProfileModal onClose={() => setShowProfile(false)} />
+      )}
+
       {guide && createPortal(
         <>
           <div
