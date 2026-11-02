@@ -32,6 +32,16 @@ function getFrom(): { name: string; address: string } {
   return { name: "Tvini🧠n", address };
 }
 
+// ალიასები: ბაზაში/login-ში რჩება მოსწავლის მეილი, მაგრამ წერილი
+// რეალურად მიდის მეორე მისამართზე.
+const EMAIL_ALIASES: Record<string, string> = {
+  "lizozivzivadze.student@gmail.com": "lizozivzivadze@gmail.com",
+};
+
+function resolveRecipient(email: string): string {
+  return EMAIL_ALIASES[email.trim().toLowerCase()] ?? email;
+}
+
 const ROLE_LABELS: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "მასწავლებლის",
   student: "მოსწავლის",
@@ -83,7 +93,7 @@ export async function sendMagicLinkEmail({
 
   const from = getFrom();
 
-  await t.sendMail({ from, to, subject, text, html });
+  await t.sendMail({ from, to: resolveRecipient(to), subject, text, html });
 }
 
 // ბმულს ფერს პირდაპირ ვაძლევთ, რომ მეილის კლიენტებმა თავისით არ შეუცვალონ
@@ -124,7 +134,7 @@ export async function sendLoginInviteEmail({
   }
 
   const from = getFrom();
-  await t.sendMail({ from, to, subject, text, html });
+  await t.sendMail({ from, to: resolveRecipient(to), subject, text, html });
 }
 
 export async function sendFeedbackEmail({

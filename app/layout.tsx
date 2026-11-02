@@ -12,6 +12,7 @@ import BottomSpace from "@/components/bottom-space";
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
 // generated per-request instead of the static export this started as.
+export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   return {
