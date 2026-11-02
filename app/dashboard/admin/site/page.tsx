@@ -42,7 +42,7 @@ export default function AdminSiteTab() {
       <div className="pt-2">
         <label className="text-sm text-ink-soft block mb-2">URL</label>
         <p className="text-ink font-body text-sm break-all">
-          https://tutoring-app-dusky.vercel.app/
+          https://tvinion.ge/
         </p>
       </div>
     </div>
