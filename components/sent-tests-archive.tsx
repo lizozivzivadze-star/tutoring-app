@@ -228,9 +228,9 @@ const chronoCols = (studentMode: boolean) =>
 
 const chronoColsDesktop = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,101fr) minmax(0,85fr) minmax(max-content,7fr) minmax(max-content,7fr)"
-    : "max-content minmax(0,173fr) minmax(0,173fr) minmax(0,170fr) minmax(max-content,42fr) minmax(max-content,42fr)";
-
+    ? "max-content minmax(0,60fr) minmax(0,126fr) minmax(max-content,7fr) minmax(max-content,7fr)"
+    : "max-content minmax(0,150fr) minmax(0,150fr) minmax(0,216fr) minmax(max-content,42fr) minmax(max-content,42fr)";
+    
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
