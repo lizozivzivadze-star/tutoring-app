@@ -228,9 +228,9 @@ const chronoCols = (studentMode: boolean) =>
 
 const chronoColsDesktop = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,23fr) minmax(0,17fr) max-content max-content"
-    : "max-content minmax(0,43fr) minmax(0,43fr) minmax(0,34fr) max-content max-content";
-    
+    ? "max-content minmax(0,101fr) minmax(0,85fr) minmax(max-content,7fr) minmax(max-content,7fr)"
+    : "max-content minmax(0,173fr) minmax(0,173fr) minmax(0,170fr) minmax(max-content,42fr) minmax(max-content,42fr)";
+
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
@@ -259,10 +259,10 @@ function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
       <HScrollText className="min-w-0 sm:text-center">{row.groupName}</HScrollText>
       {!studentMode && <HScrollText className="min-w-0 sm:text-center">{row.studentName}</HScrollText>}
       <HScrollText className="min-w-0 sm:text-center">{row.testTitle}</HScrollText>
-      <span className="whitespace-nowrap">{formatDuration(row.durationSeconds)}</span>
+      <span className="whitespace-nowrap sm:text-center">{formatDuration(row.durationSeconds)}</span>
       <Link
         href={row.href}
-        className="whitespace-nowrap text-marker underline underline-offset-2"
+        className="whitespace-nowrap text-marker underline underline-offset-2 sm:text-center"
       >
         {row.score}/{row.total}
       </Link>
