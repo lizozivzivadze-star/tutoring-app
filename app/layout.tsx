@@ -7,7 +7,7 @@ import PullToRefresh from "@/components/pull-to-refresh";
 import BottomSpace from "@/components/bottom-space";
 // ერთადერთი thumbnail-ის ფაილი მთელი საიტისთვის: bookmark-ი, ბრაუზერის
 // ტაბი, ბმულის პრევიუ (Messenger, WhatsApp...). შეცვლა მხოლოდ აქ.
-const THUMBNAIL = "/icons/round-512.png";
+   const THUMBNAIL = "/icons/thumbnail.png";
 
 // Title/description are admin-editable (Settings.siteTitle /
 // siteDescription, set from /dashboard/admin), so metadata has to be
@@ -55,8 +55,8 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" href="/icons/round-512.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+           <link rel="icon" type="image/png" href="/icons/thumbnail.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/mascot-180.png" />
         <meta name="theme-color" content="#564cbf" />
                 <script
