@@ -66,7 +66,7 @@ export default function TestDetailPage() {
       questions: QuestionDraft[];
       published: boolean;
     },
-    options?: { exitEditing?: boolean; republish?: boolean; activate?: boolean }
+    options?: { exitEditing?: boolean; republish?: boolean; activate?: boolean; deactivate?: boolean }
   ) {
     const res = await fetch(`/api/tests/${testId}`, {
       method: "PATCH",
@@ -77,7 +77,11 @@ export default function TestDetailPage() {
         instruction: values.instruction,
         published: values.published,
         republish: options?.republish ?? false,
-        ...(options?.activate ? { activated: true } : {}),
+        ...(options?.activate
+          ? { activated: true }
+          : options?.deactivate
+          ? { activated: false }
+          : {}),
         // Locked tests keep their questions server-side no matter
         // what — but we still avoid sending a payload that would be
         // rejected outright, so the rest of the save (title etc.)
@@ -196,6 +200,7 @@ return (
           initialQuestions={toDrafts(test)}
           locked={test.locked}
           onSave={(v) => save(v)}
+          onDeactivate={(v) => save(v, { exitEditing: true, deactivate: true })}
           onPublish={(v) =>
             save({ ...v, published: true }, { exitEditing: true, republish: true })
           }

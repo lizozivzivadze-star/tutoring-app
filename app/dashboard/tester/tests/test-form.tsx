@@ -26,6 +26,7 @@ export default function TestForm({
   onSave,
   onPublish,
   onActivate,                 // ← ახალი
+  onDeactivate,
   saveLabel = "Save",
   onTypeChange,
 }: {
@@ -58,6 +59,13 @@ export default function TestForm({
     questions: QuestionDraft[];
     published: boolean;
   }) => Promise<string | void>;
+  onDeactivate?: (values: {
+    themeId: string;
+    title: string;
+    instruction: string;
+    questions: QuestionDraft[];
+    published: boolean;
+  }) => Promise<string | void>;
   saveLabel?: string;
   onTypeChange?: (type: TestTemplate) => void;
 }) {
@@ -71,7 +79,7 @@ export default function TestForm({
   );
   const [error, setError] = useState("");
   const [activated, setActivated] = useState(initialActivated);
-  const [saving, setSaving] = useState<"save" | "publish" | "activate" | null>(null);
+  const [saving, setSaving] = useState<"save" | "publish" | "activate" | "deactivate" | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -127,15 +135,22 @@ export default function TestForm({
     else applyImport(result.test);
   }
 
-  async function run(action: "save" | "publish" | "activate") {
+  async function run(action: "save" | "publish" | "activate" | "deactivate") {
     setSaving(action);
     setError("");
 
-    // Save და Activate გამოქვეყნების სტატუსს არ ცვლის, მხოლოდ Publish ცვლის.
-    // Save გამოქვეყნების სტატუსს არ ცვლის; Publish და Activate ტესტს აქვეყნებს.
-    const nextPublished = action === "save" ? published : true;
+    // Save და Deactivate გამოქვეყნების სტატუსს არ ცვლის;
+    // Publish და Activate ტესტს აქვეყნებს.
+    const nextPublished =
+      action === "save" || action === "deactivate" ? published : true;
     const fn =
-      action === "save" ? onSave : action === "publish" ? onPublish : onActivate;
+      action === "save"
+        ? onSave
+        : action === "publish"
+        ? onPublish
+        : action === "activate"
+        ? onActivate
+        : onDeactivate;
     const result = fn
       ? await fn({
           themeId,
@@ -150,6 +165,7 @@ export default function TestForm({
     } else {
       setPublished(nextPublished);
       if (action === "activate") setActivated(true);
+      if (action === "deactivate") setActivated(false);
       if (action === "save") {
         setSavedNotice(true);
       }
@@ -325,11 +341,11 @@ export default function TestForm({
         <p className="text-sm text-ledger text-center">შენახულია</p>
       )}
 
-      <div className="flex gap-3 border-t border-paper-line pt-4">
+      <div className="grid grid-cols-2 gap-3 border-t border-paper-line pt-4">
         <button
           onClick={() => run("save")}
           disabled={saving !== null}
-          className="flex-1 rounded-full border-2 border-marker text-marker
+          className="rounded-full border-2 border-marker text-marker
                      font-medium py-2.5 hover:bg-marker hover:text-white
                      transition-colors disabled:opacity-50"
         >
@@ -338,7 +354,7 @@ export default function TestForm({
         <button
           onClick={() => run("publish")}
           disabled={saving !== null}
-          className="flex-1 rounded-full bg-ledger text-white font-medium py-2.5
+          className="rounded-full bg-ledger text-white font-medium py-2.5
                      hover:opacity-90 transition-colors disabled:opacity-50"
         >
           {saving === "publish" ? "ქვეყნდება..." : "Publish"}
@@ -347,10 +363,23 @@ export default function TestForm({
           <button
             onClick={() => run("activate")}
             disabled={saving !== null}
-            className="flex-1 rounded-full bg-gold text-ink font-medium py-2.5
-                       hover:bg-gold-hover transition-colors disabled:opacity-50"
+            className={`rounded-full bg-gold text-ink font-medium py-2.5
+                       hover:bg-gold-hover transition-colors disabled:opacity-50 ${
+                         onDeactivate ? "" : "col-span-2"
+                       }`}
           >
             {saving === "activate" ? "აქტიურდება..." : "Activate"}
+          </button>
+        )}
+        {onDeactivate && (
+          <button
+            onClick={() => run("deactivate")}
+            disabled={saving !== null}
+            className="rounded-full border-2 border-paper-line text-ink-soft
+                       font-medium py-2.5 hover:bg-paper
+                       transition-colors disabled:opacity-50"
+          >
+            {saving === "deactivate" ? "ითიშება..." : "Deactivate"}
           </button>
         )}
       </div>

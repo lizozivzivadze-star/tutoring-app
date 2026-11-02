@@ -168,7 +168,7 @@ export async function PATCH(
         title: finalTitle,
         instruction: finalInstruction,
         published: published ?? existing.published,
-        ...(activated === true && { activated: true }),
+        ...(typeof activated === "boolean" && { activated }),
         ...(republish && {
           publishedAt: now,
           updatedAt: now,
