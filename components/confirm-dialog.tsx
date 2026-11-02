@@ -5,10 +5,14 @@ export default function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
+  cancelLabel = "გაუქმება",
+  confirmLabel = "დასტური",
 }: {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  cancelLabel?: string;
+  confirmLabel?: string;
 }) {
   if (typeof document === "undefined") return null;
 
@@ -27,14 +31,14 @@ export default function ConfirmDialog({
             className="flex-1 rounded-full border border-paper-line text-ink-soft
                        py-2 text-sm font-medium hover:bg-paper transition-colors"
           >
-            გაუქმება
+            {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
             className="flex-1 rounded-full bg-gold text-ink py-2 text-sm
                        font-medium hover:bg-gold-hover transition-colors"
           >
-            დასტური
+            {confirmLabel}
           </button>
         </div>
       </div>

@@ -378,6 +378,8 @@ onClick={() => {
             {confirmLogout && (
   <ConfirmDialog
 message="გსურთ აპლიკაციიდან გასვლა?"
+    cancelLabel="არა"
+    confirmLabel="დიახ"
     onConfirm={() => signOut({ callbackUrl: "/login" })}
     onCancel={() => setConfirmLogout(false)}
   />
