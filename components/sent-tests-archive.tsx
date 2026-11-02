@@ -218,24 +218,30 @@ function StudentFrame({ row }: { row: Row }) {
 const pctOf = (r: Row) => (r.total > 0 ? Math.round((r.score / r.total) * 100) : 0);
 
 // ქრონოლოგიური ცხრილი: თარიღი | ჯგუფი | მოსწავლე | ტესტი | დრო | შედეგი
-// თარიღი, დრო და შედეგი ზუსტად თავიანთი მნიშვნელობის სიგანისაა (max-content),
+// მობილური: თარიღი, დრო და შედეგი თავიანთი მნიშვნელობის სიგანისაა (max-content),
 // დარჩენილ სივრცეს ჯგუფი, მოსწავლე და ტესტი თანაბრად იყოფს.
+// დესკტოპი (md+): ჯგუფი და მოსწავლე თავიანთი ტექსტის სიგანისაა, ტესტი იღებს დანარჩენს.
 const chronoCols = (studentMode: boolean) =>
   studentMode
     ? "max-content minmax(0,1fr) minmax(0,1fr) max-content max-content"
     : "max-content minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) max-content max-content";
 
+const chronoColsDesktop = (studentMode: boolean) =>
+  studentMode
+    ? "max-content minmax(0,max-content) minmax(0,1fr) max-content max-content"
+    : "max-content minmax(0,max-content) minmax(0,max-content) minmax(0,1fr) max-content max-content";
+
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
   return (
-    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 border border-transparent px-2 font-body text-ink-soft">
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 md:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
       <div className="min-w-0 text-center [contain:inline-size]">
         <HScrollText className="text-center">თარიღი</HScrollText>
       </div>
-      <HScrollText className="min-w-0 text-center">ჯგუფი</HScrollText>
+      <HScrollText className="min-w-0 text-center md:text-left">ჯგუფი</HScrollText>
       {!studentMode && (
-        <HScrollText className="min-w-0 text-center">მოსწავლე</HScrollText>
+        <HScrollText className="min-w-0 text-center md:text-left">მოსწავლე</HScrollText>
       )}
-      <HScrollText className="min-w-0 text-center">ტესტი</HScrollText>
+      <HScrollText className="min-w-0 text-center md:text-left">ტესტი</HScrollText>
       <div className="min-w-0 text-center [contain:inline-size]">
         <HScrollText className="text-center">დრო</HScrollText>
       </div>
@@ -248,7 +254,7 @@ function ChronoHeader({ studentMode }: { studentMode: boolean }) {
 
 function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
   return (
-    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 md:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
       <span className="whitespace-nowrap text-ink-soft">{ymd(row.sentAt)}</span>
       <HScrollText className="min-w-0">{row.groupName}</HScrollText>
       {!studentMode && <HScrollText className="min-w-0">{row.studentName}</HScrollText>}
@@ -635,8 +641,13 @@ export default function SentTestsArchive({
       {view === "chronological" ? (
         list.length > 0 && (
           <div
-            className="grid w-full gap-y-[3px]"
-            style={{ gridTemplateColumns: chronoCols(studentMode) }}
+            className="grid w-full gap-y-[3px] [grid-template-columns:var(--cols)] md:[grid-template-columns:var(--cols-md)]"
+            style={
+              {
+                "--cols": chronoCols(studentMode),
+                "--cols-md": chronoColsDesktop(studentMode),
+              } as React.CSSProperties
+            }
           >
             <ChronoHeader studentMode={studentMode} />
             {list.slice(0, visible).map((item) => (
