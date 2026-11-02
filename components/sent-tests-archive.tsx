@@ -237,11 +237,11 @@ function ChronoHeader({ studentMode }: { studentMode: boolean }) {
       <div className="min-w-0 text-center [contain:inline-size]">
         <HScrollText className="text-center">თარიღი</HScrollText>
       </div>
-      <HScrollText className="min-w-0 text-center md:text-left">ჯგუფი</HScrollText>
+      <HScrollText className="min-w-0 text-center">ჯგუფი</HScrollText>
       {!studentMode && (
-        <HScrollText className="min-w-0 text-center md:text-left">მოსწავლე</HScrollText>
+        <HScrollText className="min-w-0 text-center">მოსწავლე</HScrollText>
       )}
-      <HScrollText className="min-w-0 text-center md:text-left">ტესტი</HScrollText>
+      <HScrollText className="min-w-0 text-center">ტესტი</HScrollText>
       <div className="min-w-0 text-center [contain:inline-size]">
         <HScrollText className="text-center">დრო</HScrollText>
       </div>
@@ -256,9 +256,9 @@ function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 md:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
       <span className="whitespace-nowrap text-ink-soft">{ymd(row.sentAt)}</span>
-      <HScrollText className="min-w-0">{row.groupName}</HScrollText>
-      {!studentMode && <HScrollText className="min-w-0">{row.studentName}</HScrollText>}
-      <HScrollText className="min-w-0">{row.testTitle}</HScrollText>
+      <HScrollText className="min-w-0 md:text-center">{row.groupName}</HScrollText>
+      {!studentMode && <HScrollText className="min-w-0 md:text-center">{row.studentName}</HScrollText>}
+      <HScrollText className="min-w-0 md:text-center">{row.testTitle}</HScrollText>
       <span className="whitespace-nowrap">{formatDuration(row.durationSeconds)}</span>
       <Link
         href={row.href}
