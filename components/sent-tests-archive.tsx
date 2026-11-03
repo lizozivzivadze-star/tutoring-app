@@ -228,7 +228,7 @@ const chronoCols = (studentMode: boolean) =>
 
 const chronoColsDesktop = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,60fr) minmax(0,126fr) minmax(max-content,7fr) minmax(max-content,7fr)"
+    ? "max-content minmax(0,150fr) minmax(0,366fr) minmax(max-content,42fr) minmax(max-content,42fr)"
     : "max-content minmax(0,150fr) minmax(0,150fr) minmax(0,216fr) minmax(max-content,42fr) minmax(max-content,42fr)";
     
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
