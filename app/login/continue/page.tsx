@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import UiIcon from "@/components/ui-icon";
 import { copyText, detectInstallEnv, getEnvSignals } from "@/lib/install-env";
@@ -8,15 +8,51 @@ import { copyText, detectInstallEnv, getEnvSignals } from "@/lib/install-env";
 function ContinueForm() {
   const params = useSearchParams();
   const token = params.get("token");
-  const [status, setStatus] = useState<"idle" | "working" | "error">("idle");
+  // ტოკენი არსებობს → ავტომატურად ვაგრძელებთ, ამიტომ თავიდანვე "working"
+  // (რომ ღილაკი "შესვლა" წამით არ აციმციმდეს). თუ ავტომატური გადასვლა
+  // არ ხდება (iOS/ბოტი), ეფექტი "idle"-ზე გადაიყვანს.
+  const [status, setStatus] = useState<"idle" | "working" | "error">(
+    token ? "working" : "idle"
+  );
   const [needsSafari, setNeedsSafari] = useState(false);
   const [copied, setCopied] = useState(false);
+  const started = useRef(false); // ტოკენის ერთჯერადობის დასაცავად
+
+  async function handleContinue() {
+    if (!token || started.current) return;
+    started.current = true;
+    setStatus("working");
+    try {
+      const res = await fetch(
+        `/api/auth/verify?token=${encodeURIComponent(token)}`,
+        { method: "POST" }
+      );
+      if (res.redirected) {
+        window.location.href = res.url;
+        return;
+      }
+    } catch {
+      // ქსელის შეცდომა — ქვემოთ "error"
+    }
+    started.current = false;
+    setStatus("error");
+  }
 
   // iPhone-ზე ბმული Safari-ში არ გაიხსნა (Chrome, Firefox... ან ჩაშენებული
   // ბრაუზერი): აპის ეკრანზე დამატება მხოლოდ Safari-დან ადვილდება.
+  // სხვა შემთხვევაში (და თუ ბოტი არ არის) ავტომატურად ვაგრძელებთ.
   useEffect(() => {
     const env = detectInstallEnv(getEnvSignals());
-    setNeedsSafari(env === "ios-other" || env === "inapp-ios");
+    const iosNeedsSafari = env === "ios-other" || env === "inapp-ios";
+    setNeedsSafari(iosNeedsSafari);
+
+    const isBot = navigator.webdriver === true;
+    if (iosNeedsSafari || isBot || !token) {
+      setStatus("idle");
+      return;
+    }
+    handleContinue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ტოკენს აქ არ ვხარჯავთ (ის მხოლოდ "შესვლა"-ზე იწვის), ამიტომ იგივე
@@ -27,19 +63,6 @@ function ContinueForm() {
 
   async function handleCopy() {
     setCopied(await copyText(window.location.href));
-  }
-
-  async function handleContinue() {
-    if (!token) return;
-    setStatus("working");
-    const res = await fetch(`/api/auth/verify?token=${encodeURIComponent(token)}`, {
-      method: "POST",
-    });
-    if (res.redirected) {
-      window.location.href = res.url;
-    } else {
-      setStatus("error");
-    }
   }
 
   return (
@@ -73,14 +96,16 @@ function ContinueForm() {
           </p>
         </div>
       )}
-      <p className="text-ink mb-6">დააჭირეთ გასაგრძელებლად</p>
+      {status !== "working" && (
+        <p className="text-ink mb-6">დააჭირეთ გასაგრძელებლად</p>
+      )}
       <button
         onClick={handleContinue}
         disabled={status === "working" || !token}
         className="w-full rounded-full bg-gold text-ink font-medium py-3
                    hover:bg-gold-hover transition-colors disabled:opacity-50"
       >
-        {status === "working" ? "შემოწმდება..." : "შესვლა"}
+        {status === "working" ? "შემოწმება..." : "შესვლა"}
       </button>
       {status === "error" && (
         <p className="mt-4 text-sm text-danger">
