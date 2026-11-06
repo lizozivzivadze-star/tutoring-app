@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useInstall } from "@/components/install-provider";
 import { useInstallGuide } from "@/components/install-guide";
 import { isStandalone } from "@/lib/install-env";
 
-// "აპლიკაციად დაყენების" ბარათი გვერდის თავში. ჩანს მანამ, სანამ აპი
-// არ დაინსტალირდება; ღილაკი ზუსტად იმას აკეთებს, რასაც მენიუს „ეკრანზე".
+// "აპლიკაციად დაყენების" ბარათი გვერდის თავში.
+// ჩანს ყველა მოწყობილობაზე და ყველა ბრაუზერში. იმალება მხოლოდ მაშინ,
+// როცა საიტი უკვე აპის რეჟიმშია გახსნილი (ხატულიდან).
 //   variant="app"   — ყველა გვერდზე (layout.tsx-იდან); login-ზე და ტესტის
 //                     შესრულებისას დამალულია
 //   variant="login" — ლოგინის გვერდის შიგნით (page.tsx-იდან), ყოველთვის ჩანს
@@ -18,65 +18,21 @@ export default function InstallBanner({
   variant?: "app" | "login";
 }) {
   const pathname = usePathname();
-  const { installed } = useInstall();
   const { openInstall, guideModal } = useInstallGuide();
-  // ჯერ არ ვიცით დაინსტალირებულია თუ არა: სანამ არ შევამოწმებთ, არ ვაჩვენებთ
-  // (რომ დაინსტალირებულ აპში ბარათი წამით არ აციმციმდეს).
   const [checked, setChecked] = useState(false);
-  const [alreadyInstalled, setAlreadyInstalled] = useState(false);
+  const [standalone, setStandalone] = useState(false);
 
   useEffect(() => {
-    let hidden = isStandalone();
-    try {
-      if (localStorage.getItem("tvinion-installed") === "1") hidden = true;
-    } catch {}
-    setAlreadyInstalled(hidden);
+    setStandalone(isStandalone());
     setChecked(true);
-
-    // ჩვეულებრივ ჩანართშია გახსნილი, მაგრამ აპი ამ მოწყობილობაზე უკვე დგას?
-    const nav = navigator as Navigator & {
-      getInstalledRelatedApps?: () => Promise<unknown[]>;
-    };
-    if (!hidden && nav.getInstalledRelatedApps) {
-      nav
-        .getInstalledRelatedApps()
-        .then((apps) => {
-          if (apps.length > 0) setAlreadyInstalled(true);
-        })
-        .catch(() => {});
-    }
   }, []);
-
 
   const isLoginPage = pathname === "/" || pathname.startsWith("/login");
   const isTakingTest = pathname.startsWith("/dashboard/student/take");
 
-  // სერვერთან სინქრონი (შესვლის შემდეგ): აპის რეჟიმში გახსნისას ვინახავთ, რომ
-  // ეს მომხმარებელი აპს იყენებს; ნებისმიერ სხვა ბრაუზერში (მაგ. iPhone Safari)
-  // ეს ბარათს მალავს. ლოგინის გვერდზე სესია არ არის, ამიტომ იქ არ ვცდილობთ.
-  const serverDone = useRef(false);
-  useEffect(() => {
-    if (serverDone.current || isLoginPage) return;
-    fetch("/api/app-installed", { method: isStandalone() ? "POST" : "GET" })
-      .then((r) => {
-        if (r.status === 401) return null; // ჯერ არ შესულა: შემდეგ გვერდზე ვცდით
-        serverDone.current = true;
-        return r.json();
-      })
-      .then((d) => {
-        if (d?.installed) {
-          try {
-            localStorage.setItem("tvinion-installed", "1");
-          } catch {}
-          setAlreadyInstalled(true);
-        }
-      })
-      .catch(() => {});
-  }, [pathname, isLoginPage]);
-
   if (variant === "app" && (isLoginPage || isTakingTest)) return null;
 
-  if (!checked || installed || alreadyInstalled) return null;
+  if (!checked || standalone) return null;
 
   return (
     <>
