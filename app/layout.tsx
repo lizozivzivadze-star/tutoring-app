@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getSettings } from "@/lib/settings";
 import InstallProvider from "@/components/install-provider";
+import InstallBanner from "@/components/install-banner";
 import FeedbackButton from "@/components/feedback-button";
 import PullToRefresh from "@/components/pull-to-refresh";
 import BottomSpace from "@/components/bottom-space";
@@ -69,7 +70,10 @@ export default function RootLayout({
       </head>
             <body>
         <InstallProvider>
-  <div id="page-shell">{children}</div>
+  <div id="page-shell">
+    <InstallBanner />
+    {children}
+  </div>
 </InstallProvider>
 <FeedbackButton />
 <PullToRefresh />

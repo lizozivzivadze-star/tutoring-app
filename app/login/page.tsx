@@ -3,6 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import InstallBanner from "@/components/install-banner";
 import { useState, useEffect, FormEvent, CSSProperties } from "react";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -130,6 +131,8 @@ className="
   lg:h-auto lg:flex-1
 "
       >
+        <InstallBanner variant="login" />
+
         {/* ზედა სივრცე */}
         <div
           className="
