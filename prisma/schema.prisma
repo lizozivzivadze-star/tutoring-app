@@ -77,6 +77,19 @@ enum Role {
   tester
 }
 
+// Records that a user has opened the site as an installed app (from the
+// home-screen icon). Lets the "install the app" banner disappear in any
+// browser after login, e.g. iPhone Safari, which cannot detect the
+// installed app by itself. One row per user (role + id), no relations.
+model AppInstall {
+  id        String   @id @default(cuid())
+  role      Role
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@unique([role, userId])
+}
+
 // Third user type. identityEmail is what's typed on the shared login
 // form and is what the one-email-one-role uniqueness check runs
 // against (checked against Teacher.email / Student.email elsewhere).

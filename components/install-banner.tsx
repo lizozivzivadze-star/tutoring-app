@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useInstall } from "@/components/install-provider";
@@ -47,8 +47,33 @@ export default function InstallBanner({
     }
   }, []);
 
+
   const isLoginPage = pathname === "/" || pathname.startsWith("/login");
   const isTakingTest = pathname.startsWith("/dashboard/student/take");
+
+  // სერვერთან სინქრონი (შესვლის შემდეგ): აპის რეჟიმში გახსნისას ვინახავთ, რომ
+  // ეს მომხმარებელი აპს იყენებს; ნებისმიერ სხვა ბრაუზერში (მაგ. iPhone Safari)
+  // ეს ბარათს მალავს. ლოგინის გვერდზე სესია არ არის, ამიტომ იქ არ ვცდილობთ.
+  const serverDone = useRef(false);
+  useEffect(() => {
+    if (serverDone.current || isLoginPage) return;
+    fetch("/api/app-installed", { method: isStandalone() ? "POST" : "GET" })
+      .then((r) => {
+        if (r.status === 401) return null; // ჯერ არ შესულა: შემდეგ გვერდზე ვცდით
+        serverDone.current = true;
+        return r.json();
+      })
+      .then((d) => {
+        if (d?.installed) {
+          try {
+            localStorage.setItem("tvinion-installed", "1");
+          } catch {}
+          setAlreadyInstalled(true);
+        }
+      })
+      .catch(() => {});
+  }, [pathname, isLoginPage]);
+
   if (variant === "app" && (isLoginPage || isTakingTest)) return null;
 
   if (!checked || installed || alreadyInstalled) return null;
