@@ -84,7 +84,7 @@ export default function InstallBanner({
           className="h-11 w-11 shrink-0 object-contain"
         />
 
-        <div className="flex h-11 min-w-0 flex-1 flex-col justify-between text-sm leading-5 text-marker">
+        <div className="flex h-11 min-w-0 flex-1 flex-col justify-center text-sm leading-5 text-marker">
           <span className="font-bold">Tvinion</span>
           <span className="truncate">დააყენე აპლიკაციად</span>
         </div>
