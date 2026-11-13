@@ -58,9 +58,9 @@ function ContinueForm() {
 
   if (status === "confirmed") {
     return (
-      <div className="w-full max-w-sm bg-white border border-paper-line rounded-md px-6 py-8 text-center">
-        <p className="text-ink font-medium mb-3">შესვლა დადასტურდა</p>
-        <p className="text-ink-soft">
+      <div className="w-full max-w-sm rounded-md border border-[#f8e7a8]/60 bg-[#fffbe9] px-6 py-8 text-center shadow-sm">
+        <p className="mb-3 font-medium text-marker">შესვლა დადასტურდა</p>
+        <p className="text-marker">
           დაბრუნდით აპში — იქ შესვლა ავტომატურად დასრულდება.
         </p>
       </div>
