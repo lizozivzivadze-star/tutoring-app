@@ -45,9 +45,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
   const loginUrl = new URL("/login", req.url);
+  // mode=confirm: ბმულს მხოლოდ ვადასტურებთ (usedAt), ამ ბრაუზერს კი არ
+  // ვაშვებთ. სესიას ბმულის მომთხოვნი ფანჯარა (აპი) იღებს /api/auth/claim-ით.
+  const confirmOnly = req.nextUrl.searchParams.get("mode") === "confirm";
 
   if (!token) {
-    return NextResponse.redirect(loginUrl);
+    return confirmOnly
+      ? NextResponse.json({ ok: false }, { status: 400 })
+      : NextResponse.redirect(loginUrl);
   }
 
   const record = await prisma.loginToken.findUnique({ where: { token } });
@@ -56,7 +61,9 @@ export async function POST(req: NextRequest) {
     !record || record.usedAt || record.expiresAt < new Date();
 
   if (isInvalid) {
-    return NextResponse.redirect(loginUrl);
+    return confirmOnly
+      ? NextResponse.json({ ok: false }, { status: 400 })
+      : NextResponse.redirect(loginUrl);
   }
 
   // usedAt-ს ვნიშნავთ, რომ ორიგინალმა ფანჯარამ (claim route-ით)
@@ -65,6 +72,10 @@ export async function POST(req: NextRequest) {
     where: { token },
     data: { usedAt: new Date() },
   });
+
+  if (confirmOnly) {
+    return NextResponse.json({ ok: true });
+  }
 
   const destination = DASHBOARD_BY_ROLE[record.role];
 

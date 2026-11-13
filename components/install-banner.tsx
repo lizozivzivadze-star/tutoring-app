@@ -9,14 +9,9 @@ import { isStandalone } from "@/lib/install-env";
 
 // "აპლიკაციად დაყენების" ბარათი გვერდის თავში. ჩანს მანამ, სანამ ეს
 // ექაუნთი აპს ერთხელ მაინც არ გახსნის; მერე ქრება (სერვერზე ვინახავთ).
-//   variant="app"   — ყველა გვერდზე (layout.tsx-იდან); login-ზე და ტესტის
-//                     შესრულებისას დამალულია
-//   variant="login" — ლოგინის გვერდის შიგნით (page.tsx-იდან), ყოველთვის ჩანს
-export default function InstallBanner({
-  variant = "app",
-}: {
-  variant?: "app" | "login";
-}) {
+// ყველა გვერდზე (layout.tsx-იდან); login-ზე და ტესტის შესრულებისას
+// დამალულია. ლოგინის გვერდზე ინსტალაციას install-card.tsx აჩვენებს.
+export default function InstallBanner() {
   const pathname = usePathname();
   const { installed } = useInstall();
   const { openInstall, guideModal } = useInstallGuide();
@@ -64,7 +59,7 @@ export default function InstallBanner({
       .catch(() => setServerChecked(true));
   }, [pathname, isLoginPage]);
 
-  if (variant === "app" && (isLoginPage || isTakingTest)) return null;
+  if (isLoginPage || isTakingTest) return null;
 
   if (!standaloneChecked || !serverChecked) return null;
   if (installed || standalone || serverInstalled) return null;
@@ -72,9 +67,7 @@ export default function InstallBanner({
   return (
     <>
       <div
-        className={`flex items-center gap-3 rounded-2xl border border-[#f8e7a8] bg-[#fffbe9] px-3 py-2.5 shadow-sm ${
-          variant === "login" ? "mt-3 w-full shrink-0" : "m-2.5"
-        }`}
+        className="m-2.5 flex items-center gap-3 rounded-2xl border border-[#f8e7a8] bg-[#fffbe9] px-3 py-2.5 shadow-sm"
       >
         <Image
           src="/icons/mascot-nobg.png"

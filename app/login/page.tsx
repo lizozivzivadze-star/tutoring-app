@@ -3,10 +3,15 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import InstallBanner from "@/components/install-banner";
+import InstallCard from "@/components/install-card";
+import { isStandalone } from "@/lib/install-env";
 import { useState, useEffect, FormEvent, CSSProperties } from "react";
 
 type Status = "idle" | "sending" | "sent" | "error";
+
+// "checking" — ჯერ არ ვიცით (პირველი ჩატვირთვა), "form" — ლოგინის ფორმა,
+// "install" — ბრაუზერში (ყველა მოწყობილობა): ფორმის ნაცვლად აპის დაყენება
+type Mode = "checking" | "form" | "install";
 
 type Stats = {
   subjects: number;
@@ -26,8 +31,15 @@ export default function LoginPage() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [stats, setStats] = useState<Stats | null>(null);
+  const [mode, setMode] = useState<Mode>("checking");
 
   const router = useRouter();
+
+  // ლოგინი მხოლოდ აპშია (standalone), ტელეფონზეც და კომპიუტერზეც.
+  // ბრაუზერში აპის დაყენებას ვთავაზობთ.
+  useEffect(() => {
+    setMode(isStandalone() ? "form" : "install");
+  }, []);
 
   const [appH, setAppH] = useState<number | null>(null);
 
@@ -131,8 +143,6 @@ className="
   lg:h-auto lg:flex-1
 "
       >
-        <InstallBanner variant="login" />
-
         {/* ზედა სივრცე */}
         <div
           className="
@@ -172,66 +182,70 @@ className="
           {fmt(stats?.questions)} შეკითხვა
         </p>
 
-        {/* შესვლის ფორმა */}
-        <form
-          onSubmit={handleSubmit}
-          className="
-            my-4 shrink-0 rounded-md border
-            border-paper-line bg-white
-            px-6 py-6 shadow-sm
-          "
-        >
-          <label
-            htmlFor="email"
-            className="mb-2 block text-center text-sm text-ink-soft"
-          >
-            შეიყვანეთ
-          </label>
-
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+        {/* შესვლის ფორმა (აპში/კომპიუტერზე) ან აპის დაყენება (ბრაუზერში) */}
+        {mode === "install" && <InstallCard />}
+        {mode === "checking" && <div className="my-4 min-h-48 shrink-0" />}
+        {mode === "form" && (
+          <form
+            onSubmit={handleSubmit}
             className="
-              mb-5 w-full min-w-0 rounded-sm
-              border border-paper-line
-              px-3 py-2.5
-              text-center font-body text-ink
-              placeholder:text-ink-soft/50
-              focus:border-marker
-              focus:outline-none
-              focus:ring-2 focus:ring-marker/40
-            "
-          />
-
-          <button
-            type="submit"
-            disabled={status === "sending"}
-            className="
-              w-full rounded-full bg-gold text-ink
-              font-medium py-3
-              transition-colors
-              hover:bg-gold-hover
-              disabled:cursor-not-allowed
-              disabled:opacity-50
+              my-4 shrink-0 rounded-md border
+              border-paper-line bg-white
+              px-6 py-6 shadow-sm
             "
           >
-            {status === "sending"
-              ? "იგზავნება..."
-              : "გამომიგზავნე შესვლის ბმული"}
-          </button>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-center text-sm text-ink-soft"
+            >
+              შეიყვანეთ
+            </label>
 
-          {status === "error" && (
-            <p className="mt-4 text-sm text-danger">
-              {errorMessage}
-            </p>
-          )}
-        </form>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="
+                mb-5 w-full min-w-0 rounded-sm
+                border border-paper-line
+                px-3 py-2.5
+                text-center font-body text-ink
+                placeholder:text-ink-soft/50
+                focus:border-marker
+                focus:outline-none
+                focus:ring-2 focus:ring-marker/40
+              "
+            />
+
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="
+                w-full rounded-full bg-gold text-ink
+                font-medium py-3
+                transition-colors
+                hover:bg-gold-hover
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+            >
+              {status === "sending"
+                ? "იგზავნება..."
+                : "გამომიგზავნე შესვლის ბმული"}
+            </button>
+
+            {status === "error" && (
+              <p className="mt-4 text-sm text-danger">
+                {errorMessage}
+              </p>
+            )}
+          </form>
+        )}
 
         {/* გამოყენების სტატისტიკა */}
         <p className="shrink-0 text-center text-sm text-ink-soft">
