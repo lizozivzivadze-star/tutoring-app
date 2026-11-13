@@ -196,9 +196,6 @@ export default function CheckEmailContent({ template }: { template: string }) {
           <p className="text-ink-soft text-sm leading-snug mt-3">
             ან გახსენით თქვენი მეილბოქსი
           </p>
-          <p className="text-ink-soft text-sm leading-snug mt-3">
-            ბმულზე დაჭერის შემდეგ დაბრუნდით აქ — შესვლა ავტომატურად მოხდება
-          </p>
         </div>
       </div>
     </main>

@@ -10,8 +10,9 @@ function ContinueForm() {
   // ტოკენი არსებობს → ავტომატურად ვაგრძელებთ, ამიტომ თავიდანვე "working"
   // (რომ ღილაკი "შესვლა" წამით არ აციმციმდეს). თუ ავტომატური გადასვლა
   // არ ხდება (ბოტი), ეფექტი "idle"-ზე გადაიყვანს.
+  const alreadyConfirmed = params.get("confirmed") === "1";
   const [status, setStatus] = useState<"idle" | "working" | "error" | "confirmed">(
-    token ? "working" : "idle"
+    alreadyConfirmed ? "confirmed" : token ? "working" : "idle"
   );
   const started = useRef(false); // ტოკენის ერთჯერადობის დასაცავად
 
@@ -47,6 +48,7 @@ function ContinueForm() {
   }
 
   useEffect(() => {
+    if (alreadyConfirmed) return;
     const isBot = navigator.webdriver === true;
     if (isBot || !token) {
       setStatus("idle");
@@ -59,10 +61,8 @@ function ContinueForm() {
   if (status === "confirmed") {
     return (
       <div className="w-full max-w-sm rounded-md border border-[#f8e7a8]/60 bg-[#fffbe9] px-6 py-8 text-center shadow-sm">
-        <p className="mb-3 font-medium text-marker">შესვლა დადასტურდა</p>
-        <p className="text-marker">
-          დაბრუნდით აპში — იქ შესვლა ავტომატურად დასრულდება.
-        </p>
+        <p className="mb-3 font-bold text-marker">შესვლა დადასტურდა</p>
+        <p className="text-marker">დაბრუნდით აპლიკაციაში</p>
       </div>
     );
   }

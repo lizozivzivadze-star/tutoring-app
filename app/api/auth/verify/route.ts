@@ -29,6 +29,14 @@ export async function GET(req: NextRequest) {
       const dest = DASHBOARD_BY_ROLE[session.user.role];
       return NextResponse.redirect(new URL(dest, req.url));
     }
+    // ბმული ახლახან დადასტურდა (მაგ. ბრაუზერმა გვერდი ხელახლა ჩატვირთა) —
+    // "/login"-ის ნაცვლად დადასტურების გვერდს ვაჩვენებთ.
+    if (
+      record?.usedAt &&
+      Date.now() - record.usedAt.getTime() < 10 * 60 * 1000
+    ) {
+      return NextResponse.redirect(new URL("/login/continue?confirmed=1", req.url));
+    }
     return NextResponse.redirect(loginUrl);
   }
 
