@@ -25,7 +25,13 @@ export default function InstallCard() {
 
   return (
     <>
-      <div className="my-4 flex shrink-0 flex-col items-center rounded-md border border-[#f8e7a8]/60 bg-[#fffbe9] px-6 py-6 shadow-sm">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label="დააყენე აპლიკაცია"
+        onClick={openInstall}
+        className="group my-4 flex shrink-0 cursor-pointer flex-col items-center rounded-md border border-[#f8e7a8]/60 bg-[#fffbe9] px-6 py-6 shadow-sm"
+      >
         <Image
           src="/icons/mascot-nobg.png"
           alt=""
@@ -46,11 +52,9 @@ export default function InstallCard() {
           </p>
         )}
 
-        <button
-          type="button"
-          aria-label="დააყენე აპლიკაცია"
-          onClick={openInstall}
-          className="mt-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink shadow-[0_2px_0_#f2c230] transition-colors hover:bg-gold-hover"
+        <span
+          aria-hidden="true"
+          className="mt-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink shadow-[0_2px_0_#f2c230] transition-colors group-hover:bg-gold-hover group-active:bg-gold-hover"
         >
           <svg
             width="22"
@@ -67,7 +71,7 @@ export default function InstallCard() {
             <path d="M7 11l5 5 5-5" />
             <path d="M5 20h14" />
           </svg>
-        </button>
+        </span>
       </div>
 
       {guideModal}
