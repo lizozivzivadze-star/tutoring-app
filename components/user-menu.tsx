@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { signOut } from "next-auth/react";
-import { useInstallGuide } from "@/components/install-guide";
 import ProfileModal from "@/components/profile-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
 import UiIcon from "@/components/ui-icon";
@@ -35,7 +34,6 @@ export default function UserMenu({
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelResult, setCancelResult] = useState<{ testTitle: string; groupName: string | null; studentName: string | null }[] | null>(null);
-  const { openInstall, guideModal } = useInstallGuide();
   async function handleCancelPending() {
     setCancelling(true);
     const res = await fetch(cancelEndpoint, { method: "POST" });
@@ -65,38 +63,9 @@ export default function UserMenu({
             <button
               onClick={() => {
                 setOpen(false);
-                openInstall();
-              }}
-              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
-            >
-              <span className="inline-flex items-center justify-center shrink-0" style={{ width: 20, height: 20 }}>
-<svg
-  width="18.5"
-  height="18.5"
-  viewBox="270 120 1210 1215"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="64"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-                className="shrink-0"
-              >
-                <rect x="310" y="377" width="396" height="402" rx="14" />
-                <rect x="824" y="377" width="396" height="402" rx="14" />
-                <rect x="310" y="894" width="396" height="402" rx="14" />
-                <rect x="824" y="894" width="396" height="402" rx="14" />
-                <path d="M1249 250H1438M1343 157V343" />
-              </svg>
-              </span>
-              ეკრანზე
-            </button>
-            <button
-              onClick={() => {
-                setOpen(false);
                 setShowProfile(true);
               }}
-              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 whitespace-nowrap flex items-center gap-2"
             >
             <UiIcon name="profile" />
               პროფილი
@@ -130,8 +99,6 @@ onClick={() => {
       {showProfile && (
         <ProfileModal onClose={() => setShowProfile(false)} />
       )}
-
-      {guideModal}
 
       {confirmCancel && createPortal(
         <>
