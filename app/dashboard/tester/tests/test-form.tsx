@@ -79,7 +79,7 @@ export default function TestForm({
   );
   const [error, setError] = useState("");
   const [activated, setActivated] = useState(initialActivated);
-  const [saving, setSaving] = useState<"save" | "publish" | "activate" | "deactivate" | null>(null);
+  const [saving, setSaving] = useState<"save" | "publish" | "unpublish" | "activate" | "deactivate" | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -140,15 +140,20 @@ export default function TestForm({
     else applyImport(result.test);
   }
 
-  async function run(action: "save" | "publish" | "activate" | "deactivate") {
+  async function run(action: "save" | "publish" | "unpublish" | "activate" | "deactivate") {
     setSaving(action);
     setError("");
     const snap = current;
 
     // Save და Deactivate გამოქვეყნების სტატუსს არ ცვლის;
     // Publish და Activate ტესტს აქვეყნებს.
+    // unpublish: გამოქვეყნებას იხსნის (და Activate-საც თიშავს)
     const nextPublished =
-      action === "save" || action === "deactivate" ? published : true;
+      action === "unpublish"
+        ? false
+        : action === "save" || action === "deactivate"
+        ? published
+        : true;
     const fn =
       action === "save"
         ? onSave
@@ -172,7 +177,7 @@ export default function TestForm({
       setSavedSnap(snap);
       setPublished(nextPublished);
       if (action === "activate") setActivated(true);
-      if (action === "deactivate") setActivated(false);
+      if (action === "deactivate" || action === "unpublish") setActivated(false);
       if (action === "save") {
         setSavedNotice(true);
       }
@@ -361,7 +366,7 @@ export default function TestForm({
           {saving === "save" ? "ინახება..." : saveLabel}
         </button>
         <button
-          onClick={() => run("publish")}
+          onClick={() => run(published ? "unpublish" : "publish")}
           disabled={saving !== null}
           className={`rounded-full border-2 text-sm font-medium py-2.5 transition-colors disabled:opacity-50 ${
             published
@@ -369,7 +374,11 @@ export default function TestForm({
               : "border-paper-line bg-paper text-ink-soft"
           }`}
         >
-          {saving === "publish" ? "ქვეყნდება..." : "Publish"}
+          {saving === "publish"
+            ? "ქვეყნდება..."
+            : saving === "unpublish"
+            ? "იხსნება..."
+            : "Publish"}
         </button>
         {onActivate && (
           <button

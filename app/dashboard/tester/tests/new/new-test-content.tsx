@@ -111,7 +111,6 @@ async function persist(
   async function handleDeactivate(values: FormValues) {
     const result = await persist(values);
     if ("error" in result) return result.error;
-    router.push(`/dashboard/tester/tests/${result.id}`);
   }
 
   // Activate: ტესტს ერთდროულად აქვეყნებს და ააქტიურებს, მერე ტესტის გვერდზე გადადის.

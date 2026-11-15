@@ -160,15 +160,12 @@ export default function ThemeCard({
                       }
                     >
                       <HScrollText>
-    {test.published && (
+    {test.activated ? (
       <span
         aria-hidden="true"
-        className={`inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 ${
-          test.activated ? "bg-ledger" : "bg-ink-soft/50"
-        }`}
+        className="inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 bg-ledger"
       />
-    )}
-    {(test._count?.sentTests ?? 0) > 0 && (
+    ) : (
       <svg
         width="12"
         height="14"

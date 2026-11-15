@@ -9,7 +9,6 @@ export type TestSummary = {
   activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
-  _count?: { sentTests?: number };
 };
 
 export type ThemeRecord = {
