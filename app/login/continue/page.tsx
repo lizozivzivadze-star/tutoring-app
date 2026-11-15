@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { isStandalone } from "@/lib/install-env";
+import LoadingBar from "@/components/loading-bar";
 
 function ContinueForm() {
   const params = useSearchParams();
@@ -67,18 +68,20 @@ function ContinueForm() {
     );
   }
 
+  if (status === "working") {
+    return <LoadingBar className="w-full max-w-sm" />;
+  }
+
   return (
     <div className="w-full max-w-sm bg-white border border-paper-line rounded-md px-6 py-8 text-center">
-      {status !== "working" && (
-        <p className="text-ink mb-6">დააჭირეთ გასაგრძელებლად</p>
-      )}
+      <p className="text-ink mb-6">დააჭირეთ გასაგრძელებლად</p>
       <button
         onClick={handleContinue}
-        disabled={status === "working" || !token}
+        disabled={!token}
         className="w-full rounded-full bg-gold text-ink font-medium py-3
                    hover:bg-gold-hover transition-colors disabled:opacity-50"
       >
-        {status === "working" ? "შემოწმება..." : "შესვლა"}
+        შესვლა
       </button>
       {status === "error" && (
         <p className="mt-4 text-sm text-danger">
