@@ -198,7 +198,7 @@ className="
               htmlFor="email"
               className="mb-2 block text-center text-sm text-ink-soft"
             >
-              შეიყვანეთ
+              შეიყვანეთ Email
             </label>
 
             <input
