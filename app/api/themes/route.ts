@@ -27,7 +27,7 @@ export async function GET() {
           activated: true,
           updatedAt: true,
           publishedAt: true,
-          _count: { select: { questions: true } },
+          _count: { select: { questions: true, sentTests: true } },
         },
       },
     },

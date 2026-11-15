@@ -161,7 +161,27 @@ export default function ThemeCard({
                     >
                       <HScrollText>
     {test.published && (
-      <span className={test.activated ? "text-ledger" : "text-ink-soft/50"}>• </span>
+      <span
+        aria-hidden="true"
+        className={`inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 ${
+          test.activated ? "bg-ledger" : "bg-ink-soft/50"
+        }`}
+      />
+    )}
+    {(test._count?.sentTests ?? 0) > 0 && (
+      <svg
+        width="12"
+        height="14"
+        viewBox="0 0 12 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        aria-hidden="true"
+        className="inline-block align-[-1px] mr-1"
+      >
+        <rect x="1" y="6" width="10" height="7" rx="1.5" />
+        <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" />
+      </svg>
     )}
     {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
   </HScrollText>
