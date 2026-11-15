@@ -11,9 +11,13 @@ import { useEffect, useRef, useState } from "react";
 export default function HScrollText({
   children,
   className = "",
+  startAtEnd = false,
+  fadePx = 24,
 }: {
   children: React.ReactNode;
   className?: string;
+  startAtEnd?: boolean;
+  fadePx?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [fade, setFade] = useState<{ left: boolean; right: boolean }>({
@@ -34,8 +38,9 @@ export default function HScrollText({
   }
 
   useEffect(() => {
-    updateFade();
     const el = ref.current;
+    if (startAtEnd && el) el.scrollLeft = el.scrollWidth;
+    updateFade();
     if (!el) return;
     const ro = new ResizeObserver(updateFade);
     ro.observe(el);
@@ -60,8 +65,8 @@ export default function HScrollText({
   }
 
   const maskParts: string[] = [];
-  if (fade.left) maskParts.push("linear-gradient(to right, transparent, black 24px)");
-  if (fade.right) maskParts.push("linear-gradient(to left, transparent, black 24px)");
+  if (fade.left) maskParts.push(`linear-gradient(to right, transparent, black ${fadePx}px)`);
+  if (fade.right) maskParts.push(`linear-gradient(to left, transparent, black ${fadePx}px)`);
   const maskStyle =
     maskParts.length === 2
       ? { WebkitMaskImage: `${maskParts[0]}, ${maskParts[1]}`, maskImage: `${maskParts[0]}, ${maskParts[1]}`, WebkitMaskComposite: "source-in" as const, maskComposite: "intersect" as const }

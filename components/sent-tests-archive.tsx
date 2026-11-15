@@ -251,7 +251,7 @@ function ChronoHeader({ studentMode }: { studentMode: boolean }) {
 function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
-      <span className="whitespace-nowrap text-ink-soft">{ymd(row.sentAt)}</span>
+      <HScrollText startAtEnd fadePx={6} className="w-[5.5ch] text-ink-soft">{ymd(row.sentAt)}</HScrollText>
       <HScrollText className="min-w-0 sm:text-center">{row.groupName}</HScrollText>
       {!studentMode && <HScrollText className="min-w-0 sm:text-center">{row.studentName}</HScrollText>}
       <HScrollText className="min-w-0 sm:text-center">{row.testTitle}</HScrollText>
