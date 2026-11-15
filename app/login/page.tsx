@@ -249,11 +249,10 @@ className="
 
         {/* გამოყენების სტატისტიკა */}
         <p className="shrink-0 text-center text-sm text-ink-soft">
-          დღეის მდგომარეობით{" "}
-          {fmt(stats?.teachers)} მასწავლებელმა ჩაატარა{" "}
-          {fmt(stats?.sentTests)} ტესტი, ხოლო{" "}
-          {fmt(stats?.students)} მოსწავლემ გააკეთა{" "}
-          {fmt(stats?.attempts)} ტესტი.
+          სულ {fmt(stats?.teachers)} მასწავლებელმა{" "}
+          {fmt(stats?.sentTests)} ტესტი ჩაატარა, ხოლო{" "}
+          {fmt(stats?.students)} აბიტურიენტმა{" "}
+          {fmt(stats?.attempts)} ტესტი გააკეთა.
         </p>
 
         {/* მთავარი რეგულირებადი სივრცე */}
