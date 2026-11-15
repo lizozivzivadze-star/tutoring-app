@@ -200,9 +200,9 @@ return (
           initialQuestions={toDrafts(test)}
           locked={test.locked}
           onSave={(v) => save(v)}
-          onDeactivate={(v) => save(v, { exitEditing: true, deactivate: true })}
+          onDeactivate={(v) => save(v, { deactivate: true })}
           onPublish={(v) =>
-            save({ ...v, published: true }, { exitEditing: true, republish: true })
+            save({ ...v, published: true }, { republish: true })
           }
           onActivate={(v) =>
             save(

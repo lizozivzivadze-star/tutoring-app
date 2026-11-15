@@ -106,7 +106,6 @@ async function persist(
     { republish: true }
   );
   if ("error" in result) return result.error;
-  router.push(`/dashboard/tester/tests/${result.id}`);
 }
   // Deactivate: ტესტს ინახავს გამოუქვეყნებლად და გამორთულად, მერე ტესტის გვერდზე გადადის.
   async function handleDeactivate(values: FormValues) {

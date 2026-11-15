@@ -86,6 +86,11 @@ export default function TestForm({
   const [importErrors, setImportErrors] = useState<string[]>([]);
   const [importNotice, setImportNotice] = useState("");
   const [pendingImport, setPendingImport] = useState<ParsedTest | null>(null);
+  // Save ოქროსფერია, სანამ ბოლო შენახვის შემდეგ ტესტში არაფერი შეცვლილა
+  const current = JSON.stringify({ themeId, title, instruction, questions });
+  const [savedSnap, setSavedSnap] = useState<string | null>(() =>
+    initialQuestions ? current : null
+  );
 
   useEffect(() => {
     fetch("/api/themes")
@@ -138,6 +143,7 @@ export default function TestForm({
   async function run(action: "save" | "publish" | "activate" | "deactivate") {
     setSaving(action);
     setError("");
+    const snap = current;
 
     // Save და Deactivate გამოქვეყნების სტატუსს არ ცვლის;
     // Publish და Activate ტესტს აქვეყნებს.
@@ -163,6 +169,7 @@ export default function TestForm({
     if (result) {
       setError(result);
     } else {
+      setSavedSnap(snap);
       setPublished(nextPublished);
       if (action === "activate") setActivated(true);
       if (action === "deactivate") setActivated(false);
@@ -341,45 +348,44 @@ export default function TestForm({
         <p className="text-sm text-ledger text-center">შენახულია</p>
       )}
 
-      <div className="grid grid-cols-2 gap-3 border-t border-paper-line pt-4">
+      <div className="grid grid-cols-3 gap-3 border-t border-paper-line pt-4">
         <button
           onClick={() => run("save")}
           disabled={saving !== null}
-          className="rounded-full border-2 border-marker text-marker
-                     font-medium py-2.5 hover:bg-marker hover:text-white
-                     transition-colors disabled:opacity-50"
+          className={`rounded-full border-2 text-sm font-medium py-2.5 transition-colors disabled:opacity-50 ${
+            savedSnap === current
+              ? "border-gold bg-gold text-ink"
+              : "border-paper-line bg-paper text-ink-soft"
+          }`}
         >
           {saving === "save" ? "ინახება..." : saveLabel}
         </button>
         <button
           onClick={() => run("publish")}
           disabled={saving !== null}
-          className="rounded-full bg-ledger text-white font-medium py-2.5
-                     hover:opacity-90 transition-colors disabled:opacity-50"
+          className={`rounded-full border-2 text-sm font-medium py-2.5 transition-colors disabled:opacity-50 ${
+            published
+              ? "border-gold bg-gold text-ink"
+              : "border-paper-line bg-paper text-ink-soft"
+          }`}
         >
           {saving === "publish" ? "ქვეყნდება..." : "Publish"}
         </button>
         {onActivate && (
           <button
-            onClick={() => run("activate")}
+            onClick={() => run(activated ? "deactivate" : "activate")}
             disabled={saving !== null}
-            className={`rounded-full bg-gold text-ink font-medium py-2.5
-                       hover:bg-gold-hover transition-colors disabled:opacity-50 ${
-                         onDeactivate ? "" : "col-span-2"
-                       }`}
+            className={`rounded-full border-2 text-sm font-medium py-2.5 transition-colors disabled:opacity-50 ${
+              activated
+                ? "border-gold bg-gold text-ink"
+                : "border-paper-line bg-paper text-ink-soft"
+            }`}
           >
-            {saving === "activate" ? "აქტიურდება..." : "Activate"}
-          </button>
-        )}
-        {onDeactivate && (
-          <button
-            onClick={() => run("deactivate")}
-            disabled={saving !== null}
-            className="rounded-full border-2 border-paper-line text-ink-soft
-                       font-medium py-2.5 hover:bg-paper
-                       transition-colors disabled:opacity-50"
-          >
-            {saving === "deactivate" ? "ითიშება..." : "Deactivate"}
+            {saving === "activate"
+              ? "აქტიურდება..."
+              : saving === "deactivate"
+              ? "ითიშება..."
+              : "Activate"}
           </button>
         )}
       </div>
