@@ -204,6 +204,7 @@ export default function StartTab() {
           placeholder="აირჩიეთ ჯგუფი ან მოსწავლე"
           placeholderInList
           compactList
+          groupStyle
           options={groups.flatMap((g) => [
             { value: `group:${g.id}`, label: g.name },
             ...g.students.map((s) => ({

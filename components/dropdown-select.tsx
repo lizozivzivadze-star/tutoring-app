@@ -41,6 +41,7 @@ export default function DropdownSelect({
   borderClassName = "border-paper-line",
   placeholderInList = false,
     compactList = false,
+  groupStyle = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -58,6 +59,8 @@ export default function DropdownSelect({
   placeholderInList?: boolean;
     // true: სია მაქსიმუმ 5 სტრიქონს აჩვენებს, დანარჩენი სქროლდება
   compactList?: boolean;
+  // true: ჯგუფი/მოსწავლე ფერად ბლოკებად (52px / 46px, როგორც „ჯგუფების" სექციაში)
+  groupStyle?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -150,16 +153,25 @@ export default function DropdownSelect({
       <OptionLabel label={o.label} dot={o.dot} />
     </li>
   ) : (
-    <li key={o.value}>
+    <li
+      key={o.value}
+      className={groupStyle ? (o.indent ? "pl-[22px] pr-2 py-1" : "px-2 py-1") : undefined}
+    >
       <button
         type="button"
         onClick={() => {
           onChange(o.value);
           setOpen(false);
         }}
-className={`w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[22px] pr-3" : "px-3"} py-2.5 font-body text-sm hover:bg-paper ${
-          o.value === value ? "bg-paper text-marker" : "text-ink"
-        }`}
+className={
+  groupStyle
+    ? `w-full flex items-center text-left px-3 font-body text-sm rounded-sm [&>*]:min-w-0 [&>*]:flex-1 ${
+        o.indent ? "h-[46px] bg-[#fffbe9]" : "h-[52px] bg-paper"
+      } ${o.value === value ? "text-marker font-medium" : "text-ink"}`
+    : `w-full ${centered ? "text-center" : "text-left"} ${o.indent ? "pl-[22px] pr-3" : "px-3"} py-2.5 font-body text-sm hover:bg-paper ${
+        o.value === value ? "bg-paper text-marker" : "text-ink"
+      }`
+}
       >
         <OptionLabel label={o.label} dot={o.dot} />
       </button>
