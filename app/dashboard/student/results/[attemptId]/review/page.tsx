@@ -75,7 +75,14 @@ export default function ReviewPage() {
 
         <div className="flex flex-col gap-4 border-t border-paper-line pt-4">
           {data.questions.map((q, i) => (
-            <div key={q.id} className="border-b border-paper-line pb-4">
+            <div
+              key={q.id}
+              className={`border-b border-paper-line pb-4 ${
+                q.yourAnswer !== q.correctAnswer
+                  ? "bg-danger/10 -mx-2 px-2 pt-2 rounded"
+                  : ""
+              }`}
+            >
               <p className="text-ink text-sm mb-2">
                 <span className="text-ink-soft">შ{i + 1}.</span> {q.prompt}
               </p>
