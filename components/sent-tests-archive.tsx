@@ -234,18 +234,14 @@ const chronoColsDesktop = (studentMode: boolean) =>
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 border border-transparent px-2 font-body text-ink-soft">
-      <div className="min-w-0 text-center [contain:inline-size]">
-        <HScrollText className="text-center">თარიღი</HScrollText>
-      </div>
-      <HScrollText className="min-w-0 text-center">ჯგუფი</HScrollText>
+      <span className="text-left">🗓️</span>
+      <span className="min-w-0 text-center">👥</span>
       {!studentMode && (
-        <HScrollText className="min-w-0 text-center">მოსწავლე</HScrollText>
+        <span className="min-w-0 text-center">🎓</span>
       )}
-      <HScrollText className="min-w-0 text-center">ტესტი</HScrollText>
-      <div className="min-w-0 text-center [contain:inline-size]">
-        <HScrollText className="text-center">დრო</HScrollText>
-      </div>
-      <div className="flex justify-center">
+      <span className="min-w-0 text-center">📝</span>
+      <span className="text-center">⏱️</span>
+      <div className="flex justify-end">
         <UiIcon name="results" />
       </div>
     </div>
@@ -262,7 +258,7 @@ function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
       <span className="whitespace-nowrap sm:text-center">{formatDuration(row.durationSeconds)}</span>
       <Link
         href={row.href}
-        className="whitespace-nowrap text-marker underline underline-offset-2 sm:text-center"
+        className="whitespace-nowrap text-marker underline underline-offset-2 text-right"
       >
         {row.score}/{row.total}
       </Link>
