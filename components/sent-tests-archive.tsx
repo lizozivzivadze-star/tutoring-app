@@ -5,7 +5,7 @@ import { revealOnOpen } from "@/lib/reveal-on-open";
 import DropdownSelect from "@/components/dropdown-select";
 import HScrollText from "@/components/h-scroll-text";
 import Link from "next/link";
-import { formatDuration } from "@/lib/format-time";
+import { formatDuration, formatMinSec } from "@/lib/format-time";
 import UiIcon from "@/components/ui-icon";
 
 type Row = {
@@ -255,7 +255,7 @@ function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
       <HScrollText className="min-w-0 sm:text-center">{row.groupName}</HScrollText>
       {!studentMode && <HScrollText className="min-w-0 sm:text-center">{row.studentName}</HScrollText>}
       <HScrollText className="min-w-0 sm:text-center">{row.testTitle}</HScrollText>
-      <span className="whitespace-nowrap sm:text-center">{formatDuration(row.durationSeconds)}</span>
+      <span className="whitespace-nowrap sm:text-center">{formatMinSec(row.durationSeconds)}</span>
       <Link
         href={row.href}
         className="whitespace-nowrap text-marker underline underline-offset-2 text-right"

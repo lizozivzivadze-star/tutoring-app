@@ -33,3 +33,13 @@ export function formatDuration(totalSeconds: number | null | undefined): string 
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${pad(h)}:${pad(m)}:${pad(sec)}`;
 }
+
+// წთ:წმ — საათის გარეშე (ქრონოლოგიური არქივისთვის)
+export function formatMinSec(totalSeconds: number | null | undefined): string {
+  if (totalSeconds === null || totalSeconds === undefined) return "—";
+  const s = Math.max(0, Math.round(totalSeconds));
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(m)}:${pad(sec)}`;
+}
