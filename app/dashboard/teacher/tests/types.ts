@@ -6,6 +6,7 @@ export type TestSummary = {
   order: number;
   title: string;
   published: boolean;
+  activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
 };
@@ -47,6 +48,7 @@ export type TestDetail = {
   title: string;
   instruction: string | null;
   published: boolean;
+  activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
   publishedSnapshot: PublishedSnapshot | null;
@@ -65,6 +67,7 @@ export const TYPE_LABELS: Record<TestTemplate, string> = {
   type3: "ღია ტესტი",
   national: "ეროვნული ტესტი",
 };
+
 
 export const SHORT_TYPE_LABELS: Record<TestTemplate, string> = {
   type1: "MCQ ტესტი",

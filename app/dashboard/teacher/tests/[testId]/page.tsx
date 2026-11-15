@@ -1,111 +1,38 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import TestForm from "../test-form";
-import { QuestionDraft, TestDetail, TYPE_LABELS } from "../types";
-import ConfirmDialog from "@/components/confirm-dialog";
+import { PublishedSnapshot, TestTemplate, TYPE_LABELS } from "../types";
 import LoadingBar from "@/components/loading-bar";
 import UiIcon from "@/components/ui-icon";
 
-function toDrafts(test: TestDetail): QuestionDraft[] {
-  return test.questions.map((q) => ({
-    id: q.id,
-    clientId: q.id,
-    prompt: q.prompt,
-    options: q.options.map((o) => ({
-      id: o.id,
-      clientId: o.id,
-      text: o.text,
-      isCorrect: o.isCorrect,
-    })),
-  }));
-}
+type TeacherTestView = {
+  id: string;
+  type: TestTemplate;
+  activated: boolean;
+  publishedSnapshot: PublishedSnapshot;
+};
 
-function toApiQuestions(questions: QuestionDraft[]) {
-  return questions.map((q) => ({
-    prompt: q.prompt,
-    options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect })),
-  }));
-}
-
-export default function TestDetailPage() {
+// მასწავლებლისთვის ტესტის ნახვა — რედაქტირებისა და წაშლის გარეშე.
+// ჩანს ბოლო გამოქვეყნებული ვერსია.
+export default function TeacherTestViewPage() {
   const { testId } = useParams<{ testId: string }>();
-  const router = useRouter();
-  const [test, setTest] = useState<TestDetail | null>(null);
-  const [editing, setEditing] = useState(false);
+  const [test, setTest] = useState<TeacherTestView | null>(null);
   const [notFound, setNotFound] = useState(false);
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
-
-  const load = useCallback(async () => {
-    const res = await fetch(`/api/tests/${testId}`);
-    if (!res.ok) {
-      setNotFound(true);
-      return;
-    }
-    const data = await res.json();
-    setTest(data.test);
-  }, [testId]);
 
   useEffect(() => {
-    load();
-  }, [load]);
-
-  // Save: persists the current (possibly unfinished) state but stays
-  // on the edit screen — it must never kick the teacher out to the
-  // read-only view. Publish is the only action that exits editing,
-  // since publishing is the "this is done, manage it" action (mirrors
-  // the new-test flow's handleSave vs handlePublish split).
-  async function save(
-    values: {
-      themeId: string;
-      title: string;
-      instruction: string;
-      questions: QuestionDraft[];
-      published: boolean;
-    },
-    options?: { exitEditing?: boolean; republish?: boolean }
-  ) {
-    const res = await fetch(`/api/tests/${testId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        themeId: values.themeId,
-        title: values.title,
-        instruction: values.instruction,
-        published: values.published,
-        republish: options?.republish ?? false,
-        // Locked tests keep their questions server-side no matter
-        // what — but we still avoid sending a payload that would be
-        // rejected outright, so the rest of the save (title etc.)
-        // doesn't fail alongside it.
-        ...(test?.locked ? {} : { questions: toApiQuestions(values.questions) }),
-      }),
-    });
-
-    const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      return data?.error ?? "ვერ განახლდა";
-    }
-
-    setTest({ ...data.test, locked: test?.locked ?? false });
-    if (options?.exitEditing) {
-      setEditing(false);
-    }
-  }
-
-  async function handleDelete() {
-    const res = await fetch(`/api/tests/${testId}`, { method: "DELETE" });
-    if (!res.ok) {
-      const data = await res.json().catch(() => null);
-      setDeleteError(data?.error ?? "ვერ წაიშალა");
-      setConfirmingDelete(false);
-      return;
-    }
-    router.push("/dashboard/teacher/tests");
-  }
+    fetch(`/api/teacher/tests/${testId}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          setNotFound(true);
+          return;
+        }
+        const data = await res.json();
+        setTest(data.test);
+      })
+      .catch(() => setNotFound(true));
+  }, [testId]);
 
   if (notFound) {
     return (
@@ -119,153 +46,65 @@ export default function TestDetailPage() {
   }
 
   if (!test) {
-    return (
-      <LoadingBar />
-    );
+    return <LoadingBar />;
   }
 
-  const snapshot = test.published ? test.publishedSnapshot : null;
-  const display: {
-    title: string;
-    instruction: string | null;
-    questions: {
-      id?: string;
-      prompt: string;
-      options: { id?: string; text: string; isCorrect: boolean }[];
-    }[];
-  } = snapshot ?? {
-    title: test.title,
-    instruction: test.instruction,
-    questions: test.questions,
-  };
-  const hasUnpublishedEdits =
-    test.published &&
-    !!test.publishedAt &&
-    new Date(test.updatedAt) > new Date(test.publishedAt);
+  const display = test.publishedSnapshot;
 
-return (
-  <div>
-    {editing && (
-      <p className="text-sm text-marker font-medium bg-paper border border-marker rounded-md px-3 py-2 mb-3">
-        თქვენ იმყოფებით რედაქტირების რეჟიმში
-      </p>
-    )}
-    <div className="flex items-center justify-between mb-3">
-        {editing ? (
-          <button
-            onClick={() => setEditing(false)}
-            className="text-sm text-marker font-medium"
-          >
-            ← უკან
-          </button>
-        ) : (
-          <Link
-            href="/dashboard/teacher/tests"
-            className="text-sm text-marker font-medium"
-          >
-            ← უკან
-          </Link>
-        )}
-        {!editing && (
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setEditing(true)}
-              className="icon-btn text-ink-soft hover:text-marker"
-            >
-              <UiIcon name="edit" />
-            </button>
-            {!test.locked && (
-              <button
-                onClick={() => setConfirmingDelete(true)}
-                className="icon-btn text-ink-soft hover:text-marker-hover"
-              >
-                <UiIcon name="x" />
-              </button>
-            )}
-          </div>
-        )}
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <Link
+          href="/dashboard/teacher/tests"
+          className="text-sm text-marker font-medium"
+        >
+          ← უკან
+        </Link>
       </div>
 
-      {editing ? (
-        <TestForm
-          initialThemeId={test.themeId}
-          type={test.type}
-          initialTitle={test.title}
-          initialInstruction={test.instruction ?? ""}
-          initialPublished={test.published}
-          initialQuestions={toDrafts(test)}
-          locked={test.locked}
-          onSave={(v) => save(v)}
-          onPublish={(v) =>
-            save({ ...v, published: true }, { exitEditing: true, republish: true })
-          }
-        />
-      ) : (
-        <div className="flex flex-col gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              {display.title}
-              {/* Dimmed when the test has been Saved since its last
-                  explicit Publish — the live version students see is
-                  still the last-published one, this is just a "you
-                  have unpublished edits" nudge, not an unpublish. */}
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
-                  test.published && !hasUnpublishedEdits
-                    ? "bg-ledger-soft text-ledger"
-                    : "bg-paper-line/60 text-ink-soft"
-                }`}
-              >
-                {!test.published ? "unpublished" : hasUnpublishedEdits ? "draft" : "published"}
-              </span>
-              {test.locked && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-paper-line/60 text-ink-soft">
-                  გაგზავნილი — ჩაკეტილი
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
+      <div className="flex flex-col gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            {display.title}
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full ${
+                test.activated
+                  ? "bg-ledger-soft text-ledger"
+                  : "bg-paper-line/60 text-ink-soft"
+              }`}
+            >
+              {test.activated ? "active" : "published"}
+            </span>
           </div>
-
-          <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
-            {display.questions.map((q, i) => (
-              <div
-                key={q.id ?? i}
-                className="border border-paper-line rounded-sm p-3 bg-paper"
-              >
-                <p className="text-sm text-ink mb-2">
-                  <span className="text-ink-soft">შ{i + 1}.</span> {q.prompt}
-                </p>
-                <div className="flex flex-col gap-1 pl-5">
-                  {q.options.map((o, oi) => (
-                    <p
-                      key={o.id ?? oi}
-                      className={`text-sm ${
-                        o.isCorrect ? "text-ledger font-medium" : "text-ink-soft"
-                      }`}
-                    >
-                      პ{oi + 1}. {o.text}
-                      {o.isCorrect && <UiIcon name="check" className="ml-1" />}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="text-xs text-ink-soft">{TYPE_LABELS[test.type]}</p>
         </div>
-      )}
 
-      {deleteError && (
-        <p className="text-sm text-danger mt-3">{deleteError}</p>
-      )}
-
-      {confirmingDelete && (
-        <ConfirmDialog
-          message={`დარწმუნებული ხარ, რომ გინდა „${test.title}“-ის წაშლა?`}
-          onConfirm={handleDelete}
-          onCancel={() => setConfirmingDelete(false)}
-        />
-      )}
+        <div className="flex flex-col gap-3 border-t border-paper-line pt-4">
+          {display.questions.map((q, i) => (
+            <div
+              key={i}
+              className="border border-paper-line rounded-sm p-3 bg-paper"
+            >
+              <p className="text-sm text-ink mb-2">
+                <span className="text-ink-soft">შ{i + 1}.</span> {q.prompt}
+              </p>
+              <div className="flex flex-col gap-1 pl-5">
+                {q.options.map((o, oi) => (
+                  <p
+                    key={oi}
+                    className={`text-sm ${
+                      o.isCorrect ? "text-ledger font-medium" : "text-ink-soft"
+                    }`}
+                  >
+                    პ{oi + 1}. {o.text}
+                    {o.isCorrect && <UiIcon name="check" className="ml-1" />}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

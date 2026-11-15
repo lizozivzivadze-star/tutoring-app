@@ -7,6 +7,19 @@ import AddThemeModal from "./add-theme-modal";
 import LoadingBar from "@/components/loading-bar";
 import Link from "next/link";
 import UiIcon from "@/components/ui-icon";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 
 export default function ThemesAndTestsTab() {
@@ -17,6 +30,53 @@ export default function ThemesAndTestsTab() {
   >(undefined);
 
   const [addThemeOpen, setAddThemeOpen] = useState(false);
+
+  // 6-წერტილიანი სახელურით გადაადგილება (იგივე, რაც ჯგუფებში)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  function handleThemeDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!themes || !over || active.id === over.id) return;
+
+    const ids = themes.map((t) => t.id);
+    const newIds = arrayMove(
+      ids,
+      ids.indexOf(active.id as string),
+      ids.indexOf(over.id as string)
+    );
+    setThemes(newIds.map((id) => themes.find((t) => t.id === id)!));
+
+    fetch("/api/themes/reorder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderedIds: newIds }),
+    });
+  }
+
+  // ტესტების რიგი ერთი თემის ერთი ტიპის შიგნით
+  function reorderTests(themeId: string, orderedIds: string[]) {
+    setThemes((prev) =>
+      prev?.map((theme) =>
+        theme.id !== themeId
+          ? theme
+          : {
+              ...theme,
+              tests: theme.tests.map((t) => {
+                const i = orderedIds.indexOf(t.id);
+                return i === -1 ? t : { ...t, order: i };
+              }),
+            }
+      ) ?? prev
+    );
+
+    fetch("/api/tests/reorder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderedIds }),
+    });
+  }
 
   const load = useCallback(async () => {
     const res = await fetch("/api/themes");
@@ -94,6 +154,15 @@ export default function ThemesAndTestsTab() {
         </p>
       )}
 
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleThemeDragEnd}
+      >
+        <SortableContext
+          items={themes.map((t) => t.id)}
+          strategy={verticalListSortingStrategy}
+        >
           {themes.map((theme, i) => (
             <ThemeCard
               key={theme.id}
@@ -103,9 +172,12 @@ export default function ThemesAndTestsTab() {
               onToggleExpand={() => toggleExpand(theme.id)}
               onRename={(name) => renameTheme(theme.id, name)}
               onDelete={() => deleteTheme(theme.id)}
+              onReorderTests={(ids) => reorderTests(theme.id, ids)}
               deleteConfirmTemplate={deleteConfirmTemplate}
             />
           ))}
+        </SortableContext>
+      </DndContext>
 
 
       <button

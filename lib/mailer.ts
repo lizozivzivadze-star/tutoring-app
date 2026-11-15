@@ -117,16 +117,28 @@ export async function sendLoginInviteEmail({
   const t = getTransporter();
 
   const greeting = name ? `გამარჯობა ${name},` : "გამარჯობა,";
-  const subject = "შესვლა პლატფორმაზე";
+  const subject = "შესვლა Tvinion პლატფორმაზე";
   const text =
     `${greeting}\n\n` +
-    `პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (${to}). ` +
-    `თქვენ მიიღებთ შესვლის ბმულს, პაროლი არ გჭირდებათ.\n\n${url}`;
+    `Tvinion-ით სარგებლობას იწყებ ასე:\n` +
+    `1. შედით აქ - ${url}\n` +
+    `2. დააინსტალირეთ App, გახსენით და მიჰყევით ინსტრუქციას\n` +
+    `3. შეიყვანეთ თქვენი ელფოსტა: ${to}\n` +
+    `4. E-mail-ზე მიიღებთ ბმულს\n` +
+    `5. ბმულზე დაწკაპუნებით კი გადახვალთ თქვენს Dashboard-ზე\n\n` +
+    `და ამის შემდეგ აპლიკაციის ჩართვისთანავე ყოველთვის Dashboard-ზე აღმოჩნდებით.\n\n` +
+    `წარმატებები!`;
+  const link = `<a href="${url}" style="color:#564cbf;text-decoration:underline;word-break:break-all;">${url}</a>`;
   const html =
     `<p>${escapeHtml(greeting)}</p>` +
-    `<p>პლატფორმაზე შესასვლელად გახსენით ბმული და შეიყვანეთ ეს ელფოსტა (<b>${escapeHtml(to)}</b>). ` +
-    `თქვენ მიიღებთ შესვლის ბმულს, პაროლი არ გჭირდებათ.</p>` +
-    linkHtml(url);
+    `<p>Tvinion-ით სარგებლობას იწყებ ასე:<br>` +
+    `1. შედით აქ - ${link}<br>` +
+    `2. დააინსტალირეთ App, გახსენით და მიჰყევით ინსტრუქციას<br>` +
+    `3. შეიყვანეთ თქვენი ელფოსტა: <b>${escapeHtml(to)}</b><br>` +
+    `4. E-mail-ზე მიიღებთ ბმულს<br>` +
+    `5. ბმულზე დაწკაპუნებით კი გადახვალთ თქვენს Dashboard-ზე</p>` +
+    `<p>და ამის შემდეგ აპლიკაციის ჩართვისთანავე ყოველთვის Dashboard-ზე აღმოჩნდებით.</p>` +
+    `<p>წარმატებები!</p>`;
 
   if (!t) {
     console.log(`[login-invite] SMTP not configured, would send to ${to}: ${url}`);

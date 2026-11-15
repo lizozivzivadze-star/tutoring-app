@@ -2,14 +2,111 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
+import { ThemeRecord, TestSummary, TYPES, TYPE_LABELS } from "./types";
 import ConfirmDialog from "@/components/confirm-dialog";
 import { fillTemplate } from "@/lib/template";
 import HScrollText from "@/components/h-scroll-text";
 import UiIcon from "@/components/ui-icon";
+import DragHandleIcon from "@/components/drag-handle-icon";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const DEFAULT_DELETE_CONFIRM =
   "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
+
+// ერთი ტესტის ხაზი: ბმული + 6-წერტილიანი სახელური მარჯვნივ
+function SortableTestRow({
+  test,
+  label,
+}: {
+  test: TestSummary;
+  label: string;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: test.id });
+
+  const hasUnpublishedEdits =
+    test.published &&
+    !!test.publishedAt &&
+    new Date(test.updatedAt) > new Date(test.publishedAt);
+  const dimmed = !test.published || hasUnpublishedEdits || !test.activated;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+      }}
+      className="flex w-full min-w-0 items-center gap-1"
+    >
+      <Link
+        href={`/dashboard/tester/tests/${test.id}`}
+        className={`block flex-1 min-w-0 ${
+          dimmed
+            ? "text-ink-soft/50 hover:text-ink-soft"
+            : "text-ink hover:text-marker"
+        }`}
+        title={
+          !test.published
+            ? "გამოუქვეყნებელი"
+            : !test.activated
+            ? "გამოქვეყნებულია, მაგრამ ჯერ არ არის გააქტიურებული"
+            : hasUnpublishedEdits
+            ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული"
+            : ""
+        }
+      >
+        <HScrollText>
+          {test.activated ? (
+            <span
+              aria-hidden="true"
+              className="inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 bg-ledger"
+            />
+          ) : (
+            <svg
+              width="12"
+              height="14"
+              viewBox="0 0 12 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              aria-hidden="true"
+              className="inline-block align-[-1px] mr-1"
+            >
+              <rect x="1" y="6" width="10" height="7" rx="1.5" />
+              <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" />
+            </svg>
+          )}
+          {label}
+        </HScrollText>
+      </Link>
+      <span
+        {...attributes}
+        {...listeners}
+        style={{ touchAction: "none" }}
+        className="cursor-grab text-ink-soft/60 select-none shrink-0 inline-flex items-center justify-center h-5"
+        title="გადაადგილება"
+      >
+        <DragHandleIcon />
+      </span>
+    </div>
+  );
+}
 
 export default function ThemeCard({
   theme,
@@ -18,6 +115,7 @@ export default function ThemeCard({
   onToggleExpand,
   onRename,
   onDelete,
+  onReorderTests,
   deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
 }: {
   theme: ThemeRecord;
@@ -26,6 +124,7 @@ export default function ThemeCard({
   onToggleExpand: () => void;
   onRename: (name: string) => Promise<string | void>;
   onDelete: () => Promise<string | void>;
+  onReorderTests: (orderedIds: string[]) => void;
   // Admin-edited text (Settings.themeDeleteConfirmText), passed down
   // from the tests tab so it's only fetched once per page, not once
   // per theme card. Falls back to the original hardcoded wording
@@ -37,6 +136,21 @@ export default function ThemeCard({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [renameError, setRenameError] = useState("");
   const [deleteError, setDeleteError] = useState("");
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: theme.id });
+
+  const testSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  function handleTestDragEnd(ids: string[], event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    onReorderTests(
+      arrayMove(ids, ids.indexOf(active.id as string), ids.indexOf(over.id as string))
+    );
+  }
 
 
   async function saveRename() {
@@ -55,6 +169,12 @@ export default function ThemeCard({
 
   return (
 <div
+  ref={setNodeRef}
+  style={{
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }}
   className={`border rounded-md bg-white px-4 py-3 ${
     expanded ? "border-marker" : "border-paper-line"
   }`}
@@ -94,6 +214,15 @@ export default function ThemeCard({
         >
           <UiIcon name="x" />
         </button>
+        <span
+          {...attributes}
+          {...listeners}
+          style={{ touchAction: "none" }}
+          className="cursor-grab text-ink-soft/60 pl-0 pr-0.5 select-none inline-flex items-center justify-center h-7"
+          title="გადაადგილება"
+        >
+          <DragHandleIcon />
+        </span>
       </div>
 
       {renameError && (
@@ -133,58 +262,24 @@ export default function ThemeCard({
               </div>
               {tests.length > 0 && (
               <div className="flex flex-col items-start gap-1 mt-1 pl-3">
-                {tests.map((test, testIndex) => {
-                  const hasUnpublishedEdits =
-                    test.published &&
-                    !!test.publishedAt &&
-                    new Date(test.updatedAt) > new Date(test.publishedAt);
-                  const dimmed = !test.published || hasUnpublishedEdits || !test.activated;
-
-                  return (
-                    <Link
-                      key={test.id}
-                      href={`/dashboard/tester/tests/${test.id}`}
-                       className={`block w-full min-w-0 ${
-    dimmed
-      ? "text-ink-soft/50 hover:text-ink-soft"
-      : "text-ink hover:text-marker"
-  }`}
-                      title={
-                        !test.published
-                          ? "გამოუქვეყნებელი"
-                          : !test.activated
-                          ? "გამოქვეყნებულია, მაგრამ ჯერ არ არის გააქტიურებული"
-                          : hasUnpublishedEdits
-                          ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული"
-                          : ""
-                      }
-                    >
-                      <HScrollText>
-    {test.activated ? (
-      <span
-        aria-hidden="true"
-        className="inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 bg-ledger"
-      />
-    ) : (
-      <svg
-        width="12"
-        height="14"
-        viewBox="0 0 12 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        aria-hidden="true"
-        className="inline-block align-[-1px] mr-1"
-      >
-        <rect x="1" y="6" width="10" height="7" rx="1.5" />
-        <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" />
-      </svg>
-    )}
-    {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
-  </HScrollText>
-                    </Link>
-                  );
-                })}
+                <DndContext
+                  sensors={testSensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(e) => handleTestDragEnd(tests.map((t) => t.id), e)}
+                >
+                  <SortableContext
+                    items={tests.map((t) => t.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {tests.map((test, testIndex) => (
+                      <SortableTestRow
+                        key={test.id}
+                        test={test}
+                        label={`${test.title} [${themeIndex + 1}.${typeIndex + 1}.${testIndex + 1}]`}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
               </div>
               )}
             </div>

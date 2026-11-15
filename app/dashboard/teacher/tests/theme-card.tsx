@@ -1,195 +1,101 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { ThemeRecord, TYPES, TYPE_LABELS } from "./types";
-import ConfirmDialog from "@/components/confirm-dialog";
-import { fillTemplate } from "@/lib/template";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import HScrollText from "@/components/h-scroll-text";
-import UiIcon from "@/components/ui-icon";
-import DragHandleIcon from "@/components/drag-handle-icon";
 
-const DEFAULT_DELETE_CONFIRM =
-  "დარწმუნებული ხარ, რომ გინდა „{name}“-ის წაშლა? წაიშლება მასში არსებული ყველა ტესტიც.";
-
+// ტესტერის theme-card-ის ასლი, მხოლოდ სანახავად: არც თემის
+// რედაქტირება/წაშლა, არც ტესტის დამატება. ჩანს მხოლოდ გამოქვეყნებული
+// ტესტები; ნომრები ([1.1.2]) ტესტერისას ემთხვევა.
 export default function ThemeCard({
   theme,
   themeIndex,
-  onRename,
-  onDelete,
-  deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
+  expanded,
+  onToggleExpand,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
-  onRename: (name: string) => Promise<string | void>;
-  onDelete: () => Promise<string | void>;
-  // Admin-edited text (Settings.themeDeleteConfirmText), passed down
-  // from the tests tab so it's only fetched once per page, not once
-  // per theme card. Falls back to the original hardcoded wording
-  // until that fetch resolves.
-  deleteConfirmTemplate?: string;
+  expanded: boolean;
+  onToggleExpand: () => void;
 }) {
-  const [editing, setEditing] = useState(false);
-  const [draftName, setDraftName] = useState(theme.name);
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-  const [renameError, setRenameError] = useState("");
-  const [deleteError, setDeleteError] = useState("");
-  const {
-  attributes,
-  listeners,
-  setNodeRef,
-  transform,
-  transition,
-  isDragging,
-} = useSortable({ id: theme.id });
-
-const style = {
-  transform: CSS.Transform.toString(transform),
-  transition,
-  opacity: isDragging ? 0.5 : 1,
-};
-
-  async function saveRename() {
-    if (!draftName.trim() || draftName === theme.name) {
-      setEditing(false);
-      setDraftName(theme.name);
-      return;
-    }
-    const error = await onRename(draftName.trim());
-    if (error) {
-      setRenameError(error);
-      return;
-    }
-    setEditing(false);
-  }
-
   return (
-<div
-  ref={setNodeRef}
-  style={style}
-  className="border border-paper-line rounded-md bg-white px-4 py-3"
->
+    <div
+      className={`border rounded-md bg-white px-4 py-3 ${
+        expanded ? "border-marker" : "border-paper-line"
+      }`}
+    >
       <div className="flex items-center gap-2">
-        {editing ? (
-          <input
-            autoFocus
-            value={draftName}
-            onChange={(e) => setDraftName(e.target.value)}
-            onBlur={saveRename}
-            onKeyDown={(e) => e.key === "Enter" && saveRename()}
-            className="flex-1 border border-marker rounded-sm px-2 py-1 text-ink
-                       focus:outline-none"
-          />
-        ) : (
-          <HScrollText className="flex-1 min-w-0 font-body text-sm font-medium text-ink">
+        <button onClick={onToggleExpand} className="flex-1 min-w-0 text-left">
+          <HScrollText className="font-body text-sm font-medium text-ink">
             {themeIndex + 1}. {theme.name}
           </HScrollText>
-        )}
-
-        <button
-          onClick={() => setEditing(true)}
-          className="icon-btn text-ink-soft hover:text-marker"
-        >
-          <UiIcon name="edit" />
         </button>
-        <button
-          onClick={() => setConfirmingDelete(true)}
-          className="icon-btn text-ink-soft hover:text-marker-hover"
-        >
-          <UiIcon name="x" />
-        </button>
-        <span
-  {...attributes}
-  {...listeners}
-  style={{ touchAction: "none" }}
-  className="cursor-grab text-ink-soft/60 select-none px-1 inline-flex items-center justify-center h-7"
-  title="გადაადგილება"
->
-  <DragHandleIcon />
-</span>
       </div>
 
-      {renameError && (
-        <p className="mt-1 pl-6 text-xs text-danger">{renameError}</p>
-      )}
-      {deleteError && (
-        <p className="mt-1 pl-6 text-xs text-danger">{deleteError}</p>
-      )}
+      {expanded && (
+        <div className="mt-2 pl-6 flex flex-col gap-1.5">
+          {TYPES.map((type, typeIndex) => {
+            // ნომერი ყველა ტესტში ითვლება (ტესტერის ნომრებს რომ დაემთხვეს),
+            // ჩანს კი მხოლოდ გამოქვეყნებული
+            const tests = theme.tests
+              .filter((t) => t.type === type)
+              .sort((a, b) => a.order - b.order)
+              .map((test, testIndex) => ({ test, testIndex }))
+              .filter(({ test }) => test.published);
 
-      <div className="mt-2 pl-6 flex flex-col gap-1.5">
-        {TYPES.map((type, typeIndex) => {
-          const tests = theme.tests
-            .filter((t) => t.type === type)
-            .sort((a, b) => a.order - b.order);
-          const templateReady = type === "type1";
-
-          return (
-            <div key={type} className="text-sm">
-              <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
-              <div className="flex flex-col items-start gap-1 mt-1 pl-3">
-                {tests.map((test, testIndex) => {
-                  const hasUnpublishedEdits =
-                    test.published &&
-                    !!test.publishedAt &&
-                    new Date(test.updatedAt) > new Date(test.publishedAt);
-                  const dimmed = !test.published || hasUnpublishedEdits;
-
-                  return (
-                    <Link
-                      key={test.id}
-                      href={`/dashboard/teacher/tests/${test.id}`}
+            return (
+              <div key={type} className="text-sm">
+                <div className="flex items-center bg-paper/50 -ml-0.5 pl-0.5 mr-6 min-h-7">
+                  <span className="text-ink-soft">{TYPE_LABELS[type]}:</span>
+                </div>
+                {tests.length > 0 && (
+                  <div className="flex flex-col items-start gap-1 mt-1 pl-3">
+                    {tests.map(({ test, testIndex }) => (
+                      <Link
+                        key={test.id}
+                        href={`/dashboard/teacher/tests/${test.id}`}
                         className={`block w-full min-w-0 ${
-    dimmed
-      ? "text-ink-soft/50 hover:text-ink-soft"
-      : "text-ink hover:text-marker"
-  }`}
-                      title={
-                        !test.published
-                          ? "გამოუქვეყნებელი"
-                          : hasUnpublishedEdits
-                          ? "შენახულია ცვლილება — ჯერ არ არის თავიდან გამოქვეყნებული"
-                          : ""
-                      }
-                    >
-<HScrollText>
-    {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
-  </HScrollText>
-                    </Link>
-                  );
-                })}
-                {templateReady ? (
-                  <Link
-                    href={`/dashboard/teacher/tests/new?themeId=${theme.id}&type=${type}`}
-                    className="icon-btn text-marker"
-                  >
-                    <UiIcon name="plus" />
-                  </Link>
-                ) : (
-                  <span
-                    className="icon-btn text-ink-soft/40 cursor-not-allowed"
-                    title="ეს შაბლონი ჯერ არ არის მზად"
-                  >
-                    <UiIcon name="plus" className="opacity-40" />
-                  </span>
+                          test.activated
+                            ? "text-ink hover:text-marker"
+                            : "text-ink-soft/50 hover:text-ink-soft"
+                        }`}
+                        title={
+                          test.activated
+                            ? ""
+                            : "გამოქვეყნებულია, მაგრამ ჯერ არ არის გააქტიურებული"
+                        }
+                      >
+                        <HScrollText>
+                          {test.activated ? (
+                            <span
+                              aria-hidden="true"
+                              className="inline-block w-2.5 h-2.5 rounded-full align-middle mr-1.5 bg-ledger"
+                            />
+                          ) : (
+                            <svg
+                              width="12"
+                              height="14"
+                              viewBox="0 0 12 14"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.4"
+                              aria-hidden="true"
+                              className="inline-block align-[-1px] mr-1"
+                            >
+                              <rect x="1" y="6" width="10" height="7" rx="1.5" />
+                              <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" />
+                            </svg>
+                          )}
+                          {test.title} [{themeIndex + 1}.{typeIndex + 1}.{testIndex + 1}]
+                        </HScrollText>
+                      </Link>
+                    ))}
+                  </div>
                 )}
               </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {confirmingDelete && (
-        <ConfirmDialog
-          message={fillTemplate(deleteConfirmTemplate, { name: theme.name })}
-          onConfirm={async () => {
-            setConfirmingDelete(false);
-            const error = await onDelete();
-            if (error) setDeleteError(error);
-          }}
-          onCancel={() => setConfirmingDelete(false)}
-        />
+            );
+          })}
+        </div>
       )}
     </div>
   );

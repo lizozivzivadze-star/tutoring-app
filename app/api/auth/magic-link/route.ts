@@ -65,13 +65,15 @@ export async function POST(req: NextRequest) {
   const url = `${baseUrl}/api/auth/verify?token=${token}`;
 
   // For every role the login form is filled in with the identity
-  // email, but only admins and testers have a separate inbox the
-  // mail should actually land in.
-  const deliverTo = admin
-    ? admin.notificationEmail
-    : tester
-      ? tester.notificationEmail
-      : email;
+  // email. Admins and testers always have a separate inbox the mail
+  // lands in; a teacher has one only if notificationEmail is set.
+  const deliverTo = teacher
+    ? teacher.notificationEmail || email
+    : admin
+      ? admin.notificationEmail
+      : tester
+        ? tester.notificationEmail
+        : email;
 
   // Greeting name: same source as the record the email matched on.
   const recipientName =
