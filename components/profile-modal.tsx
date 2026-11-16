@@ -29,6 +29,10 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!name.trim()) {
+      setError("სახელი აუცილებელია");
+      return;
+    }
     setSaving(true);
     setError("");
 
@@ -56,7 +60,6 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
             <label className="block text-sm text-ink-soft mb-2">სახელი</label>
             <input
               autoFocus
-              required
               maxLength={30}
               value={name}
               onChange={(e) => setName(e.target.value)}

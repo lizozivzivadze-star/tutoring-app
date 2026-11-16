@@ -119,6 +119,47 @@ export default function GroupsTab() {
       .catch(() => {});
   }, [load]);
 
+  // მოსწავლის მიერ შეცვლილი სახელი refresh-ის გარეშე ჩანს:
+  // ყოველ 15 წამში და აპლიკაციაში დაბრუნებისას ვაახლებთ მხოლოდ სახელს/გვარს
+  useEffect(() => {
+    async function syncNames() {
+      if (document.visibilityState !== "visible") return;
+      try {
+        const res = await fetch("/api/groups");
+        if (!res.ok) return;
+        const data = await res.json();
+        const fresh = new Map<string, { name: string | null; surname: string | null }>();
+        for (const g of data.groups ?? []) {
+          for (const s of g.students ?? []) {
+            fresh.set(s.id, { name: s.name, surname: s.surname });
+          }
+        }
+        setGroups((prev) => {
+          if (!prev) return prev;
+          let changed = false;
+          const next = prev.map((g) => ({
+            ...g,
+            students: g.students.map((s) => {
+              const f = fresh.get(s.id);
+              if (f && (f.name !== s.name || f.surname !== s.surname)) {
+                changed = true;
+                return { ...s, name: f.name, surname: f.surname };
+              }
+              return s;
+            }),
+          }));
+          return changed ? next : prev;
+        });
+      } catch {}
+    }
+    const timer = setInterval(syncNames, 15000);
+    document.addEventListener("visibilitychange", syncNames);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", syncNames);
+    };
+  }, []);
+
   function toggleExpand(id: string) {
     setExpandedIds((prev) => {
       const next = new Set(prev);

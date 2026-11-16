@@ -54,6 +54,9 @@ export async function PATCH(req: NextRequest) {
 
   const body = await req.json();
   const name = typeof body.name === "string" ? body.name.trim() : "";
+  if (!name) {
+    return NextResponse.json({ error: "სახელი აუცილებელია" }, { status: 400 });
+  }
 
   const { role, id } = session.user;
 
