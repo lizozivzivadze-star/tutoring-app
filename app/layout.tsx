@@ -3,7 +3,6 @@ import "./globals.css";
 import { getSettings } from "@/lib/settings";
 import InstallProvider from "@/components/install-provider";
 import InstallBanner from "@/components/install-banner";
-import FeedbackButton from "@/components/feedback-button";
 import PullToRefresh from "@/components/pull-to-refresh";
 import BottomSpace from "@/components/bottom-space";
 // ერთადერთი thumbnail-ის ფაილი მთელი საიტისთვის: bookmark-ი, ბრაუზერის
@@ -75,7 +74,6 @@ export default function RootLayout({
     {children}
   </div>
 </InstallProvider>
-<FeedbackButton />
 <PullToRefresh />
 <BottomSpace />
       </body>

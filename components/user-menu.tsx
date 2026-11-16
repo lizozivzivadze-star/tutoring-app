@@ -7,6 +7,7 @@ import ProfileModal from "@/components/profile-modal";
 import ConfirmDialog from "@/components/confirm-dialog";
 import UiIcon from "@/components/ui-icon";
 import VScrollBox from "@/components/v-scroll-box";
+import FeedbackButton from "@/components/feedback-button";
 
 export default function UserMenu({
   showCancelPending = false,
@@ -30,6 +31,7 @@ export default function UserMenu({
     return () => document.removeEventListener("pointerdown", onDown);
   }, [open]);
   const [showProfile, setShowProfile] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [cancelling, setCancelling] = useState(false);
@@ -83,6 +85,16 @@ export default function UserMenu({
               </button>
             )}
             <button
+              onClick={() => {
+                setOpen(false);
+                setShowFeedback(true);
+              }}
+              className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
+            >
+              <UiIcon name="feedback" />
+              მოგვწერეთ
+            </button>
+            <button
 onClick={() => {
   setOpen(false);
   setConfirmLogout(true);
@@ -98,6 +110,10 @@ onClick={() => {
 
       {showProfile && (
         <ProfileModal onClose={() => setShowProfile(false)} />
+      )}
+
+      {showFeedback && (
+        <FeedbackButton onClose={() => setShowFeedback(false)} />
       )}
 
       {confirmCancel && createPortal(

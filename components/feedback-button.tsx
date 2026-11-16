@@ -5,8 +5,7 @@ import Modal from "@/components/modal";
 import { usePathname } from "next/navigation";
 import UiIcon from "@/components/ui-icon";
 
-export default function FeedbackButton() {
-  const [open, setOpen] = useState(false);
+export default function FeedbackButton({ onClose }: { onClose: () => void }) {
     const pathname = usePathname();
   const isLogin = pathname?.startsWith("/login");
   const [text, setText] = useState("");
@@ -16,9 +15,7 @@ export default function FeedbackButton() {
   const [error, setError] = useState("");
 
   function close() {
-    setOpen(false);
-    setStatus("idle");
-    setError("");
+    onClose();
   }
 
   async function send() {
@@ -50,18 +47,6 @@ export default function FeedbackButton() {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        aria-label="რის გაუმჯობესებას გვირჩევთ?"
-        className="fixed left-2 z-40 w-9 h-9 rounded-full border border-ink-soft/50
-                   bg-white text-ink-soft text-base font-medium shadow-sm
-                   hover:text-marker hover:border-marker transition-colors"
-        style={{ bottom: "max(0.375rem, env(safe-area-inset-bottom))" }}
-      >
-        ?
-      </button>
-
-      {open && (
         <Modal
           feedbackLayout
           title={
@@ -125,7 +110,6 @@ export default function FeedbackButton() {
             </div>
           )}
         </Modal>
-      )}
     </>
   );
 }
