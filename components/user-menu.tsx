@@ -91,14 +91,7 @@ export default function UserMenu({
               }}
               className="w-full text-left pl-4 pr-6 py-2.5 text-sm text-ink hover:bg-paper-line/40 border-t border-paper-line whitespace-nowrap flex items-center gap-2"
             >
-              <span
-                aria-hidden="true"
-                className="inline-flex shrink-0 items-center justify-center w-5 h-5"
-              >
-                <span className="w-[18px] h-[18px] rounded-full border border-ink-soft/50 text-ink-soft text-[11px] font-medium leading-none inline-flex items-center justify-center">
-                  ?
-                </span>
-              </span>
+              <UiIcon name="question" />
               მოგვწერეთ
             </button>
             <button

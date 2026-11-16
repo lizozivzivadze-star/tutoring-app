@@ -9,18 +9,20 @@ type IconName =
   | "profile"
   | "red-button"
   | "log-out"
-  | "feedback";
+  | "feedback"
+  | "question";
 
 // ყველა ხატულა წინასწარაა დამუშავებული scripts/build-icons.py-ით: შიგთავსი ზუსტად
 // 20x20 ველის ცენტრშია (მთელ პიქსელზე) და სასურველ ზომაზეა. ამიტომ აქ არც
 // გადიდებაა, არც გადაწევა: სურათი 1:1 ისახება და არ ბუნდდება.
 // ფაილების შეცვლისას გაზარდეთ V, რომ ბრაუზერმა ძველი ქეში არ აჩვენოს.
-const V = 4;
+const V = 5;
 
 // ოპტიკური გასწორება მთელ CSS პიქსელზე (უარყოფითი = მარცხნივ)
 const SHIFT_X: Partial<Record<IconName, number>> = {
   profile: -1.4,
   "red-button": -1.4,
+  question: -1.4,
   "log-out": -2.4,
 };
 
