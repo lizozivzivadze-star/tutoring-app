@@ -283,6 +283,10 @@ className="
           ყველა ტესტი/შეკითხვა უნიკალურია და არ მეორდება.
           მასალა მომზადებულია განათლების სამინისტროს
           მიერ გრიფირებული სახელმძღვანელოების მიხედვით
+          <br />
+          <span suppressHydrationWarning>
+            © {new Date().getFullYear()}. Made by NI &amp; AI
+          </span>
         </p>
       </div>
     </main>
