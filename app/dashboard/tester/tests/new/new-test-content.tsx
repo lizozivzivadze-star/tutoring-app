@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import TestForm from "../test-form";
 import { QuestionDraft, TestTemplate } from "../types";
@@ -24,7 +24,6 @@ type FormValues = {
 
 export default function NewTestContent() {
   const params = useSearchParams();
-  const router = useRouter();
   const themeId = params.get("themeId") ?? "";
   const typeParam = params.get("type");
   const [type, setType] = useState<TestTemplate>(
@@ -54,7 +53,7 @@ export default function NewTestContent() {
 
 async function persist(
   values: FormValues,
-  options?: { republish?: boolean }
+  options?: { republish?: boolean; activated?: boolean }
 ): Promise<{ id: string } | { error: string }> {
     if (!values.themeId) return { error: "აირჩიე თემა" };
   const res = savedTestId
@@ -68,6 +67,9 @@ async function persist(
           published: values.published,
           questions: toApiQuestions(values.questions),
           republish: options?.republish ?? false,
+          ...(typeof options?.activated === "boolean" && {
+            activated: options.activated,
+          }),
         }),
       })
       : await fetch(`/api/themes/${values.themeId}/tests`, {
@@ -98,8 +100,7 @@ async function persist(
     if ("error" in result) return result.error;
   }
 
-  // Publish: marks it published and moves on to the test's admin
-  // page, since publishing is the "this is done, manage it" action.
+  // Publish: marks it published, stays on this screen.
   async function handlePublish(values: FormValues) {
   const result = await persist(
     { ...values, published: true },
@@ -107,13 +108,13 @@ async function persist(
   );
   if ("error" in result) return result.error;
 }
-  // Deactivate: ტესტს ინახავს გამოუქვეყნებლად და გამორთულად, მერე ტესტის გვერდზე გადადის.
+  // Deactivate: ტესტს ინახავს გამორთულად, იმავე ეკრანზე რჩება.
   async function handleDeactivate(values: FormValues) {
-    const result = await persist(values);
+    const result = await persist(values, { activated: false });
     if ("error" in result) return result.error;
   }
 
-  // Activate: ტესტს ერთდროულად აქვეყნებს და ააქტიურებს, მერე ტესტის გვერდზე გადადის.
+  // Activate: ტესტს ერთდროულად აქვეყნებს და ააქტიურებს, იმავე ეკრანზე რჩება.
   async function handleActivate(values: FormValues) {
     const result = await persist(
       { ...values, published: true },
@@ -137,7 +138,6 @@ async function persist(
       const data = await res.json().catch(() => null);
       return data?.error ?? "ვერ გააქტიურდა";
     }
-    router.push(`/dashboard/tester/tests/${result.id}`);
   }
 
 

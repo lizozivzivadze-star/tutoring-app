@@ -53,6 +53,15 @@ export default function TestDetailPage() {
     load();
   }, [load]);
 
+  // ახალი ტესტის Activate-ის შემდეგ აქ პირდაპირ რედაქტირების რეჟიმში ვხვდებით (?edit=1)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edit") === "1") {
+      setEditing(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
   // Save: persists the current (possibly unfinished) state but stays
   // on the edit screen — it must never kick the teacher out to the
   // read-only view. Publish is the only action that exits editing,
@@ -207,7 +216,7 @@ return (
           onActivate={(v) =>
             save(
               { ...v, published: true },
-              { exitEditing: true, activate: true, republish: true }
+              { activate: true, republish: true }
             )
           }
         />
