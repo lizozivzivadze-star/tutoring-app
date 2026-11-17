@@ -10,15 +10,49 @@ export async function GET() {
   // როცა საგნები დაემატება, აქ ბაზიდან ვთვლით.
   const subjects = 1;
 
+  // სტატისტიკიდან გამოსარიცხი სატესტო ანგარიშები.
+  // ტესტები/შეკითხვები: ამ ტესტერების ტესტები არ ითვლება.
+  const EXCLUDED_TEST_AUTHORS = ["lizozivzivadze.test@gmail.com"];
+  // მასწავლებლები / გაგზავნილი / გაკეთებული / აბიტურიენტები:
+  // ამ ანგარიშების ჯგუფებიდან გაგზავნილი ტესტები არ ითვლება.
+  const EXCLUDED_TEACHERS = [
+    "tariel.zivzivadze@gmail.com",
+    "lizozivzivadze.teacher@gmail.com",
+  ];
+  const EXCLUDED_TESTERS = [
+    "lizozivzivadze.test@gmail.com",
+    "tariel.zivzivadze.tester@gmail.com",
+  ];
+
   // ვითვლით მხოლოდ იმ გამოქვეყნებულ ტესტებს, რომლებსაც მასწავლებლები ხედავენ
-  // (ტესტერს აქვს მასწავლებლებთან წვდომა).
+  // (ტესტერს აქვს მასწავლებლებთან წვდომა), სატესტო ანგარიშების გარდა.
   const visible = {
     published: true,
-    theme: { tester: { teacherAccess: { some: {} } } },
+    theme: {
+      tester: {
+        teacherAccess: { some: {} },
+        identityEmail: { notIn: EXCLUDED_TEST_AUTHORS },
+      },
+    },
   };
 
-  // ითვლება ყველა გაგზავნილი და გაკეთებული ტესტი, მიუხედავად იმისა,
-  // მასწავლებლის ჯგუფიდანაა თუ ტესტერის (ტესტერიც მასწავლებლის როლს ასრულებს).
+  // ჯგუფი ითვლება, თუ არც სატესტო მასწავლებელს ეკუთვნის და არც სატესტო ტესტერს.
+  const countedGroup = {
+    NOT: [
+      { teacher: { email: { in: EXCLUDED_TEACHERS } } },
+      { tester: { identityEmail: { in: EXCLUDED_TESTERS } } },
+    ],
+  };
+
+  // გაგზავნილი ტესტი ითვლება, თუ მისი ჯგუფი (ინდივიდუალურად
+  // გაგზავნისას — მოსწავლის ჯგუფი) ითვლება.
+  const countedSent = {
+    OR: [
+      { group: countedGroup },
+      { groupId: null, student: { group: countedGroup } },
+    ],
+  };
+
   const hasSent = {
     OR: [
       { sentTests: { some: {} } },
@@ -30,12 +64,16 @@ export async function GET() {
     await Promise.all([
       prisma.test.count({ where: visible }),
       prisma.question.count({ where: { test: visible } }),
-      prisma.teacher.count({ where: { groups: { some: hasSent } } }),
-      prisma.tester.count({ where: { groups: { some: hasSent } } }),
-      prisma.sentTest.count(),
-      prisma.testAttempt.count(),
+      prisma.teacher.count({
+        where: { email: { notIn: EXCLUDED_TEACHERS }, groups: { some: hasSent } },
+      }),
+      prisma.tester.count({
+        where: { identityEmail: { notIn: EXCLUDED_TESTERS }, groups: { some: hasSent } },
+      }),
+      prisma.sentTest.count({ where: countedSent }),
+      prisma.testAttempt.count({ where: { sentTest: countedSent } }),
       prisma.testAttempt
-        .groupBy({ by: ["studentId"] })
+        .groupBy({ by: ["studentId"], where: { sentTest: countedSent } })
         .then((rows) => rows.length),
     ]);
 
