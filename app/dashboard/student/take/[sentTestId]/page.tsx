@@ -198,14 +198,16 @@ useEffect(() => {
 
   if (stage === "instructions") {
     return (
-<main className="min-h-screen flex items-center justify-center">
+<main className="min-h-screen flex items-center justify-center pb-28">
   <div className="w-[90%]">
 <h1 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-4 text-center">
   ინსტრუქცია
 </h1>
           <div className="text-sm text-ink-soft mb-6 text-center flex flex-col gap-4">
   <p>ტესტში {test.questions.length} შეკითხვაა.</p>
+  <hr className="mx-auto w-1/4 border-paper-line" />
   <p>თითოეულს პასუხის 4 ვარიანტი აქვს, რომელთაგან 1 არის სწორი.</p>
+  <hr className="mx-auto w-1/4 border-paper-line" />
   {test.timerEnabled ? (
     <p>
       თითო შეკითხვაზე გაქვთ {QUESTION_TIME_SECONDS} წამი სწორი პასუხის
@@ -215,9 +217,12 @@ useEffect(() => {
     <p>შეკითხვებზე პასუხის გაცემისთვის დრო შეზღუდული არ გაქვთ.</p>
   )}
   {test.instruction && (
-    <p className="whitespace-pre-line">
-      {test.instruction}
-    </p>
+    <>
+      <hr className="mx-auto w-1/4 border-paper-line" />
+      <p className="whitespace-pre-line">
+        {test.instruction}
+      </p>
+    </>
   )}
 </div>
           <button
