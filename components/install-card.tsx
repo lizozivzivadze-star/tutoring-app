@@ -21,7 +21,23 @@ export default function InstallCard() {
       setFlag(localStorage.getItem("tvinion-installed") === "1");
     } catch {}
   }, []);
-  const alreadyInstalled = flag && !canPrompt;
+  // ღილაკზე დაჭერის შემდეგ ტექსტს თავად ვმართავთ: Chrome-ის ფანჯარაში
+  // Install-ზე დაჭერიდან 10 წამში იცვლება, Cancel-ზე კი უცვლელი რჩება.
+  const [mode, setMode] = useState<"auto" | "install" | "installed">("auto");
+  const alreadyInstalled =
+    mode === "installed" || (mode === "auto" && flag && !canPrompt);
+
+  async function handleClick() {
+    if (!canPrompt) {
+      openInstall();
+      return;
+    }
+    setMode("install");
+    const result = await openInstall();
+    if (result === "accepted") {
+      setTimeout(() => setMode("installed"), 10000);
+    }
+  }
 
   return (
     <>
@@ -29,7 +45,7 @@ export default function InstallCard() {
         role="button"
         tabIndex={0}
         aria-label="დააყენე აპლიკაცია"
-        onClick={openInstall}
+        onClick={handleClick}
         className="group my-4 flex shrink-0 cursor-pointer flex-col items-center rounded-md border border-[#f8e7a8]/60 bg-[#fffbe9] px-6 py-6 shadow-sm"
       >
         <Image

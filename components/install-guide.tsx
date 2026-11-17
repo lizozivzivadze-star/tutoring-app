@@ -105,7 +105,7 @@ const INSTALLED_GUIDE: Guide = {
 // გვერდის თავის ბარათიც ამას იყენებს. openInstall() = ის, რასაც ადრე
 // UserMenu-ს handleAddToHome აკეთებდა; guideModal უნდა ჩაიხატოს JSX-ში.
 export function useInstallGuide(): {
-  openInstall: () => Promise<void>;
+  openInstall: () => Promise<"accepted" | "dismissed" | undefined>;
   guideModal: ReactNode;
 } {
   const [guide, setGuide] = useState<Guide | null>(null);
@@ -123,7 +123,7 @@ export function useInstallGuide(): {
     // ერთ-დაწკაპუნებიანი დაინსტალირება.
     if (canPrompt) {
       const result = await promptInstall();
-      if (result !== "unavailable") return;
+      if (result !== "unavailable") return result;
     }
 
     // ყველა დანარჩენი (iOS, Firefox, ჩაშენებული ბრაუზერები...) —
