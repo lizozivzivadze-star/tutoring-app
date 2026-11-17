@@ -39,6 +39,19 @@ export default function LoginPage() {
   // ბრაუზერში აპის დაყენებას ვთავაზობთ.
   useEffect(() => {
     setMode(isStandalone() ? "form" : "install");
+
+    // კომპიუტერზე (Chrome/Edge) დაყენებისას ბრაუზერი იმავე გვერდს
+    // გადატვირთვის გარეშე აპის ფანჯარაში გადაიტანს — ამ დროს ფორმაზე გადავდივართ
+    const mq = window.matchMedia("(display-mode: standalone)");
+    const onChange = () => {
+      if (isStandalone()) setMode("form");
+    };
+    mq.addEventListener("change", onChange);
+    window.addEventListener("resize", onChange);
+    return () => {
+      mq.removeEventListener("change", onChange);
+      window.removeEventListener("resize", onChange);
+    };
   }, []);
 
   const [appH, setAppH] = useState<number | null>(null);
