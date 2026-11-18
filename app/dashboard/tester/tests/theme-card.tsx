@@ -31,9 +31,14 @@ const DEFAULT_DELETE_CONFIRM =
 function SortableTestRow({
   test,
   label,
+  usageCount,
+  onOpenUsage,
 }: {
   test: TestSummary;
   label: string;
+  // რამდენჯერ გაკეთდა ტესტი (undefined = ჯერ იტვირთება)
+  usageCount?: number;
+  onOpenUsage?: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: test.id });
@@ -95,6 +100,17 @@ function SortableTestRow({
           {label}
         </HScrollText>
       </Link>
+      {usageCount !== undefined && (
+        <button
+          type="button"
+          onClick={onOpenUsage}
+          title="რამდენჯერ გაკეთდა ეს ტესტი"
+          className="shrink-0 min-w-7 h-6 px-1.5 rounded-sm bg-fresh text-ink
+                     text-sm leading-6 text-center tabular-nums hover:bg-fresh-line"
+        >
+          {usageCount}
+        </button>
+      )}
       <span
         {...attributes}
         {...listeners}
@@ -117,6 +133,8 @@ export default function ThemeCard({
   onDelete,
   onReorderTests,
   deleteConfirmTemplate = DEFAULT_DELETE_CONFIRM,
+  usageCounts,
+  onOpenUsage,
 }: {
   theme: ThemeRecord;
   themeIndex: number;
@@ -130,6 +148,9 @@ export default function ThemeCard({
   // per theme card. Falls back to the original hardcoded wording
   // until that fetch resolves.
   deleteConfirmTemplate?: string;
+  // „ტესტები #": ყოველი ტესტის გაკეთებების რაოდენობა (null = იტვირთება)
+  usageCounts?: Record<string, number> | null;
+  onOpenUsage?: (testId: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(theme.name);
@@ -276,6 +297,8 @@ export default function ThemeCard({
                         key={test.id}
                         test={test}
                         label={`${test.title} [${themeIndex + 1}.${typeIndex + 1}.${testIndex + 1}]`}
+                        usageCount={usageCounts ? usageCounts[test.id] ?? 0 : undefined}
+                        onOpenUsage={() => onOpenUsage?.(test.id)}
                       />
                     ))}
                   </SortableContext>

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
+import TestUsageDialog from "./test-usage-dialog";
 import LoadingBar from "@/components/loading-bar";
 import Link from "next/link";
 import UiIcon from "@/components/ui-icon";
@@ -30,6 +31,9 @@ export default function ThemesAndTestsTab() {
   >(undefined);
 
   const [addThemeOpen, setAddThemeOpen] = useState(false);
+  // „ტესტები #": რამდენჯერ გაკეთდა თითოეული ტესტი + გახსნილი ანგარიში
+  const [usageCounts, setUsageCounts] = useState<Record<string, number> | null>(null);
+  const [usageTestId, setUsageTestId] = useState<string | null>(null);
 
   // 6-წერტილიანი სახელურით გადაადგილება (იგივე, რაც ჯგუფებში)
   const sensors = useSensors(
@@ -86,6 +90,10 @@ export default function ThemesAndTestsTab() {
 
   useEffect(() => {
     load();
+    fetch("/api/tester/test-usage", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => setUsageCounts(data.counts ?? {}))
+      .catch(() => {});
     fetch("/api/settings/texts")
       .then((r) => r.json())
       .then((data) => setDeleteConfirmTemplate(data.themeDeleteConfirmText))
@@ -174,6 +182,8 @@ export default function ThemesAndTestsTab() {
               onDelete={() => deleteTheme(theme.id)}
               onReorderTests={(ids) => reorderTests(theme.id, ids)}
               deleteConfirmTemplate={deleteConfirmTemplate}
+              usageCounts={usageCounts}
+              onOpenUsage={setUsageTestId}
             />
           ))}
         </SortableContext>
@@ -186,6 +196,13 @@ export default function ThemesAndTestsTab() {
       >
         <UiIcon name="plus" /> თემა
       </button>
+
+      {usageTestId && (
+        <TestUsageDialog
+          testId={usageTestId}
+          onClose={() => setUsageTestId(null)}
+        />
+      )}
 
       {addThemeOpen && (
         <AddThemeModal
