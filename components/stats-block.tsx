@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Greeting from "@/components/greeting";
 
 // ღია ყვითელი ბლოკი სტატისტიკისთვის (ფონი — იგივე, რაც dropdown-ში
@@ -31,35 +32,53 @@ type StudentStats = {
 
 const n = (v: number | undefined) => (v === undefined ? "…" : v);
 
-// მისალმება + სტატისტიკის ბლოკი („დაიწყე ტესტი" ტაბი და მოსწავლის გვერდი)
+// ბოლოს ნანახი რიცხვები ინახება ბრაუზერში, რომ შემდეგ გახსნაზე ბლოკი
+// მაშინვე გამოჩნდეს; ახალი რიცხვები ფონზე მოდის სერვერიდან.
+const CACHE_KEY = "myStats:";
+
+// მისალმება + სტატისტიკის ბლოკი („დაიწყე ტესტი" ტაბი და მოსწავლის გვერდი).
+// ბლოკი ყოველთვის ეგრევე ჩანს (ჯერ უცნობი რიცხვის ნაცვლად „…"), რომ გვერდი არ ახტეს.
 export function MyStats() {
+  const isStudent = usePathname().startsWith("/dashboard/student");
+  const key = CACHE_KEY + (isStudent ? "student" : "staff");
   const [data, setData] = useState<StaffStats | StudentStats | null>(null);
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) setData(JSON.parse(cached));
+    } catch {}
     fetch("/api/my-stats", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then(setData)
+      .then((d) => {
+        setData(d);
+        try {
+          localStorage.setItem(key, JSON.stringify(d));
+        } catch {}
+      })
       .catch(() => {});
-  }, []);
+  }, [key]);
 
-  if (!data) return null;
+  const staff = data?.role === "staff" ? data : null;
+  const student = data?.role === "student" ? data : null;
 
   return (
     <div className="flex flex-col gap-2">
       <p className="flex -mt-1.5">
-        <Greeting name={data.name} />
+        <Greeting name={data?.name} />
       </p>
       <StatsBlock>
-        {data.role === "student" ? (
+        {isStudent ? (
           <>
-            Tvinion-ით {n(data.students)} აბიტურიენტმა გააკეთა {n(data.attempts)}{" "}
-            ტესტი. თქვენ გაკეთებული გაქვთ {n(data.myAttempts)} ტესტი.
+            Tvinion-ით {n(student?.students)} აბიტურიენტმა გააკეთა{" "}
+            {n(student?.attempts)} ტესტი. თქვენ გაკეთებული გაქვთ{" "}
+            {n(student?.myAttempts)} ტესტი.
           </>
         ) : (
           <>
-            Tvinion-ით {n(data.teachers)} მასწავლებელმა ჩაატარა {n(data.sentTests)}{" "}
-            ტესტი. თქვენ {n(data.myStudents)} მოსწავლისთვის ჩატარებული გაქვთ{" "}
-            {n(data.mySent)} ტესტი.
+            Tvinion-ით {n(staff?.teachers)} მასწავლებელმა ჩაატარა{" "}
+            {n(staff?.sentTests)} ტესტი. თქვენ {n(staff?.myStudents)} მოსწავლისთვის
+            ჩატარებული გაქვთ {n(staff?.mySent)} ტესტი.
           </>
         )}
       </StatsBlock>
