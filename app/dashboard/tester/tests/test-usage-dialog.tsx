@@ -53,8 +53,14 @@ export default function TestUsageDialog({
 
   if (typeof document === "undefined") return null;
 
+  // ორივე ეკრანზე ერთი და იგივე სვეტები: სახელს/სათაურს მეტი ადგილი აქვს,
+  // მარჯვენა სვეტი ვერტიკალური ხაზით არის გამოყოფილი
+  const gridClass = "grid grid-cols-[minmax(0,82fr)_minmax(0,18fr)] text-sm text-ink";
   const rowClass =
-    "col-span-full grid grid-cols-subgrid items-center gap-x-3 py-2 border-b border-paper-line last:border-b-0";
+    "col-span-full grid grid-cols-subgrid border-b border-paper-line last:border-b-0";
+  const leftCell = "min-w-0 py-2 pr-3";
+  const rightCell =
+    "flex items-center justify-center py-2 pl-2 border-l border-paper-line whitespace-nowrap";
 
   let body: React.ReactNode;
   if (error) {
@@ -69,15 +75,15 @@ export default function TestUsageDialog({
       );
     else
       body = (
-        <div className="grid grid-cols-[minmax(0,1fr)_max-content] text-sm text-ink">
+        <div className={gridClass}>
           {students.map((s) => (
             <div key={s.id} className={rowClass}>
-              <HScrollText className="min-w-0">{s.name}</HScrollText>
+              <HScrollText className={leftCell}>{s.name}</HScrollText>
               <button
                 type="button"
                 onClick={() => openStudent(s)}
                 aria-label="მოსწავლის გაკეთებული ტესტები"
-                className="flex justify-end"
+                className={rightCell}
               >
                 <UiIcon name="results" />
               </button>
@@ -95,11 +101,11 @@ export default function TestUsageDialog({
       );
     else
       body = (
-        <div className="grid grid-cols-[minmax(0,1fr)_max-content] text-sm text-ink">
+        <div className={gridClass}>
           {tests.map((t) => (
             <div key={t.id} className={rowClass}>
-              <HScrollText className="min-w-0">{t.title}</HScrollText>
-              <span className="whitespace-nowrap text-right">
+              <HScrollText className={leftCell}>{t.title}</HScrollText>
+              <span className={rightCell}>
                 {t.score}/{t.total}
               </span>
             </div>
@@ -115,41 +121,45 @@ export default function TestUsageDialog({
       }}
       className="fixed inset-0 bg-ink/40 flex items-center justify-center z-50"
     >
-      <div className="bg-white rounded-md border border-paper-line w-[75vw] h-[75dvh] px-4 py-3 flex flex-col">
-        <div className="flex items-center gap-2 border-b border-paper-line pb-2 mb-1 shrink-0">
-          {student ? (
-            <>
+      <div className="bg-white rounded-md border border-paper-line w-[75vw] h-[50dvh] px-4 py-3 flex flex-col">
+        <div className="border-b border-paper-line pb-2 mb-1 shrink-0">
+          <div className="flex items-center gap-2">
+            {student ? (
               <button
                 type="button"
                 onClick={back}
-                className="shrink-0 text-sm text-marker font-medium hover:text-marker-hover"
+                className="flex-1 text-left text-sm text-marker font-medium hover:text-marker-hover"
               >
                 ← უკან
               </button>
-              <HScrollText className="flex-1 min-w-0 font-medium text-ink text-sm">
-                {student.name}
+            ) : (
+              <HScrollText className="flex-1 min-w-0 font-bold text-marker text-sm">
+                {title}
               </HScrollText>
-            </>
-          ) : (
-            <HScrollText className="flex-1 min-w-0 font-medium text-ink text-sm">
-              {title}
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="დახურვა"
+              className="icon-btn shrink-0 text-ink-soft hover:text-marker"
+            >
+              <UiIcon name="x" />
+            </button>
+          </div>
+          {student && (
+            <HScrollText className="min-w-0 mt-1 font-bold text-marker text-sm">
+              {student.name}
             </HScrollText>
           )}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="დახურვა"
-            className="icon-btn shrink-0 text-ink-soft hover:text-marker"
-          >
-            <UiIcon name="x" />
-          </button>
         </div>
 
         <VScrollBox
           key={student?.id ?? "students"}
           drag={false}
           showScrollbar
-          className="h-[calc(75dvh-4.5rem)] pr-3"
+          className={`${
+            student ? "h-[calc(50dvh-6rem)]" : "h-[calc(50dvh-4.5rem)]"
+          } pr-3`}
         >
           {body}
         </VScrollBox>
