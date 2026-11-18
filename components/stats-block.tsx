@@ -46,7 +46,7 @@ export function MyStats() {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="flex">
+      <p className="flex -mt-1.5">
         <Greeting name={data.name} />
       </p>
       <StatsBlock>
