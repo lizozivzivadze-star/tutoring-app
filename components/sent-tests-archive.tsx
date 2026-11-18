@@ -8,6 +8,7 @@ import Link from "next/link";
 import { formatDuration, formatMinSec } from "@/lib/format-time";
 import UiIcon from "@/components/ui-icon";
 import ConfirmDialog from "@/components/confirm-dialog";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 
 type Row = {
@@ -284,19 +285,16 @@ function ChronoRow({
       >
         {row.score}/{row.total}
       </Link>
-      {studentMode &&
-        (row.canRetake ? (
-          <button
-            type="button"
-            onClick={() => onRetake?.(row)}
-            aria-label="ტესტის ხელახლა გაკეთება"
-            className="flex justify-end"
-          >
-            <UiIcon name="refresh" />
-          </button>
-        ) : (
-          <span className="w-5" />
-        ))}
+      {studentMode && (
+        <button
+          type="button"
+          onClick={() => onRetake?.(row)}
+          aria-label="ტესტის ხელახლა გაკეთება"
+          className="flex justify-end"
+        >
+          <UiIcon name="refresh" />
+        </button>
+      )}
     </div>
   );
 }
@@ -449,6 +447,7 @@ export default function SentTestsArchive({
   const router = useRouter();
   const [retakeRow, setRetakeRow] = useState<Row | null>(null);
   const [retakeError, setRetakeError] = useState("");
+  const [limitOpen, setLimitOpen] = useState(false);
 
   async function confirmRetake() {
     const row = retakeRow;
@@ -653,7 +652,7 @@ export default function SentTestsArchive({
         if (view === "chronological") {
       return rows.map((r) => ({
         key: `${r.eventKey}:${r.studentId}`,
-        node: <ChronoRow row={r} studentMode={studentMode} onRetake={setRetakeRow} />,
+        node: <ChronoRow row={r} studentMode={studentMode} onRetake={(r) => (r.canRetake ? setRetakeRow(r) : setLimitOpen(true))} />,
       }));
     }
     if (view === "by-result") {
@@ -809,6 +808,31 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
           {results}
         </div>
       )}
+
+      {limitOpen &&
+        createPortal(
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setLimitOpen(false);
+            }}
+            className="fixed inset-0 bg-ink/40 flex items-center justify-center z-50 px-6"
+          >
+            <div className="bg-white rounded-md border border-paper-line px-6 py-6 w-full max-w-xs">
+              <p className="text-ink text-center mb-6">
+                ამ ტესტის ხელახლა გაკეთების ლიმიტი ამოიწურა.
+              </p>
+              <button
+                type="button"
+                onClick={() => setLimitOpen(false)}
+                className="w-full rounded-full bg-gold text-ink py-2 text-sm
+                           font-medium hover:bg-gold-hover transition-colors"
+              >
+                გასაგებია
+              </button>
+            </div>
+          </div>,
+          document.body
+        )}
 
       {retakeRow && (
         <ConfirmDialog
