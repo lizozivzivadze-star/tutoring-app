@@ -9,6 +9,9 @@ export type TestSummary = {
   activated: boolean;
   updatedAt: string;
   publishedAt: string | null;
+  // სტატისტიკისთვის (/api/themes)
+  _count?: { questions: number };
+  publishedQuestionCount?: number;
 };
 
 export type ThemeRecord = {

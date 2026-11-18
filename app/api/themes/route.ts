@@ -27,13 +27,24 @@ export async function GET() {
           activated: true,
           updatedAt: true,
           publishedAt: true,
+          publishedSnapshot: true,
           _count: { select: { questions: true } },
         },
       },
     },
   });
 
-  return NextResponse.json({ themes });
+  // შეკითხვების რაოდენობა ბოლო გამოქვეყნებულ ვერსიაში (მასწავლებლის
+  // „ტესტები" ტაბის სტატისტიკისთვის). თავად snapshot კლიენტს არ ეგზავნება.
+  const result = themes.map((th) => ({
+    ...th,
+    tests: th.tests.map(({ publishedSnapshot, ...t }) => {
+      const qs = (publishedSnapshot as { questions?: unknown[] } | null)?.questions;
+      return { ...t, publishedQuestionCount: Array.isArray(qs) ? qs.length : 0 };
+    }),
+  }));
+
+  return NextResponse.json({ themes: result });
 }
 
 export async function POST(req: NextRequest) {

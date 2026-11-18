@@ -8,6 +8,7 @@ import NewSentTests from "@/components/new-sent-tests";
 import SentTestsArchive from "@/components/sent-tests-archive";
 import CollapsibleSection from "@/components/collapsible-section";
 import UiIcon from "@/components/ui-icon";
+import { MyStats } from "@/components/stats-block";
 
 type GroupOption = {
   id: string;
@@ -195,6 +196,8 @@ export default function TesterStartTab() {
   const pillOff = "border-paper-line text-ink-soft bg-paper";
 
   return (
+    <div className="flex flex-col gap-5">
+    <MyStats />
     <form onSubmit={handleSend} className="flex flex-col gap-5">
       <div className="flex flex-col gap-5">
         <DropdownSelect
@@ -310,5 +313,6 @@ className="mb-5 rounded-full bg-gold text-ink font-body font-medium
         <SentTestsArchive endpoint="/api/tester/archive" />
       </CollapsibleSection>
     </form>
+    </div>
   );
 }

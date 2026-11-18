@@ -6,6 +6,7 @@ import UserMenu from "@/components/user-menu";
 import LogoLink from "@/components/logo-link";
 import LoadingBar from "@/components/loading-bar";
 import SentTestsArchive from "@/components/sent-tests-archive";
+import { MyStats } from "@/components/stats-block";
 
 type PendingTest = {
   sentTestId: string;
@@ -43,6 +44,7 @@ export default function StudentDashboard() {
 </header>
 
       <main className="py-8 flex flex-col gap-8 mx-auto w-[90%]">
+        <MyStats />
               {group && (
           <section className="text-sm text-ink flex flex-col gap-1 px-1">
             <p>

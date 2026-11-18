@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import LoadingBar from "@/components/loading-bar";
+import { TestsStats } from "@/components/stats-block";
 
 // მასწავლებლის „ტესტები" ტაბი — მხოლოდ სანახავად (დაგეგმვისთვის).
 // ტესტერის ჩამონათვალის ასლია, ოღონდ დამატების, რედაქტირების და
@@ -35,8 +36,19 @@ export default function TeacherTestsTab() {
     return <LoadingBar />;
   }
 
+  // სტატისტიკა: ზუსტად ის, რაც ქვემოთ სიაში ჩანს (გამოქვეყნებული ტესტები,
+  // შეკითხვები ბოლო გამოქვეყნებული ვერსიიდან)
+  const shownTests = themes.flatMap((th) => th.tests.filter((t) => t.published));
+  const shownQuestions = shownTests.reduce(
+    (sum, t) => sum + (t.publishedQuestionCount ?? 0),
+    0
+  );
+
   return (
     <div>
+      <div className="mb-5">
+        <TestsStats tests={shownTests.length} questions={shownQuestions} />
+      </div>
       <div className="flex flex-col gap-2.5">
         <div className="border-b border-paper-line pb-[5px] -mb-[5px]">
           <div className="flex items-center justify-between gap-2">
