@@ -44,7 +44,9 @@ export default function StudentDashboard() {
 </header>
 
       <main className="py-8 flex flex-col gap-8 mx-auto w-[90%]">
-        <MyStats />
+        <div className="-mb-3">
+          <MyStats />
+        </div>
               {group && (
           <section className="text-sm text-ink flex flex-col gap-1 px-1">
             <p>
