@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/dashboard/admin/texts", label: "ტექსტები" },
   { href: "/dashboard/admin/site", label: "საიტი" },
+  { href: "/dashboard/admin/rules", label: "წესები" },
 ];
 
 export default function AdminTabs() {

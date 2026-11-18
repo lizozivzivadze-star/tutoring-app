@@ -71,9 +71,9 @@ export async function GET() {
         where: { identityEmail: { notIn: EXCLUDED_TESTERS }, groups: { some: hasSent } },
       }),
       prisma.sentTest.count({ where: countedSent }),
-      prisma.testAttempt.count({ where: { sentTest: countedSent } }),
+      prisma.testAttempt.count({ where: { superseded: false, sentTest: countedSent } }),
       prisma.testAttempt
-        .groupBy({ by: ["studentId"], where: { sentTest: countedSent } })
+        .groupBy({ by: ["studentId"], where: { superseded: false, sentTest: countedSent } })
         .then((rows) => rows.length),
     ]);
 

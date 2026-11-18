@@ -154,6 +154,8 @@ model Settings {
   studentDeleteConfirmText String   @default("დარწმუნებული ხარ, რომ გინდა ამ მოსწავლის წაშლა?")
   siteTitle                String   @default("რეპეტიტორის პლატფორმა")
   siteDescription          String   @default("ჯგუფების, ტესტებისა და მოსწავლეების მართვის პლატფორმა")
+  // ერთი ტესტის ხელახლა გაკეთების მაქსიმალური რაოდენობა; null = შეუზღუდავი
+  retakeLimit              Int?
   updatedAt                DateTime @updatedAt
 }
 
@@ -255,6 +257,9 @@ model TestAttempt {
   totalQuestions Int
   completedAt    DateTime @default(now())
   durationSeconds Int?
+  // ხელახალი გაკეთებისას ძველი შედეგი არ იშლება — აღინიშნება როგორც
+  // ჩანაცვლებული (true) და აღარსად ჩანს, მაგრამ ბაზაში რჩება პროგრესისთვის.
+  superseded     Boolean  @default(false)
   answers        AttemptAnswer[]
 
   @@index([sentTestId])

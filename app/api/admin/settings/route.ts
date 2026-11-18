@@ -54,6 +54,23 @@ export async function PATCH(req: NextRequest) {
     }
   }
 
+  // ხელახლა გაკეთების ლიმიტი — რიცხვი (0 ან მეტი) ან ცარიელი/null = შეუზღუდავი
+  if ("retakeLimit" in body) {
+    const raw = body.retakeLimit;
+    if (raw === null || raw === "") {
+      data.retakeLimit = null;
+    } else {
+      const n = Number(raw);
+      if (!Number.isInteger(n) || n < 0) {
+        return NextResponse.json(
+          { error: "შეიყვანეთ მთელი რიცხვი (0 ან მეტი) ან დატოვეთ ცარიელი" },
+          { status: 400 }
+        );
+      }
+      data.retakeLimit = n;
+    }
+  }
+
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "no valid fields" }, { status: 400 });
   }

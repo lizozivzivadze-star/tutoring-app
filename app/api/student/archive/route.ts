@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentStudentId } from "@/lib/current-student";
+import { getSettings } from "@/lib/settings";
 
 export async function GET() {
   const studentId = await getCurrentStudentId();
@@ -9,7 +10,7 @@ export async function GET() {
   }
 
   const attempts = await prisma.testAttempt.findMany({
-    where: { studentId },
+    where: { studentId, superseded: false },
     orderBy: [{ sentTest: { sentAt: "desc" } }, { completedAt: "desc" }],
     select: {
       id: true,
@@ -38,6 +39,18 @@ export async function GET() {
     },
   });
 
+  // რამდენჯერ გააკეთა თითოეული ტესტი ხელახლა (ჩანაცვლებული შედეგების რაოდენობა)
+  const [settings, retakes] = await Promise.all([
+    getSettings(),
+    prisma.testAttempt.groupBy({
+      by: ["sentTestId"],
+      where: { studentId, superseded: true },
+      _count: { _all: true },
+    }),
+  ]);
+  const retakeCount = new Map(retakes.map((r) => [r.sentTestId, r._count._all]));
+  const limit = settings.retakeLimit;
+
   const seen = new Set<string>();
   const rows: Record<string, unknown>[] = [];
   for (const a of attempts) {
@@ -45,6 +58,8 @@ export async function GET() {
     seen.add(a.sentTestId);
     const st = a.sentTest;
     rows.push({
+      sentTestId: a.sentTestId,
+      canRetake: limit == null || (retakeCount.get(a.sentTestId) ?? 0) < limit,
       eventKey: st.groupId ? st.id : `${st.testId}|${st.sentAt.toISOString()}`,
       sentAt: st.sentAt.toISOString(),
       testId: st.testId,

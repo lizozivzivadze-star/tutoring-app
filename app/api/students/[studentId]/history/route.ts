@@ -23,7 +23,7 @@ export async function GET(
   }
 
   const attempts = await prisma.testAttempt.findMany({
-    where: { studentId },
+    where: { studentId, superseded: false },
     include: {
       sentTest: { include: { test: { include: { theme: true } } } },
     },

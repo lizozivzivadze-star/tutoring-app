@@ -7,6 +7,8 @@ import HScrollText from "@/components/h-scroll-text";
 import Link from "next/link";
 import { formatDuration, formatMinSec } from "@/lib/format-time";
 import UiIcon from "@/components/ui-icon";
+import ConfirmDialog from "@/components/confirm-dialog";
+import { useRouter } from "next/navigation";
 
 type Row = {
   eventKey: string;
@@ -24,6 +26,9 @@ type Row = {
   attemptId: string;
   durationSeconds: number | null;
   href: string;
+  // მხოლოდ მოსწავლის არქივში: ხელახლა გაკეთებისთვის
+  sentTestId?: string;
+  canRetake?: boolean;
 };
 
 type StudentLine = {
@@ -223,12 +228,12 @@ const pctOf = (r: Row) => (r.total > 0 ? Math.round((r.score / r.total) * 100) :
 // დესკტოპი (md+): ჯგუფი და მოსწავლე თავიანთი ტექსტის სიგანისაა, ტესტი იღებს დანარჩენს.
 const chronoCols = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,1fr) minmax(0,1fr) max-content max-content"
+    ? "max-content minmax(0,1fr) minmax(0,1fr) max-content max-content max-content"
     : "max-content minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) max-content max-content";
 
 const chronoColsDesktop = (studentMode: boolean) =>
   studentMode
-    ? "max-content minmax(0,150fr) minmax(0,366fr) minmax(max-content,42fr) minmax(max-content,42fr)"
+    ? "max-content minmax(0,150fr) minmax(0,366fr) minmax(max-content,42fr) minmax(max-content,42fr) max-content"
     : "max-content minmax(0,150fr) minmax(0,150fr) minmax(0,216fr) minmax(max-content,42fr) minmax(max-content,42fr)";
     
 function ChronoHeader({ studentMode }: { studentMode: boolean }) {
@@ -244,11 +249,24 @@ function ChronoHeader({ studentMode }: { studentMode: boolean }) {
       <div className="flex justify-end">
         <UiIcon name="results" />
       </div>
+      {studentMode && (
+        <div className="flex justify-end">
+          <UiIcon name="refresh" />
+        </div>
+      )}
     </div>
   );
 }
 
-function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
+function ChronoRow({
+  row,
+  studentMode,
+  onRetake,
+}: {
+  row: Row;
+  studentMode: boolean;
+  onRetake?: (row: Row) => void;
+}) {
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 sm:gap-x-6 rounded-md border border-paper-line bg-white px-2 py-1.5 font-body text-ink">
       <div className="grid md:hidden">
@@ -266,6 +284,19 @@ function ChronoRow({ row, studentMode }: { row: Row; studentMode: boolean }) {
       >
         {row.score}/{row.total}
       </Link>
+      {studentMode &&
+        (row.canRetake ? (
+          <button
+            type="button"
+            onClick={() => onRetake?.(row)}
+            aria-label="ტესტის ხელახლა გაკეთება"
+            className="flex justify-end"
+          >
+            <UiIcon name="refresh" />
+          </button>
+        ) : (
+          <span className="w-5" />
+        ))}
     </div>
   );
 }
@@ -415,6 +446,31 @@ export default function SentTestsArchive({
   studentMode?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const [retakeRow, setRetakeRow] = useState<Row | null>(null);
+  const [retakeError, setRetakeError] = useState("");
+
+  async function confirmRetake() {
+    const row = retakeRow;
+    setRetakeRow(null);
+    if (!row?.sentTestId) return;
+    setRetakeError("");
+    try {
+      const res = await fetch("/api/student/retake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sentTestId: row.sentTestId }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setRetakeError(data?.error ?? "ტესტის ხელახლა დაწყება ვერ მოხერხდა.");
+        return;
+      }
+      router.push(`/dashboard/student/take/${row.sentTestId}`);
+    } catch {
+      setRetakeError("ტესტის ხელახლა დაწყება ვერ მოხერხდა.");
+    }
+  }
     const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -597,7 +653,7 @@ export default function SentTestsArchive({
         if (view === "chronological") {
       return rows.map((r) => ({
         key: `${r.eventKey}:${r.studentId}`,
-        node: <ChronoRow row={r} studentMode={studentMode} />,
+        node: <ChronoRow row={r} studentMode={studentMode} onRetake={setRetakeRow} />,
       }));
     }
     if (view === "by-result") {
@@ -706,6 +762,9 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
             <p className="text-sm text-ink-soft text-center">იტვირთება...</p>
           )}
           {error && <p className="text-sm text-danger text-center">{error}</p>}
+          {retakeError && (
+            <p className="text-sm text-danger text-center">{retakeError}</p>
+          )}
 
           {view === "by-test" && (
             <ScrollPicker
@@ -749,6 +808,16 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
 
           {results}
         </div>
+      )}
+
+      {retakeRow && (
+        <ConfirmDialog
+          message="თქვენ ეს ტესტი უკვე გაკეთებული გაქვთ. გსურთ ხელახლა გააკეთოთ? გაფრთხილება: ტესტის დაწყებისთანავე ძველი შედეგი წაიშლება"
+          cancelLabel="არა"
+          confirmLabel="დიახ"
+          onCancel={() => setRetakeRow(null)}
+          onConfirm={confirmRetake}
+        />
       )}
     </div>
   );

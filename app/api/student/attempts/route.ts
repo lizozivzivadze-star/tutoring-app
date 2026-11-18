@@ -45,7 +45,7 @@ if (!authorized) {
   }
 
   const existing = await prisma.testAttempt.findFirst({
-    where: { sentTestId, studentId },
+    where: { sentTestId, studentId, superseded: false },
   });
   if (existing) {
     return NextResponse.json({ attempt: existing });

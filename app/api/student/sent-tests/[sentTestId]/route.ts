@@ -38,7 +38,7 @@ if (!authorized) {
   }
 
   const existingAttempt = await prisma.testAttempt.findFirst({
-    where: { sentTestId, studentId },
+    where: { sentTestId, studentId, superseded: false },
   });
   if (existingAttempt) {
     return NextResponse.json(

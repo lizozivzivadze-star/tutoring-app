@@ -10,7 +10,8 @@ type IconName =
   | "red-button"
   | "log-out"
   | "feedback"
-  | "question";
+  | "question"
+  | "refresh";
 
 // ყველა ხატულა წინასწარაა დამუშავებული scripts/build-icons.py-ით: შიგთავსი ზუსტად
 // 20x20 ველის ცენტრშია (მთელ პიქსელზე) და სასურველ ზომაზეა. ამიტომ აქ არც
