@@ -54,6 +54,11 @@ export default function ThemeCard({
                       <Link
                         key={test.id}
                         href={`/dashboard/teacher/tests/${test.id}`}
+                        // ჩაკეტილი ტესტი არ იხსნება
+                        onClick={(e) => {
+                          if (!test.activated) e.preventDefault();
+                        }}
+                        aria-disabled={!test.activated}
                         className={`block w-full min-w-0 ${
                           test.activated
                             ? "text-ink hover:text-marker"

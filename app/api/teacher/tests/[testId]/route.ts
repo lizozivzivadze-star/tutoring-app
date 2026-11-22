@@ -19,6 +19,7 @@ export async function GET(
     where: {
       id: testId,
       published: true,
+      activated: true, // ჩაკეტილი (გაუაქტიურებელი) ტესტის შინაარსი არ ჩანს
       theme: { tester: { teacherAccess: { some: { teacherId } } } },
     },
     select: {
