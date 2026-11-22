@@ -139,7 +139,11 @@ export default function StartTab() {
 
   async function handleSend(e: FormEvent) {
     e.preventDefault();
-    if (!selection || !testId) return;
+    if (!selection || !themeId || !testId) {
+      setError("გთხოვთ მონიშნეთ სამივე ველი");
+      setStatus("error");
+      return;
+    }
 
     const key = selection + "|" + testId;
     if (lastSentKey.current === key) {
@@ -198,7 +202,7 @@ export default function StartTab() {
   return (
     <div className="flex flex-col gap-5">
     <MyStats />
-    <form onSubmit={handleSend} className="flex flex-col gap-5">
+    <form onSubmit={handleSend} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-5">
         <DropdownSelect
           value={selection}
