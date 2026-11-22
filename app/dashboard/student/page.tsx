@@ -38,7 +38,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen">
-      <header className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
+      <header data-app-menu className="ruled-edge bg-white px-6 py-6 flex items-center justify-between gap-4">
   <LogoLink />
   <UserMenu />
 </header>
