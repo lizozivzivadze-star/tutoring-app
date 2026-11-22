@@ -51,7 +51,6 @@ const RETURN_MAX_AGE = 60 * 60 * 1000; // 1 საათი
 
 const VIEWS = [
   { value: "chronological", label: "ქრონოლოგიური" },
-  { value: "by-test", label: "ტესტების მიხედვით" },
   { value: "by-group", label: "ჯგუფების მიხედვით" },
   { value: "by-student", label: "მოსწავლეების მიხედვით" },
   { value: "by-result", label: "შედეგების მიხედვით" },
