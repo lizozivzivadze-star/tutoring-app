@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import { signIn, auth } from "@/lib/auth";
+import { generateAccessCode } from "@/lib/access-code";
 
 const DASHBOARD_BY_ROLE: Record<"teacher" | "student" | "admin" | "tester", string> = {
   teacher: "/dashboard/teacher",
@@ -9,6 +10,33 @@ const DASHBOARD_BY_ROLE: Record<"teacher" | "student" | "admin" | "tester", stri
   admin: "/dashboard/admin",
   tester: "/dashboard/tester",
 };
+
+// ღია რეგისტრაციით მოსული ახალი ანგარიში. თუ ეს მეილი უკვე რომელიმე
+// ანგარიშს ეკუთვნის (მაგ. ორი ბმული მოითხოვა), ახალს აღარ ვქმნით.
+async function createRegisteredAccount(email: string, role: string) {
+  if (role !== "teacher" && role !== "student") return;
+  const ci = { equals: email, mode: "insensitive" as const };
+  const [teacher, student, admin, tester] = await Promise.all([
+    prisma.teacher.findFirst({ where: { email: ci }, select: { id: true } }),
+    prisma.student.findFirst({ where: { email: ci }, select: { id: true } }),
+    prisma.admin.findFirst({ where: { identityEmail: ci }, select: { id: true } }),
+    prisma.tester.findFirst({ where: { identityEmail: ci }, select: { id: true } }),
+  ]);
+  if (teacher || student || admin || tester) return;
+
+  try {
+    if (role === "teacher") {
+      await prisma.teacher.create({ data: { email } });
+    } else {
+      // ჯგუფის გარეშე; მასწავლებელი მერე ამ მეილს ჯგუფში დაამატებს
+      await prisma.student.create({
+        data: { email, accessCode: await generateAccessCode() },
+      });
+    }
+  } catch {
+    // ერთდროული მოთხოვნისას მეორემ უკვე შექმნა (unique email) — ყველაფერი რიგზეა
+  }
+}
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
@@ -80,6 +108,11 @@ export async function POST(req: NextRequest) {
     where: { token },
     data: { usedAt: new Date() },
   });
+
+  // ღია რეგისტრაცია: მეილი დადასტურდა → ანგარიშს ახლა ვქმნით
+  if (record.register) {
+    await createRegisteredAccount(record.email, record.role);
+  }
 
   if (confirmOnly) {
     return NextResponse.json({ ok: true });

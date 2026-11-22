@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentTeacherId } from "@/lib/current-teacher";
 import { isStaffEmail } from "@/lib/staff-email";
+import { isRuEmail, RU_BLOCK_MESSAGE } from "@/lib/email-domain";
 
 async function assertOwnership(studentId: string, teacherId: string) {
   const student = await prisma.student.findUnique({
@@ -66,6 +67,9 @@ export async function PATCH(
   const cleanEmail = email.trim();
 
   if (cleanEmail.toLowerCase() !== owned.email.toLowerCase()) {
+    if (isRuEmail(cleanEmail)) {
+      return NextResponse.json({ error: RU_BLOCK_MESSAGE }, { status: 400 });
+    }
     const clash = await prisma.student.findFirst({
       where: { email: { equals: cleanEmail, mode: "insensitive" } },
     });

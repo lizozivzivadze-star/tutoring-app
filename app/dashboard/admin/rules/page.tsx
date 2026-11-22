@@ -13,6 +13,8 @@ export default function AdminRulesTab() {
   const [value, setValue] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [openReg, setOpenReg] = useState(false);
+  const [regStatus, setRegStatus] = useState<Status>("idle");
 
   useEffect(() => {
     fetch("/api/admin/settings")
@@ -20,8 +22,28 @@ export default function AdminRulesTab() {
       .then((data) => {
         const v = data.settings?.retakeLimit;
         setValue(v == null ? "" : String(v));
+        setOpenReg(Boolean(data.settings?.openRegistration));
       });
   }, []);
+
+  // ღია რეგისტრაციის ჩართვა/გამორთვა — დაჭერისთანავე ინახება
+  async function toggleOpenReg() {
+    const next = !openReg;
+    setOpenReg(next);
+    setRegStatus("saving");
+    const res = await fetch("/api/admin/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ openRegistration: next }),
+    }).catch(() => null);
+    if (!res || !res.ok) {
+      setOpenReg(!next);
+      setRegStatus("error");
+      return;
+    }
+    setRegStatus("saved");
+    setTimeout(() => setRegStatus((s) => (s === "saved" ? "idle" : s)), 2000);
+  }
 
   async function save() {
     setStatus("saving");
@@ -82,6 +104,43 @@ export default function AdminRulesTab() {
           {status === "saved" && <span className="text-sm text-ledger">შენახულია</span>}
           {status === "error" && <span className="text-sm text-danger">{error}</span>}
         </div>
+      </div>
+
+      <h2 className="font-display text-lg text-ink border-b border-paper-line pb-2 mb-5">
+        რეგისტრაციის წესები
+      </h2>
+
+      <div className="flex flex-col gap-2 pb-5 mb-5">
+        <div className="flex items-center justify-between gap-4">
+          <label htmlFor="open-registration" className="text-sm text-ink-soft">
+            ღია რეგისტრაცია
+          </label>
+          <button
+            id="open-registration"
+            type="button"
+            role="switch"
+            aria-checked={openReg}
+            onClick={toggleOpenReg}
+            disabled={regStatus === "saving"}
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full
+                        transition-colors disabled:opacity-50 ${
+                          openReg ? "bg-ledger" : "bg-paper-line"
+                        }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                openReg ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+        <p className="text-xs text-ink-soft/70">
+          {openReg
+            ? "ჩართულია: მასწავლებელიც და აბიტურიენტიც თავად რეგისტრირდება login გვერდიდან"
+            : "გამორთულია: მასწავლებელს არეგისტრირებს ადმინი, აბიტურიენტს — მასწავლებელი"}
+        </p>
+        {regStatus === "saved" && <span className="text-sm text-ledger">შენახულია</span>}
+        {regStatus === "error" && <span className="text-sm text-danger">ვერ შეინახა</span>}
       </div>
     </div>
   );

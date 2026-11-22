@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentTesterId } from "@/lib/current-teacher";
 import { generateAccessCode } from "@/lib/access-code";
 import { isStaffEmail } from "@/lib/staff-email";
+import { isRuEmail, RU_BLOCK_MESSAGE } from "@/lib/email-domain";
 import { sendLoginInviteEmail } from "@/lib/mailer";
 
 export const maxDuration = 30;
@@ -37,6 +38,10 @@ export async function POST(
   }
 
   const cleanEmail = email.trim();
+
+  if (isRuEmail(cleanEmail)) {
+    return NextResponse.json({ error: RU_BLOCK_MESSAGE }, { status: 400 });
+  }
 
   const existing = await prisma.student.findFirst({
     where: { email: { equals: cleanEmail, mode: "insensitive" } },

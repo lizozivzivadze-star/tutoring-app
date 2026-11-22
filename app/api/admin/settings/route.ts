@@ -71,6 +71,14 @@ export async function PATCH(req: NextRequest) {
     }
   }
 
+  // ღია რეგისტრაციის ჩართვა/გამორთვა
+  if ("openRegistration" in body) {
+    if (typeof body.openRegistration !== "boolean") {
+      return NextResponse.json({ error: "invalid value" }, { status: 400 });
+    }
+    data.openRegistration = body.openRegistration;
+  }
+
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "no valid fields" }, { status: 400 });
   }

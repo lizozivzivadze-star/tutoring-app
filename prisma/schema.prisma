@@ -70,6 +70,8 @@ model LoginToken {
   role       Role
   expiresAt  DateTime
   usedAt     DateTime?
+  // true: ღია რეგისტრაციის ბმული — ანგარიში იქმნება მხოლოდ ბმულზე დაჭერისას
+  register   Boolean   @default(false)
   createdAt  DateTime  @default(now())
 }
 
@@ -156,6 +158,8 @@ model Settings {
   siteDescription          String   @default("ჯგუფების, ტესტებისა და მოსწავლეების მართვის პლატფორმა")
   // ერთი ტესტის ხელახლა გაკეთების მაქსიმალური რაოდენობა; null = შეუზღუდავი
   retakeLimit              Int?
+  // ღია რეგისტრაცია: true = ახალი მასწავლებელი/აბიტურიენტი თავად რეგისტრირდება login გვერდიდან
+  openRegistration         Boolean  @default(false)
   updatedAt                DateTime @updatedAt
 }
 

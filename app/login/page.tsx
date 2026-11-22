@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import InstallCard from "@/components/install-card";
+import Modal from "@/components/modal";
 import { isStandalone } from "@/lib/install-env";
 import { useState, useEffect, FormEvent, CSSProperties } from "react";
 
@@ -12,6 +13,22 @@ type Status = "idle" | "sending" | "sent" | "error";
 // "checking" — ჯერ არ ვიცით (პირველი ჩატვირთვა), "form" — ლოგინის ფორმა,
 // "install" — ბრაუზერში (ყველა მოწყობილობა): ფორმის ნაცვლად აპის დაყენება
 type Mode = "checking" | "form" | "install";
+
+type RegisterRole = "teacher" | "student";
+
+// ღია რეგისტრაციის სტატუსის არჩევის ფანჯრის ბარათები
+const ROLE_OPTIONS: { role: RegisterRole; title: string; points: string[] }[] = [
+  {
+    role: "teacher",
+    title: "ისტორიის მასწავლებელი",
+    points: ["ქმნით ჯგუფებს", "ამატებთ აბიტურიენტებს", "ატარებთ ტესტებს"],
+  },
+  {
+    role: "student",
+    title: "აბიტურიენტი",
+    points: ["აკეთებთ ტესტებს", "ნახულობთ შეფასებებს", "აუმჯობესებთ შედეგებს"],
+  },
+];
 
 type Stats = {
   subjects: number;
@@ -32,6 +49,9 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [stats, setStats] = useState<Stats | null>(null);
   const [mode, setMode] = useState<Mode>("checking");
+  // ღია რეგისტრაცია: უცნობ მეილზე სტატუსის არჩევის ფანჯარა
+  const [showRolePicker, setShowRolePicker] = useState(false);
+  const [pickedRole, setPickedRole] = useState<RegisterRole | null>(null);
 
   const router = useRouter();
 
@@ -90,25 +110,40 @@ useEffect(() => {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email) return;
+    await sendLink();
+  }
 
+  // role: მხოლოდ ღია რეგისტრაციისას, სტატუსის არჩევის შემდეგ
+  async function sendLink(role?: RegisterRole) {
     setStatus("sending");
 
     try {
       const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(role ? { email, role } : { email }),
       });
 
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
+        setShowRolePicker(false);
         setErrorMessage(
           data?.error ?? "ვერ გაიგზავნა. სცადეთ ხელახლა."
         );
         setStatus("error");
         return;
       }
+
+      // მეილი არ არის რეგისტრირებული, ღია რეგისტრაცია ჩართულია
+      if (data?.needsRole) {
+        setPickedRole(null);
+        setShowRolePicker(true);
+        setStatus("idle");
+        return;
+      }
+
+      setShowRolePicker(false);
 
       setStatus("sent");
 
@@ -258,6 +293,64 @@ className="
               </p>
             )}
           </form>
+        )}
+
+        {showRolePicker && (
+          <Modal title="მონიშნეთ" onClose={() => setShowRolePicker(false)}>
+            <div className="flex items-start gap-2">
+              {ROLE_OPTIONS.map((opt, i) => (
+                <div key={opt.role} className="contents">
+                  {i === 1 && (
+                    <span className="self-center pt-1 text-sm text-ink-soft">ან</span>
+                  )}
+                  <div className="flex min-w-0 flex-1 flex-col gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPickedRole(opt.role)}
+                      aria-pressed={pickedRole === opt.role}
+                      className={`flex min-h-16 items-center justify-center rounded-md border-2
+                                  px-2 py-3 text-center text-sm font-medium text-ink transition-colors ${
+                                    pickedRole === opt.role
+                                      ? "border-marker bg-gold/30"
+                                      : "border-paper-line bg-white"
+                                  }`}
+                    >
+                      {opt.title}
+                    </button>
+                    <ul className="flex flex-col gap-1.5 text-xs text-ink-soft">
+                      {opt.points.map((pt) => (
+                        <li key={pt} className="flex gap-1">
+                          <span className="text-ledger">✓</span>
+                          <span>{pt}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => pickedRole && sendLink(pickedRole)}
+              disabled={!pickedRole || status === "sending"}
+              className="
+                mt-6 w-full rounded-full bg-gold text-ink
+                font-medium py-3
+                transition-colors
+                hover:bg-gold-hover
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+            >
+              {status === "sending" ? "იგზავნება..." : "გაგრძელება"}
+            </button>
+
+            <p className="mt-4 text-xs text-ink-soft">
+              შენიშვნა: ამ ეტაპზე Tvinion-ის გამოყენება შეუძლიათ მხოლოდ ისტორიის
+              მასწავლებლებს და ისტორიის შესწავლით დაინტერესებულ აბიტურიენტებს
+            </p>
+          </Modal>
         )}
 
         {/* გამოყენების სტატისტიკა */}
