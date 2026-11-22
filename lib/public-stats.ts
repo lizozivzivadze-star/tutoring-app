@@ -50,23 +50,12 @@ export async function computePublicStats() {
     ],
   };
 
-  const hasSent = {
-    OR: [
-      { sentTests: { some: {} } },
-      { students: { some: { sentTests: { some: {} } } } },
-    ],
-  };
-
-  const [tests, questions, teachers, testers, sentTests, attempts, students] =
+  const [tests, questions, teachers, sentTests, attempts, students] =
     await Promise.all([
       prisma.test.count({ where: visible }),
       prisma.question.count({ where: { test: visible } }),
-      prisma.teacher.count({
-        where: { email: { notIn: EXCLUDED_TEACHERS }, groups: { some: hasSent } },
-      }),
-      prisma.tester.count({
-        where: { identityEmail: { notIn: EXCLUDED_TESTERS }, groups: { some: hasSent } },
-      }),
+      // მასწავლებლები: ყველა მასწავლებლის ანგარიში ითვლება (გამორიცხვის გარეშე).
+      prisma.teacher.count(),
       prisma.sentTest.count({ where: countedSent }),
       prisma.testAttempt.count({ where: { superseded: false, sentTest: countedSent } }),
       prisma.testAttempt
@@ -78,7 +67,7 @@ export async function computePublicStats() {
     subjects,
     tests,
     questions,
-    teachers: teachers + testers,
+    teachers,
     sentTests,
     attempts,
     students,
