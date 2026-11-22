@@ -288,7 +288,7 @@ className="
             </button>
 
             {status === "error" && (
-              <p className="mt-4 text-sm text-danger">
+              <p className="mt-4 text-center text-sm text-danger">
                 {errorMessage}
               </p>
             )}
@@ -297,37 +297,41 @@ className="
 
         {showRolePicker && (
           <Modal title="მონიშნეთ" onClose={() => setShowRolePicker(false)}>
-            <div className="flex items-start gap-2">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-x-2 gap-y-1.5">
+              {/* ორივე ბარათი ერთ რიგშია → ერთნაირი სიგანე და სიმაღლე */}
               {ROLE_OPTIONS.map((opt, i) => (
-                <div key={opt.role} className="contents">
-                  {i === 1 && (
-                    <span className="self-center pt-1 text-sm text-ink-soft">ან</span>
-                  )}
-                  <div className="flex min-w-0 flex-1 flex-col gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPickedRole(opt.role)}
-                      aria-pressed={pickedRole === opt.role}
-                      className={`flex min-h-16 items-center justify-center rounded-md border-2
-                                  px-2 py-3 text-center text-sm font-medium text-ink transition-colors ${
-                                    pickedRole === opt.role
-                                      ? "border-marker bg-gold/30"
-                                      : "border-paper-line bg-white"
-                                  }`}
-                    >
-                      {opt.title}
-                    </button>
-                    <ul className="flex flex-col gap-1.5 text-xs text-ink-soft">
-                      {opt.points.map((pt) => (
-                        <li key={pt} className="flex gap-1">
-                          <span className="text-ledger">✓</span>
-                          <span>{pt}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <button
+                  key={opt.role}
+                  type="button"
+                  onClick={() => setPickedRole(opt.role)}
+                  aria-pressed={pickedRole === opt.role}
+                  className={`${i === 0 ? "col-start-1" : "col-start-3"} row-start-1 mb-1.5
+                              flex min-h-16 items-center justify-center rounded-md border-2
+                              px-2 py-3 text-center text-sm font-medium text-ink transition-colors ${
+                                pickedRole === opt.role
+                                  ? "border-marker bg-gold/30"
+                                  : "border-paper-line bg-white"
+                              }`}
+                >
+                  {opt.title}
+                </button>
               ))}
+              <span className="col-start-2 row-span-4 row-start-1 self-center text-sm text-ink-soft">
+                ან
+              </span>
+              {/* ✓ ხაზები: მარცხენა და მარჯვენა ერთ რიგში → ერთ სიმაღლეზე */}
+              {ROLE_OPTIONS.map((opt, i) =>
+                opt.points.map((pt, k) => (
+                  <div
+                    key={pt}
+                    style={{ gridRowStart: k + 2 }}
+                    className={`${i === 0 ? "col-start-1" : "col-start-3"} flex gap-1 text-xs text-ink-soft`}
+                  >
+                    <span className="text-ledger">✓</span>
+                    <span>{pt}</span>
+                  </div>
+                ))
+              )}
             </div>
 
             <button
@@ -346,7 +350,7 @@ className="
               {status === "sending" ? "იგზავნება..." : "გაგრძელება"}
             </button>
 
-            <p className="mt-4 text-xs text-ink-soft">
+            <p className="mt-4 text-center text-xs text-ink-soft">
               შენიშვნა: ამ ეტაპზე Tvinion-ის გამოყენება შეუძლიათ მხოლოდ ისტორიის
               მასწავლებლებს და ისტორიის შესწავლით დაინტერესებულ აბიტურიენტებს
             </p>
