@@ -30,7 +30,7 @@ export default function NewSentTests({
 
   useEffect(() => {
     if (!open || !wrapRef.current) return;
-    return revealOnOpen(wrapRef.current);
+    return revealOnOpen(wrapRef.current, "with-next");
   }, [open]);
 
   const load = useCallback(
@@ -117,7 +117,7 @@ className="w-full rounded-md border-2 border-marker text-marker font-body
           )}
 
           {items && items.length > 0 && (
-            <VScrollBox drag={false} className="max-h-72">
+            <VScrollBox drag={false}>
               {items.map((item) => (
                 <div
                   key={item.id}

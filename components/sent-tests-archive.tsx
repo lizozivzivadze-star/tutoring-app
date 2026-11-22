@@ -475,7 +475,7 @@ export default function SentTestsArchive({
   useEffect(() => {
     if (!open || !wrapRef.current) return;
     if (restoreScrollRef.current != null) return; // აღდგენისას ავტო-სქროლი არ გვჭირდება
-    return revealOnOpen(wrapRef.current);
+    return revealOnOpen(wrapRef.current, studentMode ? "auto" : "top");
   }, [open]);
   const [view, setView] = useState("");
   const [rows, setRows] = useState<Row[] | null>(null);
@@ -729,7 +729,13 @@ export default function SentTestsArchive({
   );
 
   return (
-    <div ref={wrapRef} onClickCapture={saveReturn} className="w-full flex flex-col gap-2">
+    <div
+      ref={wrapRef}
+      onClickCapture={saveReturn}
+      className="w-full flex flex-col gap-2"
+      // ქვემოთ საკმარისი ადგილი, რომ გახსნილი არქივი ეკრანის თავამდე ავიდეს
+      style={open && !studentMode ? { minHeight: "calc(100dvh - 10px)" } : undefined}
+    >
       <button
         type="button"
         onClick={() => {
