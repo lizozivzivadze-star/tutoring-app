@@ -89,10 +89,10 @@ export default function StudentDashboard() {
                 <Link
                   key={t.sentTestId}
                   href={`/dashboard/student/take/${t.sentTestId}`}
-                  className="flex items-center gap-2 px-3 py-3 text-sm text-ink hover:text-marker
+                  className="flex items-start gap-2 px-3 py-3 text-sm text-ink hover:text-marker
                              border-b border-paper-line last:border-b-0"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
+                  <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-marker shrink-0" />
                   <span>
                     {t.title}{" "}
                     <span className="text-ink-soft text-xs">[{t.typeLabel}]</span>

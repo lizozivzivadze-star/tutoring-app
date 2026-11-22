@@ -61,13 +61,13 @@ export async function PATCH(req: NextRequest) {
   const { role, id } = session.user;
 
   if (role === "teacher") {
-    await prisma.teacher.update({ where: { id }, data: { name } });
+    await prisma.teacher.update({ where: { id }, data: { name, surname: null } });
   } else if (role === "student") {
-    await prisma.student.update({ where: { id }, data: { name } });
+    await prisma.student.update({ where: { id }, data: { name, surname: null } });
   } else if (role === "admin") {
-    await prisma.admin.update({ where: { id }, data: { name } });
+    await prisma.admin.update({ where: { id }, data: { name, surname: null } });
   } else if (role === "tester") {
-    await prisma.tester.update({ where: { id }, data: { name } });
+    await prisma.tester.update({ where: { id }, data: { name, surname: null } });
   } else {
     return NextResponse.json({ error: "unknown role" }, { status: 400 });
   }
