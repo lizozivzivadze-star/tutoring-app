@@ -15,7 +15,12 @@ export default function PullToRefresh() {
   const startY = useRef<number | null>(null);
   const pullRef = useRef(0);
 
-  const isLoginPage = pathname === "/" || pathname === "/login";
+  // Login გვერდზე და ტესტის შესრულებისას (/dashboard/student/take/...)
+  // refresh გამორთულია, რომ მოსწავლე ტესტიდან არ ამოვარდეს
+  const isLoginPage =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname.startsWith("/dashboard/student/take/");
 
   useEffect(() => {
     const shell = document.getElementById(SHELL_ID);
