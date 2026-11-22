@@ -51,7 +51,7 @@ export default function ProfileModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <Modal title="პროფილი" onClose={onClose} topAligned>
+    <Modal title="პროფილი" onClose={onClose} onBackdropClick={onClose} topAligned>
       {loading ? (
         <LoadingBar className="py-4" />
       ) : (
