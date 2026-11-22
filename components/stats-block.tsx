@@ -30,7 +30,6 @@ type StudentStats = {
   myAttempts: number;
 };
 
-const n = (v: number | undefined) => (v === undefined ? "…" : v);
 
 // ბოლოს ნანახი რიცხვები ინახება ბრაუზერში, რომ შემდეგ გახსნაზე ბლოკი
 // მაშინვე გამოჩნდეს; ახალი რიცხვები ფონზე მოდის სერვერიდან.
@@ -59,29 +58,11 @@ export function MyStats() {
       .catch(() => {});
   }, [key]);
 
-  const staff = data?.role === "staff" ? data : null;
-  const student = data?.role === "student" ? data : null;
-
   return (
     <div className="flex flex-col gap-2">
       <p className="flex -mt-1.5">
         <Greeting name={data?.name} />
       </p>
-      <StatsBlock>
-        {isStudent ? (
-          <>
-            Tvinion-ით {n(student?.students)} აბიტურიენტმა გააკეთა{" "}
-            {n(student?.attempts)} ტესტი. თქვენ გაკეთებული გაქვთ{" "}
-            {n(student?.myAttempts)} ტესტი.
-          </>
-        ) : (
-          <>
-            Tvinion-ით {n(staff?.teachers)} მასწავლებელმა ჩაატარა{" "}
-            {n(staff?.sentTests)} ტესტი. თქვენ {n(staff?.myStudents)} მოსწავლისთვის
-            ჩატარებული გაქვთ {n(staff?.mySent)} ტესტი.
-          </>
-        )}
-      </StatsBlock>
     </div>
   );
 }

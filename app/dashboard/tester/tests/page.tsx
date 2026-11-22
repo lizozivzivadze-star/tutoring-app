@@ -5,7 +5,6 @@ import { ThemeRecord } from "./types";
 import ThemeCard from "./theme-card";
 import AddThemeModal from "./add-theme-modal";
 import TestUsageDialog from "./test-usage-dialog";
-import { TestsStats } from "@/components/stats-block";
 import LoadingBar from "@/components/loading-bar";
 import Link from "next/link";
 import UiIcon from "@/components/ui-icon";
@@ -140,18 +139,8 @@ export default function ThemesAndTestsTab() {
     );
   }
 
-  // სტატისტიკა: ზუსტად ის, რაც ქვემოთ სიაში ჩანს (ყველა ტესტი, დრაფტებითაც)
-  const shownTests = themes.flatMap((th) => th.tests);
-  const shownQuestions = shownTests.reduce(
-    (sum, t) => sum + (t._count?.questions ?? 0),
-    0
-  );
-
   return (
     <div>
-    <div className="mb-5">
-      <TestsStats tests={shownTests.length} questions={shownQuestions} />
-    </div>
     <div className="flex flex-col gap-2.5">
       <div className="border-b border-paper-line pb-[5px] -mb-[5px]">
         <div className="flex items-center justify-between gap-2">
