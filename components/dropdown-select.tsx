@@ -16,12 +16,25 @@ function OptionLabel({ label, dot }: { label: string; dot?: "green" | "grey" }) 
   if (!dot) return <HScrollText>{label}</HScrollText>;
   return (
     <div className="flex items-center gap-1.5">
-      <span
-        aria-hidden
-        className={`shrink-0 ${dot === "green" ? "text-ledger" : "text-ink-soft/50"}`}
-      >
-        •
-      </span>
+      {dot === "green" ? (
+        // აქტიური ტესტი: დიდი მწვანე წრე (როგორც „ტესტები" ტაბში)
+        <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full bg-ledger" />
+      ) : (
+        // ჩაკეტილი (გაუაქტიურებელი) ტესტი: ბოქლომი
+        <svg
+          width="12"
+          height="14"
+          viewBox="0 0 12 14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          aria-hidden
+          className="shrink-0 text-ink-soft/50"
+        >
+          <rect x="1" y="6" width="10" height="7" rx="1.5" />
+          <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" />
+        </svg>
+      )}
       <HScrollText className="min-w-0 flex-1">{label}</HScrollText>
     </div>
   );
