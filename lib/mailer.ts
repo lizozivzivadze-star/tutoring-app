@@ -29,7 +29,7 @@ function getFrom(): { name: string; address: string } {
   const raw = process.env.SMTP_FROM || process.env.SMTP_USER || "";
   const match = raw.match(/<([^>]+)>/);
   const address = (match ? match[1] : raw).trim();
-  return { name: "Tvini🧠n", address };
+  return { name: "Tvinion", address };
 }
 
 // ალიასები: ბაზაში/login-ში რჩება მოსწავლის მეილი, მაგრამ წერილი
