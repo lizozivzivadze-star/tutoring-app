@@ -164,6 +164,15 @@ export default function PullToRefresh() {
         moveShell(THRESHOLD, true);
 
         window.setTimeout(() => {
+          // ჯგუფების ტაბი refresh-ისას საწყის მდგომარეობაში ბრუნდება
+          try {
+            [
+              "teacherGroupsExpanded",
+              "teacherGroupsScroll",
+              "testerGroupsExpanded",
+              "testerGroupsScroll",
+            ].forEach((k) => sessionStorage.removeItem(k));
+          } catch {}
           window.location.reload();
         }, 250);
       } else {
