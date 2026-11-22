@@ -70,11 +70,11 @@ export default function InstallCard() {
 
         <span
           aria-hidden="true"
-          className="mt-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink shadow-[0_2px_0_#f2c230] transition-colors group-hover:bg-gold-hover group-active:bg-gold-hover"
+          className="mt-4 flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-full bg-gold text-ink shadow-[0_2px_0_#f2c230] transition-colors group-hover:bg-gold-hover group-active:bg-gold-hover"
         >
           <svg
-            width="22"
-            height="22"
+            width="33"
+            height="33"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -83,8 +83,18 @@ export default function InstallCard() {
             strokeLinejoin="round"
             aria-hidden="true"
           >
-            <path d="M12 3v12" />
-            <path d="M7 11l5 5 5-5" />
+            {/* ისარი მოძრაობს ზემოდან ქვემოთ (ქვედა ხაზი ადგილზე რჩება) */}
+            <g>
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values="0 -3; 0 2; 0 -3"
+                dur="1.2s"
+                repeatCount="indefinite"
+              />
+              <path d="M12 3v12" />
+              <path d="M7 11l5 5 5-5" />
+            </g>
             <path d="M5 20h14" />
           </svg>
         </span>
