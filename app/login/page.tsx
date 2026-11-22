@@ -296,7 +296,10 @@ className="
         )}
 
         {showRolePicker && (
-          <Modal title="მონიშნეთ" onClose={() => setShowRolePicker(false)}>
+          <Modal
+            title={<span className="block pl-8 text-center">მონიშნეთ</span>}
+            onClose={() => setShowRolePicker(false)}
+          >
             <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-x-2 gap-y-1.5">
               {/* ორივე ბარათი ერთ რიგშია → ერთნაირი სიგანე და სიმაღლე */}
               {ROLE_OPTIONS.map((opt, i) => (
@@ -316,7 +319,7 @@ className="
                   {opt.title}
                 </button>
               ))}
-              <span className="col-start-2 row-span-4 row-start-1 self-center text-sm text-ink-soft">
+              <span className="col-start-2 row-start-1 mb-1.5 self-center text-sm text-ink-soft">
                 ან
               </span>
               {/* ✓ ხაზები: მარცხენა და მარჯვენა ერთ რიგში → ერთ სიმაღლეზე */}
@@ -347,7 +350,7 @@ className="
                 disabled:opacity-50
               "
             >
-              {status === "sending" ? "იგზავნება..." : "გაგრძელება"}
+              {status === "sending" ? "იგზავნება..." : "განაგრძეთ"}
             </button>
 
             <p className="mt-4 text-center text-xs text-ink-soft">
